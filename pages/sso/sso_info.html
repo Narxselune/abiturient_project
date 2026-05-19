@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Информация по специальностям ССО</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="sso_main.html" class="btn-back">← Назад</a>
+            <h1>Информация по специальностям ССО</h1>
+            <p>Используйте переключатель и стрелки, чтобы листать описания специальностей.</p>
+        </header>
+
+        <main>
+            <div class="slider-container">
+                <div class="slider-controls">
+                    <label for="level-select">Выберите базу: </label>
+                    <select id="level-select" class="select-level" onchange="changeBase()">
+                        <option value="9">База 9 классов</option>
+                        <option value="11">База 11 классов / ПТО</option>
+                    </select>
+                </div>
+
+                <!-- Блок книги -->
+                <div class="slider-book">
+                    <h3 id="spec-title">Загрузка...</h3>
+                    <p id="spec-text" style="margin-top: 15px; color: #555; line-height: 1.6;"></p>
+                </div>
+
+                <div class="slider-nav-btns">
+                    <button class="btn-arrow" onclick="prevPage()">← Пред.</button>
+                    <span id="page-num" style="font-weight: bold; margin: 0 10px;">1 / 7</span>
+                    <button class="btn-arrow" onclick="nextPage()">След. →</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Интерактивная логика "Книжки" -->
+    <script>
+        const data9 = [
+            { title: "Специальность 1 (9 кл.)", text: "Описание специальности 1. Здесь рассказывается о квалификации, сроках обучения на базе 9 классов и изучаемых предметах." },
+            { title: "Специальность 2 (9 кл.)", text: "Описание специальности 2. Особенности практического обучения, ключевые навыки и будущие места трудоустройства." },
+            { title: "Специальность 3 (9 кл.)", text: "Описание специальности 3. Информация о лабораториях, техническом оснащении и требованиях к абитуриентам." },
+            { title: "Специальность 4 (9 кл.)", text: "Описание специальности 4. Подробности учебного плана, прохождения производственной практики." },
+            { title: "Специальность 5 (9 кл.)", text: "Описание специальности 5. Перспективы карьерного роста выпускников и востребованность на рынке труда." },
+            { title: "Специальность 6 (9 кл.)", text: "Описание специальности 6. Творческие или технические направления, требования к портфолио или экзаменам." },
+            { title: "Специальность 7 (9 кл.)", text: "Описание специальности 7. Итоговая информация, условия зачисления по среднему баллу документа об образовании." }
+        ];
+
+        const data11 = [
+            { title: "Специальность 1 (11 кл. / ПТО)", text: "Описание для базы 11 классов. Сокращенные сроки обучения, ключевые дисциплины и профессиональные модули." },
+            { title: "Специальность 2 (11 кл. / ПТО)", text: "Специфика подготовки специалистов среднего звена. Особенности взаимодействия с предприятиями-заказчиками кадров." },
+            { title: "Специальность 3 (11 кл. / ПТО)", text: "Организация практических занятий, требования к выпускной квалификационной работе." }
+        ];
+
+        let currentData = data9;
+        let currentIndex = 0;
+
+        function updateSlider() {
+            const item = currentData[currentIndex];
+            document.getElementById("spec-title").innerText = item.title;
+            document.getElementById("spec-text").innerText = item.text;
+            document.getElementById("page-num").innerText = `${currentIndex + 1} / ${currentData.length}`;
+        }
+
+        function changeBase() {
+            const select = document.getElementById("level-select");
+            if (select.value === "9") {
+                currentData = data9;
+            } else {
+                currentData = data11;
+            }
+            currentIndex = 0;
+            updateSlider();
+        }
+
+        function nextPage() {
+            if (currentIndex < currentData.length - 1) {
+                currentIndex++;
+            } else {
+                currentIndex = 0; // закольцовываем
+            }
+            updateSlider();
+        }
+
+        function prevPage() {
+            if (currentIndex > 0) {
+                currentIndex--;
+            } else {
+                currentIndex = currentData.length - 1; // закольцовываем в обратную сторону
+            }
+            updateSlider();
+        }
+
+        // Первичная инициализация при открытии страницы
+        window.onload = updateSlider;
+    </script>
+</body>
+</html>

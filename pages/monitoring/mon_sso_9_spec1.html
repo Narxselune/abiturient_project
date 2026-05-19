@@ -1,0 +1,142 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мониторинг — Разработка и сопровождение веб-ресурсов</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="container">
+        <header style="text-align: left; border: none; padding: 0;">
+            <a href="../sso/sso_9_classes.html" class="btn-back">← назад</a>
+        </header>
+
+        <main>
+            <div class="spec-card">
+                <h1 class="spec-title">Разработка и сопровождение веб-ресурсов</h1>
+
+                <div class="info-line">
+                    <strong>Прием:</strong>
+                    <div class="badge-container">
+                        <span class="badge badge-budget">за счет средств бюджета</span>
+                        <span class="badge badge-paid">на платной основе</span>
+                    </div>
+                </div>
+
+                <div class="info-line"><strong>Форма обучения:</strong> дневная</div>
+                <div class="info-line"><strong>Прием осуществляется на основе:</strong> общего базового образования (9 классов)</div>
+                <div class="info-line"><strong>Срок обучения:</strong> 3 года 10 месяцев</div>
+                <div class="info-line"><strong>План приема:</strong> 25 | <strong>Целевой план:</strong> 2</div>
+
+                <div class="stat-box">
+                    <div class="stat-title">Всего заявлений подано: 58</div>
+                    <div class="stat-row">По общему конкурсу: 55</div>
+                    <div class="stat-row">Льготные вне конкурса: 2</div>
+                    <div class="stat-row">Целевые: 1</div>
+                </div>
+            </div>
+
+            <h2 class="section-title">Заявления по баллам:</h2>
+            <div class="bar-table-wrapper">
+                <table class="bar-table">
+                    <thead>
+                        <tr>
+                            <th>9.9</th>
+                            <th>9.8</th>
+                            <th>9.7</th>
+                            <th>9.6</th>
+                            <th>9.5</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="cell-1-0" class="cell-green">...</td>
+                            <td id="cell-1-1" class="cell-green">...</td>
+                            <td id="cell-1-2" class="cell-green">...</td>
+                            <td id="cell-1-3" class="cell-green">...</td>
+                            <td id="cell-1-4" class="cell-green">...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 class="section-title">Льготные вне конкурса по баллам:</h2>
+            <div class="bar-table-wrapper" style="max-width: 250px;">
+                <table class="bar-table">
+                    <thead>
+                        <tr>
+                            <th>7.8</th>
+                            <th>6.3</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="cell-green">1</td>
+                            <td class="cell-green">1</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 class="section-title">Целевые по баллам:</h2>
+            <div class="bar-table-wrapper" style="max-width: 150px;">
+                <table class="bar-table">
+                    <thead>
+                        <tr>
+                            <th>7.6</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="cell-green">1</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+    <script>
+    
+        const SHEET_ID = '1uFwZs-jzJiUkZk6U266bo4QbmwjAjoUcc0pKAabWhos'; 
+
+    // Ссылка, которая превращает таблицу в JSON-данные для нашего кода
+    const REQ_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+
+    async function getSheetData() {
+        try {
+            // Запрашиваем данные у Google
+            const response = await fetch(REQ_URL);
+            const text = await response.text();
+
+            // Google возвращает данные в хитрой обертке, очищаем её, чтобы получить чистый JSON
+            const jsonString = text.substring(text.indexOf("{"), text.lastIndexOf("}") + 1);
+            const data = JSON.parse(jsonString);
+
+            // Все строки таблицы теперь лежат в массиве rows
+            const rows = data.table.rows;
+
+            // РАСКЛАДЫВАЕМ ДАННЫЕ ПО НАШИМ ID В HTML
+            // rows[1] — это вторая строка таблицы. c[0] — это колонка A, c[1] — колонка B и т.д.
+            // .v — это чистое значение (value) ячейки
+
+            document.getElementById('cell-1-0').innerText = rows[127].c[4] ? rows[1].c[0].v : 0;
+            document.getElementById('cell-1-1').innerText = rows[127].c[5] ? rows[1].c[1].v : 0;
+            document.getElementById('cell-1-2').innerText = rows[127].c[6] ? rows[1].c[2].v : 0;
+            document.getElementById('cell-1-3').innerText = rows[127].c[7] ? rows[1].c[3].v : 0;
+            document.getElementById('cell-1-4').innerText = rows[127].c[8] ? rows[1].c[4].v : 0;
+
+            console.log("Данные из Google Таблицы успешно загружены!");
+
+        } catch (error) {
+            console.error("Ошибка при получении данных:", error);
+            // Если интернет отключен или ID неверный, покажем прочерки
+            document.getElementById('cell-1-0').innerText = "ошибка";
+        }
+    }
+
+    // Запускаем загрузку сразу при открытии страницы
+    window.addEventListener('DOMContentLoaded', getSheetData);
+    </script>
+</body>
+</html>

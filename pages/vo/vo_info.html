@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Информация по специальностям ВО</title>
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="vo_main.html" class="btn-back">← Назад</a>
+            <h1>Информация по специальностям ВО</h1>
+            <p>Листайте карточки, чтобы изучить подробности направлений высшего образования.</p>
+        </header>
+
+        <main>
+            <div class="slider-container">
+                <div class="slider-controls">
+                    <label for="level-select-vo">Выберите базу: </label>
+                    <select id="level-select-vo" class="select-level" onchange="changeBaseVo()">
+                        <option value="11">База 11 классов</option>
+                        <option value="sso">База ССО (Сокращенная)</option>
+                    </select>
+                </div>
+
+                <!-- Блок книги -->
+                <div class="slider-book">
+                    <h3 id="vo-spec-title">Загрузка...</h3>
+                    <p id="vo-spec-text" style="margin-top: 15px; color: #555; line-height: 1.6;"></p>
+                </div>
+
+                <div class="slider-nav-btns">
+                    <button class="btn-arrow" onclick="prevPageVo()">← Пред.</button>
+                    <span id="vo-page-num" style="font-weight: bold; margin: 0 10px;">1 / 6</span>
+                    <button class="btn-arrow" onclick="nextPageVo()">След. →</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Логика перелистывания ВО -->
+    <script>
+        const voData11 = [
+            { title: "Специальность 1 (ВО, 11 кл.)", text: "Полный курс высшего образования. Фундаментальная подготовка, научно-исследовательская работа и широкие возможности трудоустройства." },
+            { title: "Специальность 2 (ВО, 11 кл.)", text: "Профильное ИТ или инженерное направление. Изучение современных технологий, языков программирования и проектирования систем." },
+            { title: "Специальность 3 (ВО, 11 кл.)", text: "Экономический или гуманитарный профиль. Упор на аналитику, менеджмент и управление проектами в современных условиях." },
+            { title: "Специальность 4 (ВО, 11 кл.)", text: "Практикоориентированное обучение с углубленным изучением производственных процессов на предприятиях партнеров." }
+        ];
+
+        const voDataSso = [
+            { title: "Специальность 1 (ВО на базе ССО)", text: "Сокращенная программа для выпускников колледжей. Перезачет смежных дисциплин, обучение сразу по профильным предметам." },
+            { title: "Специальность 2 (ВО на базе ССО)", text: "Интенсивный курс подготовки инженеров/специалистов высшей квалификации. Идеально для совмещения с работой." }
+        ];
+
+        let currentVoData = voData11;
+        let currentVoIndex = 0;
+
+        function updateVoSlider() {
+            const item = currentVoData[currentVoIndex];
+            document.getElementById("vo-spec-title").innerText = item.title;
+            document.getElementById("vo-spec-text").innerText = item.text;
+            document.getElementById("vo-page-num").innerText = `${currentVoIndex + 1} / ${currentVoData.length}`;
+        }
+
+        function changeBaseVo() {
+            const select = document.getElementById("level-select-vo");
+            if (select.value === "11") {
+                currentVoData = voData11;
+            } else {
+                currentVoData = voDataSso;
+            }
+            currentVoIndex = 0;
+            updateVoSlider();
+        }
+
+        function nextPageVo() {
+            if (currentVoIndex < currentVoData.length - 1) {
+                currentVoIndex++;
+            } else {
+                currentVoIndex = 0;
+            }
+            updateVoSlider();
+        }
+
+        function prevPageVo() {
+            if (currentVoIndex > 0) {
+                currentVoIndex--;
+            } else {
+                currentVoIndex = currentVoData.length - 1;
+            }
+            updateVoSlider();
+        }
+
+        window.onload = updateVoSlider;
+    </script>
+</body>
+</html>
