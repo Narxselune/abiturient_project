@@ -11,7 +11,6 @@
         <header>
             <a href="vo_main.html" class="btn-back">← Назад</a>
             <h1>Информация по специальностям ВО</h1>
-            <p>Листайте карточки, чтобы изучить подробности направлений высшего образования.</p>
         </header>
 
         <main>
@@ -24,7 +23,6 @@
                     </select>
                 </div>
 
-                <!-- Блок книги -->
                 <div class="slider-book">
                     <h3 id="vo-spec-title">Загрузка...</h3>
                     <p id="vo-spec-text" style="margin-top: 15px; color: #555; line-height: 1.6;"></p>
@@ -32,25 +30,28 @@
 
                 <div class="slider-nav-btns">
                     <button class="btn-arrow" onclick="prevPageVo()">← Пред.</button>
-                    <span id="vo-page-num" style="font-weight: bold; margin: 0 10px;">1 / 6</span>
+                    <span id="vo-page-num" style="font-weight: bold; margin: 0 10px;">1 / 5</span>
                     <button class="btn-arrow" onclick="nextPageVo()">След. →</button>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Логика перелистывания ВО -->
     <script>
+        // Данные для Базы 11 классов (строго 5 специальностей)
         const voData11 = [
-            { title: "Специальность 1 (ВО, 11 кл.)", text: "Полный курс высшего образования. Фундаментальная подготовка, научно-исследовательская работа и широкие возможности трудоустройства." },
-            { title: "Специальность 2 (ВО, 11 кл.)", text: "Профильное ИТ или инженерное направление. Изучение современных технологий, языков программирования и проектирования систем." },
-            { title: "Специальность 3 (ВО, 11 кл.)", text: "Экономический или гуманитарный профиль. Упор на аналитику, менеджмент и управление проектами в современных условиях." },
-            { title: "Специальность 4 (ВО, 11 кл.)", text: "Практикоориентированное обучение с углубленным изучением производственных процессов на предприятиях партнеров." }
+            { title: "Специальность 1 (ВО, 11 кл.)", text: "" },
+            { title: "Специальность 2 (ВО, 11 кл.)", text: "" },
+            { title: "Специальность 3 (ВО, 11 кл.)", text: "" },
+            { title: "Специальность 4 (ВО, 11 кл.)", text: "" },
+            { title: "Специальность 5 (ВО, 11 кл.)", text: "" }
         ];
 
+        // Данные для базы ССО (строго 3 специальности)
         const voDataSso = [
-            { title: "Специальность 1 (ВО на базе ССО)", text: "Сокращенная программа для выпускников колледжей. Перезачет смежных дисциплин, обучение сразу по профильным предметам." },
-            { title: "Специальность 2 (ВО на базе ССО)", text: "Интенсивный курс подготовки инженеров/специалистов высшей квалификации. Идеально для совмещения с работой." }
+            { title: "Специальность 1 (ВО на базе ССО)", text: "" },
+            { title: "Специальность 2 (ВО на базе ССО)", text: "" },
+            { title: "Специальность 3 (ВО на базе ССО)", text: "" }
         ];
 
         let currentVoData = voData11;
@@ -70,7 +71,7 @@
             } else {
                 currentVoData = voDataSso;
             }
-            currentVoIndex = 0;
+            currentVoIndex = 0; // Сбрасываем на первую страницу при смене базы
             updateVoSlider();
         }
 
@@ -78,7 +79,7 @@
             if (currentVoIndex < currentVoData.length - 1) {
                 currentVoIndex++;
             } else {
-                currentVoIndex = 0;
+                currentVoIndex = 0; // закольцовываем
             }
             updateVoSlider();
         }
@@ -87,11 +88,12 @@
             if (currentVoIndex > 0) {
                 currentVoIndex--;
             } else {
-                currentVoIndex = currentVoData.length - 1;
+                currentVoIndex = currentVoData.length - 1; // закольцовываем в обратную сторону
             }
             updateVoSlider();
         }
 
+        // Первичная инициализация при открытии страницы
         window.onload = updateVoSlider;
     </script>
 </body>

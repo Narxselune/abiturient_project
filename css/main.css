@@ -31,7 +31,7 @@ header {
 }
 
 h1 {
-    font-size: 24px;
+    font-size: 40px;
     color: #333333;
     margin-bottom: 10px;
 }
@@ -68,17 +68,18 @@ nav ul {
                 background-color: #F1EEFF;
             }
 
-/* Кнопки */
+/* --- КНОПКИ --- */
 .btn-grid {
     display: block;
     margin-top: 20px;
+    width: 100%;
 }
 
 .btn-item {
     display: block;
     width: 100%;
-    max-width: 400px;
-    margin: 12px auto;
+    max-width: 420px;
+    margin: 0 auto 16px auto !important; /* !important принудительно разлепит кнопки на 16px */
     padding: 15px 20px;
     background-color: #8CBEFF;
     color: #000000;
@@ -88,6 +89,7 @@ nav ul {
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     transition: transform 0.2s, background-color 0.2s;
+    box-sizing: border-box;
 }
 
     .btn-item:hover {
@@ -95,45 +97,42 @@ nav ul {
         background-color: #72aeff;
     }
 
-.btn-back {
-    display: inline-block;
-    margin-bottom: 20px;
-    padding: 8px 16px;
-    background-color: #E0E0E0;
-    color: #000000;
-    text-decoration: none;
-    border-radius: 6px;
-    font-weight: 600;
-    font-size: 14px;
-}
-
-    .btn-back:hover {
-        background-color: #D5D5D5;
-    }
-
-/* Две колонки для ВО ССО */
+/* --- ДВЕ КОЛОНКИ --- */
 .columns-container {
-    display: block;
-    margin-top: 20px;
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    margin-top: 30px;
+    width: 100%;
 }
 
 .column {
-    width: 48%;
-    display: inline-block;
-    vertical-align: top;
-    margin-right: 3%;
+    flex: 1;
+    width: 50%;
 }
-
-    .column:last-child {
-        margin-right: 0;
-    }
 
     .column h3 {
         text-align: center;
-        margin-bottom: 15px;
+        margin-bottom: 25px;
         padding-bottom: 5px;
         border-bottom: 2px solid #8CBEFF;
     }
+
+    /* Центрируем кнопки внутри их колонок */
+    .column .btn-item {
+        max-width: 420px;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+/* Перенос срока обучения */
+.spec-duration {
+    display: block;
+    font-size: 14px;
+    opacity: 0.8;
+    margin-top: 8px; /* Делаем отступ внутри кнопки побольше, чтобы текст не слипался */
+    font-weight: normal;
+}
 
 /* Стили для Слайдера Информации (Книжечка) */
 .slider-container {
@@ -208,10 +207,9 @@ nav ul {
         background-color: #F9F9F9;
     }
 
-
 /* --- СТИЛИ ДЛЯ ОКНА МОНИТОРИНГА (ПО МАКЕТУ) --- */
 .spec-card {
-    border-left: 5px solid #007bff; /* синяя полоса слева */
+    border-left: 5px solid #007bff;
     border-top: 1px solid #E0E0E0;
     border-right: 1px solid #E0E0E0;
     border-bottom: 1px solid #E0E0E0;
@@ -233,7 +231,7 @@ nav ul {
 }
 
     .info-line strong {
-        color: #007bff; /* Голубой цвет для названий категорий */
+        color: #007bff;
     }
 
 /* Теги Бюджет / Платное */
@@ -291,7 +289,7 @@ nav ul {
 }
 
 .bar-table-wrapper {
-    overflow-x: auto; /* Чтобы на телефонах таблица скроллилась вбок и не ломала экран */
+    overflow-x: auto;
     margin-bottom: 20px;
 }
 
@@ -316,7 +314,7 @@ nav ul {
         padding: 8px 5px;
     }
 
-/* Цвета ячеек с количеством человек (как на макете) */
+/* Цвета ячеек с количеством человек */
 .cell-green {
     background-color: #66BB6A;
     color: #000000;
@@ -331,3 +329,18 @@ nav ul {
     background-color: #EF5350;
     color: #000000;
 }
+.btn-back {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 8px 16px;
+    background-color: #E0E0E0;
+    color: #000000;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+    .btn-back:hover {
+        background-color: #D5D5D5;
+    }
