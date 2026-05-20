@@ -17,7 +17,34 @@
                 <a href="pages/sso/sso_main.html" class="btn-item">Среднее специальное образование (ССО)</a>
                 <a href="pages/vo/vo_main.html" class="btn-item">Высшее образование (ВО)</a>
             </div>
+
+            <!-- Блок скрыт по умолчанию (display: none) -->
+            <div class="recently-viewed" id="recently-viewed-container" style="display: none;">
+                <span class="recently-viewed-title">Вы недавно смотрели:</span>
+                <div class="recently-viewed-links" id="recent-links"></div>
+            </div>
         </main>
     </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            // Получаем историю просмотров из localStorage
+            const history = JSON.parse(localStorage.getItem('recently_viewed_specs')) || [];
+            const container = document.getElementById('recently-viewed-container');
+            const linksContainer = document.getElementById('recent-links');
+
+            // Если в истории есть хотя бы одна страница — генерируем ссылки и показываем блок
+            if (history.length > 0) {
+                linksContainer.innerHTML = '';
+                history.forEach(item => {
+                    const a = document.createElement('a');
+                    a.href = item.url;
+                    a.textContent = item.title;
+                    linksContainer.appendChild(a);
+                });
+                container.style.display = 'inline-flex'; // Показываем блок на главной
+            }
+        });
+    </script>
 </body>
 </html>

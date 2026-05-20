@@ -171,3 +171,29 @@ async function initMonitoring() {
 }
 
 window.addEventListener('DOMContentLoaded', initMonitoring);
+
+// Автоматическое сохранение текущей страницы в историю просмотров
+(function () {
+    // Получаем название специальности из <title> страницы и текущий путь
+    const specTitle = document.title;
+    const specUrl = window.location.pathname;
+
+    // Игнорируем главную страницу и пустые переходы
+    if (specTitle && specUrl && !specUrl.endsWith('index.html') && !specUrl.endsWith('/')) {
+        let history = JSON.parse(localStorage.getItem('recently_viewed_specs')) || [];
+
+        // Удаляем страницу из истории, если она там уже была (для обновления ее позиции на первую строчку)
+        history = history.filter(item => item.url !== specUrl);
+
+        // Добавляем текущую страницу в начало массива
+        history.unshift({ title: specTitle, url: specUrl });
+
+        // Ограничиваем размер истории ровно 3 ссылками
+        if (history.length > 3) {
+            history.pop();
+        }
+
+        // Записываем обновленный список в localStorage
+        localStorage.setItem('recently_viewed_specs', JSON.stringify(history));
+    }
+})();
