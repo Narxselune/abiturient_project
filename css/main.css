@@ -28,7 +28,15 @@ header {
     text-align: center;
     border-bottom: 2px solid #F1EEFF;
     padding-bottom: 20px;
+    position: relative; /* Относительное позиционирование для выравнивания кнопки Назад */
+    min-height: 45px; /* Защита от схлопывания шапки */
 }
+
+    /* Защита от наложения заголовков на кнопку "Назад" */
+    header h1, header h2 {
+        padding-left: 110px;
+        padding-right: 110px;
+    }
 
 h1 {
     font-size: 40px;
@@ -68,7 +76,7 @@ nav ul {
                 background-color: #F1EEFF;
             }
 
-/* --- КНОПКИ --- */
+/* --- Кнопки --- */
 .btn-grid {
     display: block;
     margin-top: 20px;
@@ -79,7 +87,7 @@ nav ul {
     display: block;
     width: 100%;
     max-width: 420px;
-    margin: 0 auto 16px auto !important; /* !important принудительно разлепит кнопки на 16px */
+    margin: 0 auto 16px auto !important; /* !important переопределяет внешние отступы до 16px */
     padding: 15px 20px;
     background-color: #8CBEFF;
     color: #000000;
@@ -97,7 +105,7 @@ nav ul {
         background-color: #72aeff;
     }
 
-/* --- ДВЕ КОЛОНКИ --- */
+/* --- Вид колонок --- */
 .columns-container {
     display: flex;
     gap: 40px;
@@ -118,23 +126,23 @@ nav ul {
         border-bottom: 2px solid #8CBEFF;
     }
 
-    /* Центрируем кнопки внутри их колонок */
+    /* Выравнивание кнопок внутри колонок */
     .column .btn-item {
         max-width: 420px;
         margin-left: auto !important;
         margin-right: auto !important;
     }
 
-/* Перенос срока обучения */
+/* Описание срока обучения */
 .spec-duration {
     display: block;
     font-size: 14px;
     opacity: 0.8;
-    margin-top: 8px; /* Делаем отступ внутри кнопки побольше, чтобы текст не слипался */
+    margin-top: 8px; /* Дополнительный отступ сверху для разделения, чтобы текст не сливался */
     font-weight: normal;
 }
 
-/* Стили для Слайдера Информации (Книжечка) */
+/* Слайдер для описания специальностей */
 .slider-container {
     max-width: 500px;
     margin: 30px auto;
@@ -185,7 +193,7 @@ nav ul {
         background-color: #72aeff;
     }
 
-/* Таблица Мониторинга */
+/* Таблицы мониторинга */
 .monitoring-table {
     width: 100%;
     border-collapse: collapse;
@@ -207,7 +215,7 @@ nav ul {
         background-color: #F9F9F9;
     }
 
-/* --- СТИЛИ ДЛЯ ОКНА МОНИТОРИНГА (ПО МАКЕТУ) --- */
+/* --- Стили для карт специальностей (по ссылке) --- */
 .spec-card {
     border-left: 5px solid #007bff;
     border-top: 1px solid #E0E0E0;
@@ -234,7 +242,7 @@ nav ul {
         color: #007bff;
     }
 
-/* Теги Бюджет / Платное */
+/* План приема / Бюджет */
 .badge-container {
     display: inline-block;
     margin-left: 10px;
@@ -260,7 +268,7 @@ nav ul {
     margin-left: 5px;
 }
 
-/* Внутренний блок "Всего заявлений" */
+/* Статистика блока "Всего подано" */
 .stat-box {
     border: 1px solid #999;
     border-radius: 10px;
@@ -280,7 +288,7 @@ nav ul {
     margin-bottom: 4px;
 }
 
-/* Стили для цветных таблиц баллов */
+/* Таблицы конкурса по баллам */
 .section-title {
     color: #007bff;
     font-size: 16px;
@@ -314,7 +322,7 @@ nav ul {
         padding: 8px 5px;
     }
 
-/* Цвета ячеек с количеством человек */
+/* Цвета ячеек в соответствии с конкурсом */
 .cell-green {
     background-color: #66BB6A;
     color: #000000;
@@ -329,18 +337,115 @@ nav ul {
     background-color: #EF5350;
     color: #000000;
 }
+
+/* Кнопка "Назад" во всех разделах */
 .btn-back {
-    display: inline-block;
-    margin-bottom: 20px;
+    position: absolute;
+    left: 0;
+    top: 5px; /* Выравнивание по уровню первой строки заголовка */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 8px 16px;
-    background-color: #E0E0E0;
+    background-color: transparent; /* Цвет как цвет фона контейнера */
     color: #000000;
     text-decoration: none;
-    border-radius: 6px;
+    border: 1px solid #D5D5D5; /* Серая обводка */
+    border-radius: 30px; /* Скругленная форма как на фото 3 */
     font-weight: 600;
     font-size: 14px;
+    transition: all 0.2s ease;
 }
 
     .btn-back:hover {
-        background-color: #D5D5D5;
+        background-color: #F1EEFF; /* Легкая подсветка при наведении */
+        border-color: #B5B5B5;
+    }
+
+/* Адаптивность для мобильных экранов (перенос заголовка под кнопку назад) */
+@media (max-width: 768px) {
+    header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 50px; /* Освобождаем место сверху под кнопку */
+    }
+
+        header h1, header h2 {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+    .btn-back {
+        left: 50%;
+        transform: translateX(-50%); /* Центрирование кнопки сверху на мобильных */
+        top: 0;
+    }
+}
+
+/* ==========================================================================
+   СТИЛИ ДЛЯ ГЛАВНОЙ СТРАНИЦЫ (index.html)
+   ========================================================================== */
+
+/* Центрирование контейнера по вертикали и горизонтали */
+.body-main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    background-color: #F1EEFF;
+}
+
+/* Настройки увеличенного белого окна */
+.container-main {
+    max-width: 900px;
+    width: 100%;
+    border-radius: 24px;
+    padding: 70px 50px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+/* Шапка главной страницы */
+.header-main {
+    margin-bottom: 45px;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.title-main {
+    font-size: 46px;
+    line-height: 1.3;
+    font-weight: 700;
+    color: #000000;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* Вертикальная сетка для кнопок (друг под другом) */
+.btn-grid-main {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    align-items: center;
+    width: 100%;
+}
+
+    /* Кнопки на главной странице */
+    .btn-grid-main .btn-item {
+        width: 100%;
+        max-width: 480px;
+        margin: 0 !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 65px;
+        padding: 15px 30px;
+        font-size: 16px;
+        line-height: 1.4;
+        border-radius: 12px;
+        background-color: #8CBEFF;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
     }

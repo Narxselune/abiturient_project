@@ -61,30 +61,30 @@ function renderMonitoringPage(s) {
     let totalAll = totalCommon + totalLgota + totalTarget;
 
     let html = `
-    <div class="spec-card">
-        <h1 class="spec-title">${s.name}</h1>
-        <div class="info-line">
-            <strong>Прием:</strong>
-            <div class="badge-container">
-                <span class="badge badge-budget">за счет средств бюджета</span>
-                <span class="badge badge-paid">на платной основе</span>
-            </div>
-        </div>
-        <div class="info-line"><strong>Форма обучения:</strong> ${s.educationForm}</div>
-        <div class="info-line"><strong>Прием осуществляется на основе:</strong> ${s.base}</div>
-        <div class="info-line"><strong>Срок обучения:</strong> ${s.duration}</div>
-        <div class="info-line"><strong>План приема:</strong> ${s.plan} | <b>Целевой план:</b> ${s.planTarget}</div>
-        <div class="stat-box">
-            <div class="stat-title">Всего заявлений подано: ${totalAll}</div>
-            <div class="stat-row">По общему конкурсу: ${totalCommon}</div>
-            <div class="stat-row">Льготные вне конкурса: ${totalLgota}</div>
-            <div class="stat-row">Целевые: ${totalTarget}</div>
-        </div>
-    </div>`;
+    <div class="spec-card">
+        <h1 class="spec-title">${s.name}</h1>
+        <div class="info-line">
+            <strong>Прием:</strong>
+            <div class="badge-container">
+                <span class="badge badge-budget">за счет средств бюджета</span>
+                <span class="badge badge-paid">на платной основе</span>
+            </div>
+        </div>
+        <div class="info-line"><strong>Форма обучения:</strong> ${s.educationForm}</div>
+        <div class="info-line"><strong>Прием осуществляется на основе:</strong> ${s.base}</div>
+        <div class="info-line"><strong>Срок обучения:</strong> ${s.duration}</div>
+        <div class="info-line"><strong>План приема:</strong> ${s.plan} | <b>Целевой план:</b> ${s.planTarget}</div>
+        <div class="stat-box">
+            <div class="stat-title">Всего заявлений подано: ${totalAll}</div>
+            <div class="stat-row">По общему конкурсу: ${totalCommon}</div>
+            <div class="stat-row">Льготные вне конкурса: ${totalLgota}</div>
+            <div class="stat-row">Целевые: ${totalTarget}</div>
+        </div>
+    </div>`;
 
     if (s.applications.length > 0) {
         html += `\n<h2 class="section-title">Заявления по баллам:</h2>
-        <div class="bar-table-wrapper"><table class="bar-table"><thead><tr>`;
+        <div class="bar-table-wrapper"><table class="bar-table"><thead><tr>`;
         s.applications.forEach(a => html += `<th>${a.score.toFixed(1)}</th>`);
         html += `</tr></thead><tbody><tr>`;
         s.applications.forEach(a => {
@@ -107,7 +107,7 @@ function renderMonitoringPage(s) {
 
     if (s.lgota.length > 0) {
         html += `\n<h2 class="section-title">Льготные вне конкурса по баллам:</h2>
-        <div class="bar-table-wrapper" style="max-width: 250px;"><table class="bar-table"><thead><tr>`;
+        <div class="bar-table-wrapper" style="max-width: 250px;"><table class="bar-table"><thead><tr>`;
         s.lgota.forEach(a => html += `<th>${a.score.toFixed(1)}</th>`);
         html += `</tr></thead><tbody><tr>`;
         s.lgota.forEach(a => html += `<td class="cell-green">${a.count}</td>`);
@@ -128,7 +128,7 @@ function renderMonitoringPage(s) {
         };
 
         html += `\n<h2 class="section-title">Целевые по баллам:</h2>
-        <div class="bar-table-wrapper" style="max-width: 150px;"><table class="bar-table"><thead><tr>`;
+        <div class="bar-table-wrapper" style="max-width: 150px;"><table class="bar-table"><thead><tr>`;
         s.target.forEach(a => html += `<th>${a.score.toFixed(1)}</th>`);
         html += `</tr></thead><tbody><tr>`;
         s.target.forEach(a => {
@@ -164,9 +164,9 @@ async function initMonitoring() {
     } catch (error) {
         console.error(error);
         document.getElementById('loading-overlay').innerHTML = `
-            <div style="color: red; padding: 20px; font-weight: 500;">
-                ⚠️ Ошибка загрузки данных мониторинга.
-            </div>`;
+            <div style="color: red; padding: 20px; font-weight: 500;">
+                ⚠️ Ошибка загрузки данных мониторинга.
+            </div>`;
     }
 }
 
