@@ -5,26 +5,246 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Абитуриентам после 9 класса — ССО</title>
     <link rel="stylesheet" href="../../css/main.css">
+
+    <!-- Подключение библиотеки XLSX для фонового парсинга и расчета шансов поступления -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
+    <!-- Черно-белая кнопка-домик (вынесена за рамки белого окна, находится на фоне) -->
+    <a href="../../index.html" class="btn-home" title="На главную">
+        <svg viewBox="0 0 24 24">
+            <rect x="16" y="4" width="3" height="5" />
+            <path d="M12 2.5L2 10.5h2v10a1 1 0 0 0 1 1h6v-6h2v6h6a1 1 0 0 0 1-1v-10h2L12 2.5z" />
+        </svg>
+    </a>
+
     <div class="container">
         <header>
-            <a href="sso_main.html" class="btn-back">← назад</a>
+            <a href="sso_main.html" class="btn-back">← Назад</a>
             <h1>Абитуриентам после 9 класса</h1>
-            <h2>Среднее специальное образование </h2>
+            <h2>Среднее специальное образование</h2>
         </header>
 
         <main>
-            <div class="btn-grid">
-                <a href="/pages/monitoring/mon_sso_9_spec7.html" class="btn-item">Тестирование программного обеспечения<br><span class="spec-duration">(3 года)</span></a>
-                <a href="/pages/monitoring/mon_sso_9_spec1.html" class="btn-item">Разработка и сопровождение веб-ресурсов<br><span class="spec-duration">(3 года 10 месяцев)</span></a>
-                <a href="/pages/monitoring/mon_sso_9_spec2.html" class="btn-item">Техническая эксплуатация систем и сетей телекоммуникаций<br><span class="spec-duration">(3 года 10 месяцев)</span></a>
-                <a href="/pages/monitoring/mon_sso_9_spec3.html" class="btn-item">Информационные кабельные сети<br><span class="spec-duration">(3 года 10 месяцев)</span></a>
-                <a href="/pages/monitoring/mon_sso_9_spec4.html" class="btn-item">Техническая эксплуатация систем радиосвязи, радиовещания и телевидения<br><span class="spec-duration">(3 года 10 месяцев)</span></a>
-                <a href="/pages/monitoring/mon_sso_9_spec5.html" class="btn-item">Техническая эксплуатация мультимедийных систем<br><span class="spec-duration">(3 года 10 месяцев)</span></a>
-                <a href="/pages/monitoring/mon_sso_9_spec6.html" class="btn-item">Почтовая деятельность<br><span class="spec-duration">(3 года)</span></a>
+            <!-- Поле ввода среднего балла (Калькулятор шансов) -->
+            <div class="search-container">
+                <input type="text" id="score-search" class="score-search-input" placeholder="Введите средний балл" disabled>
+                <span id="search-clear-btn" class="search-clear" onclick="clearSearch()">&times;</span>
+            </div>
+
+            <!-- Блок, в который будут динамически выводиться результаты калькулятора -->
+            <div id="search-results" class="search-results-box" style="display: none;"></div>
+
+            <!-- Стандартные кнопки специальностей (будут скрываться при поиске) -->
+            <div id="default-btn-grid" class="btn-grid">
+                <a href="../monitoring/mon_sso_9_spec7.html" class="btn-item">Тестирование программного обеспечения<br><span class="spec-duration">(3 года)</span></a>
+                <a href="../monitoring/mon_sso_9_spec1.html" class="btn-item">Разработка и сопровождение веб-ресурсов<br><span class="spec-duration">(3 года 10 месяцев)</span></a>
+                <a href="../monitoring/mon_sso_9_spec2.html" class="btn-item">Техническая эксплуатация систем и сетей телекоммуникаций<br><span class="spec-duration">(3 года 10 месяцев)</span></a>
+                <a href="../monitoring/mon_sso_9_spec3.html" class="btn-item">Информационные кабельные сети<br><span class="spec-duration">(3 года 10 месяцев)</span></a>
+                <a href="../monitoring/mon_sso_9_spec4.html" class="btn-item">Техническая эксплуатация систем радиосвязи, радиовещания и телевидения<br><span class="spec-duration">(3 года 10 месяцев)</span></a>
+                <a href="../monitoring/mon_sso_9_spec5.html" class="btn-item">Техническая эксплуатация мультимедийных систем<br><span class="spec-duration">(3 года 10 месяцев)</span></a>
+                <a href="../monitoring/mon_sso_9_spec6.html" class="btn-item">Почтовая деятельность<br><span class="spec-duration">(3 года)</span></a>
             </div>
         </main>
     </div>
+
+    <script>
+        const SHEET_ID = '1uFwZs-jzJiUkZk6U266bo4QbmwjAjoUcc0pKAabWhos';
+        const XLSX_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=xlsx`;
+
+        // Список всех 7 специальностей ССО базы 9 кл. с их смещениями строк в Excel
+        const specsConfig = [
+            { id: 1, name: "Разработка и сопровождение веб-ресурсов", offset: 116, hasPaid: true, url: "../monitoring/mon_sso_9_spec1.html" },
+            { id: 2, name: "Техническая эксплуатация систем и сетей телекоммуникаций", offset: 180, hasPaid: false, url: "../monitoring/mon_sso_9_spec2.html" },
+            { id: 3, name: "Информационные кабельные сети", offset: 212, hasPaid: false, url: "../monitoring/mon_sso_9_spec3.html" },
+            { id: 4, name: "Техническая эксплуатация систем радиосвязи, радиовещания и телевидения", offset: 244, hasPaid: false, url: "../monitoring/mon_sso_9_spec4.html" },
+            { id: 5, name: "Техническая эксплуатация мультимедийных систем", offset: 276, hasPaid: true, url: "../monitoring/mon_sso_9_spec5.html" },
+            { id: 6, name: "Почтовая деятельность", offset: 292, hasPaid: false, url: "../monitoring/mon_sso_9_spec6.html" },
+            { id: 7, name: "Тестирование программного обеспечения", offset: 148, hasPaid: false, url: "../monitoring/mon_sso_9_spec7.html" }
+        ];
+
+        let workbookCache = null;
+
+        // Вспомогательная функция чтения ячейки Excel
+        function getCell(sheet, r, c) {
+            if (!sheet) return '';
+            const addr = XLSX.utils.encode_cell({ r, c });
+            return sheet[addr] ? sheet[addr].v : '';
+        }
+
+        // Фоновый парсинг заявления по баллам для конкретного блока
+        function parseBlockData(sheet, offset) {
+            const plan = parseInt(getCell(sheet, offset + 10, 2), 10) || 0;
+            let applications = [];
+            for (let col = 4, score = 10.0; col <= 74; col++, score = +(score - 0.1).toFixed(1)) {
+                let count = parseInt(getCell(sheet, offset + 10, col), 10) || 0;
+                if (count > 0) applications.push({ score: +score.toFixed(1), count });
+            }
+            return { plan, applications };
+        }
+
+        // Загрузка Google Таблицы в фоновом режиме при запуске
+        async function loadDatabase() {
+            const searchInput = document.getElementById('score-search');
+            try {
+                const response = await fetch(XLSX_URL);
+                if (!response.ok) throw new Error();
+                const buffer = await response.arrayBuffer();
+                workbookCache = XLSX.read(buffer, { type: 'array' });
+
+                // Разблокируем поиск после полной фоновой загрузки базы
+                searchInput.disabled = false;
+                searchInput.placeholder = "Введите средний балл (например, 8.0)";
+            } catch (e) {
+                searchInput.placeholder = "⚠️ База данных недоступна";
+            }
+        }
+
+        // Очистка поиска
+        function clearSearch() {
+            const searchInput = document.getElementById('score-search');
+            searchInput.value = '';
+            document.getElementById('search-clear-btn').style.display = 'none';
+            document.getElementById('search-results').style.display = 'none';
+            document.getElementById('default-btn-grid').style.display = 'block';
+        }
+
+        // Подсчет вашей позиции (Количество заявлений с баллом >= Вашего + 1)
+        function getPosition(applications, userScore) {
+            const count = applications
+                .filter(app => app.score >= userScore)
+                .reduce((sum, app) => sum + app.count, 0);
+            return count + 1;
+        }
+
+        // Определение цвета для вывода (зеленый, оранжевый/желтый, красный)
+        function getColorClass(position, plan) {
+            if (position <= plan) {
+                // Если пользователь на грани (в последних 10% мест), подсвечиваем оранжевым/желтым
+                if (position >= plan * 0.9) {
+                    return 'text-yellow';
+                }
+                return 'text-green';
+            }
+            return 'text-red';
+        }
+
+        // Основная функция калькулятора шансов поступления
+        function handleSearchInput(e) {
+            const val = e.target.value.trim().replace(',', '.');
+            const clearBtn = document.getElementById('search-clear-btn');
+            const resultsBox = document.getElementById('search-results');
+            const defaultGrid = document.getElementById('default-btn-grid');
+
+            if (!val) {
+                clearSearch();
+                return;
+            }
+
+            clearBtn.style.display = 'block';
+            const userScore = parseFloat(val);
+
+            if (isNaN(userScore) || userScore < 1.0 || userScore > 10.0) {
+                resultsBox.innerHTML = `<div style="padding: 15px; text-align: center; color: #888;">Введите корректный балл от 1.0 до 10.0</div>`;
+                resultsBox.style.display = 'block';
+                defaultGrid.style.display = 'none';
+                return;
+            }
+
+            if (!workbookCache) return;
+
+            const sheetBudget = workbookCache.Sheets[workbookCache.SheetNames[0]];
+            const sheetPaid = workbookCache.Sheets[workbookCache.SheetNames[1]];
+
+            let calculatedSpecs = [];
+
+            // Обрабатываем каждую специальность
+            specsConfig.forEach(spec => {
+                // Получаем бюджетные данные (Лист 1)
+                const budgetData = parseBlockData(sheetBudget, spec.offset);
+                const budgetPos = getPosition(budgetData.applications, userScore);
+
+                let paidPos = 0;
+                let paidPlan = 0;
+
+                // Получаем платные данные (Лист 2), если специальность имеет платное отделение
+                if (spec.hasPaid && sheetPaid) {
+                    const paidData = parseBlockData(sheetPaid, spec.offset);
+                    paidPlan = paidData.plan;
+                    paidPos = getPosition(paidData.applications, userScore);
+                }
+
+                // Оцениваем «коэффициент шанса» для сортировки.
+                // Чем меньше коэффициент (позиция / план), тем выше шанс пройти.
+                const budgetRatio = budgetData.plan > 0 ? (budgetPos / budgetData.plan) : Infinity;
+                const paidRatio = paidPlan > 0 ? (paidPos / paidPlan) : Infinity;
+                const bestRatio = Math.min(budgetRatio, paidRatio);
+
+                calculatedSpecs.push({
+                    name: spec.name,
+                    url: spec.url,
+                    budget: { position: budgetPos, plan: budgetData.plan },
+                    paid: { position: paidPos, plan: paidPlan, exists: spec.hasPaid },
+                    bestRatio: bestRatio
+                });
+            });
+
+            // Сортировка специальностей в порядке наилучших шансов поступления
+            calculatedSpecs.sort((a, b) => a.bestRatio - b.bestRatio);
+
+            // Генерация результатов поиска
+            let html = '';
+            calculatedSpecs.forEach(spec => {
+                const bClass = getColorClass(spec.budget.position, spec.budget.plan);
+
+                let paidHtml = '';
+                if (spec.paid.exists && spec.paid.plan > 0) {
+                    const pClass = getColorClass(spec.paid.position, spec.paid.plan);
+                    paidHtml = `<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;на платное <span class="${pClass}">(${spec.paid.position} из ${spec.paid.plan})</span>`;
+                }
+
+                html += `
+                    <a href="${spec.url}" class="search-result-item">
+                        <div class="search-result-name">${spec.name}</div>
+                        <div class="search-result-info">
+                            Ваша позиция: на бюджет <span class="${bClass}">(${spec.budget.position} из ${spec.budget.plan})</span>${paidHtml}
+                        </div>
+                    </a>
+                `;
+            });
+
+            resultsBox.innerHTML = html;
+            resultsBox.style.display = 'block';
+            defaultGrid.style.display = 'none';
+        }
+
+        document.getElementById('score-search').addEventListener('input', handleSearchInput);
+
+        // Инициализируем фоновую подгрузку базы
+        window.onload = loadDatabase;
+
+        // Скрипт плавных анимированных переходов между страницами
+        document.addEventListener('DOMContentLoaded', () => {
+            const links = document.querySelectorAll('a');
+            links.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href && !href.startsWith('#') && !href.startsWith('javascript:') && link.hostname === window.location.hostname) {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const targetUrl = link.href;
+                        const container = document.querySelector('.container');
+                        if (container) {
+                            container.style.transition = 'opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)';
+                            container.style.opacity = '0';
+                            container.style.transform = 'translateY(-6px)';
+                        }
+                        setTimeout(() => {
+                            window.location.href = targetUrl;
+                        }, 220);
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>

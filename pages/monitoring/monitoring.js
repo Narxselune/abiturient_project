@@ -1,6 +1,12 @@
-﻿// Переменная GID берется из настроек конкретной страницы (если задана) или по умолчанию 0
+﻿// monitoring.js
+
+// Переменная GID берется из настроек конкретной страницы (если задана) или по умолчанию 0
 const CURRENT_GID = typeof GID !== 'undefined' ? GID : '0';
 const XLSX_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=xlsx&id=${SHEET_ID}&gid=${CURRENT_GID}`;
+
+// Глобальные переменные для переключения бюджета/платного и кэширования всей таблицы
+let cachedWorkbook = null;
+let currentCategory = 'budget';
 
 // Чтение ячейки Excel
 function getCell(sheet, r, c) {
@@ -61,30 +67,31 @@ function renderMonitoringPage(s) {
     let totalAll = totalCommon + totalLgota + totalTarget;
 
     let html = `
-    <div class="spec-card">
-        <h1 class="spec-title">${s.name}</h1>
-        <div class="info-line">
-            <strong>Прием:</strong>
-            <div class="badge-container">
-                <span class="badge badge-budget">за счет средств бюджета</span>
-                <span class="badge badge-paid">на платной основе</span>
-            </div>
-        </div>
-        <div class="info-line"><strong>Форма обучения:</strong> ${s.educationForm}</div>
-        <div class="info-line"><strong>Прием осуществляется на основе:</strong> ${s.base}</div>
-        <div class="info-line"><strong>Срок обучения:</strong> ${s.duration}</div>
-        <div class="info-line"><strong>План приема:</strong> ${s.plan} | <b>Целевой план:</b> ${s.planTarget}</div>
-        <div class="stat-box">
-            <div class="stat-title">Всего заявлений подано: ${totalAll}</div>
-            <div class="stat-row">По общему конкурсу: ${totalCommon}</div>
-            <div class="stat-row">Льготные вне конкурса: ${totalLgota}</div>
-            <div class="stat-row">Целевые: ${totalTarget}</div>
-        </div>
-    </div>`;
+    <div class="spec-card">
+        <h1 class="spec-title">${s.name}</h1>
+        <div class="info-line">
+            <strong>Прием:</strong>
+            <div class="badge-container">
+                <!-- Кнопки выбора категории (бюджет / платно) -->
+                <button class="badge badge-budget ${currentCategory === 'budget' ? 'active' : ''}" onclick="switchCategory('budget')">за счет средств бюджета</button>
+                <button class="badge badge-paid ${currentCategory === 'paid' ? 'active' : ''}" onclick="switchCategory('paid')">на платной основе</button>
+            </div>
+        </div>
+        <div class="info-line"><strong>Форма обучения:</strong> ${s.educationForm}</div>
+        <div class="info-line"><strong>Прием осуществляется на основе:</strong> ${s.base}</div>
+        <div class="info-line"><strong>Срок обучения:</strong> ${s.duration}</div>
+        <div class="info-line"><strong>План приема:</strong> ${s.plan} | <b>Целевой план:</b> ${s.planTarget}</div>
+        <div class="stat-box">
+            <div class="stat-title">Всего заявлений подано: ${totalAll}</div>
+            <div class="stat-row">По общему конкурсу: ${totalCommon}</div>
+            <div class="stat-row">Льготные вне конкурса: ${totalLgota}</div>
+            <div class="stat-row">Целевые: ${totalTarget}</div>
+        </div>
+    </div>`;
 
     if (s.applications.length > 0) {
         html += `\n<h2 class="section-title">Заявления по баллам:</h2>
-        <div class="bar-table-wrapper"><table class="bar-table"><thead><tr>`;
+        <div class="bar-table-wrapper"><table class="bar-table"><thead><tr>`;
         s.applications.forEach(a => html += `<th>${a.score.toFixed(1)}</th>`);
         html += `</tr></thead><tbody><tr>`;
         s.applications.forEach(a => {
@@ -107,7 +114,7 @@ function renderMonitoringPage(s) {
 
     if (s.lgota.length > 0) {
         html += `\n<h2 class="section-title">Льготные вне конкурса по баллам:</h2>
-        <div class="bar-table-wrapper" style="max-width: 250px;"><table class="bar-table"><thead><tr>`;
+        <div class="bar-table-wrapper" style="max-width: 250px;"><table class="bar-table"><thead><tr>`;
         s.lgota.forEach(a => html += `<th>${a.score.toFixed(1)}</th>`);
         html += `</tr></thead><tbody><tr>`;
         s.lgota.forEach(a => html += `<td class="cell-green">${a.count}</td>`);
@@ -128,7 +135,7 @@ function renderMonitoringPage(s) {
         };
 
         html += `\n<h2 class="section-title">Целевые по баллам:</h2>
-        <div class="bar-table-wrapper" style="max-width: 150px;"><table class="bar-table"><thead><tr>`;
+        <div class="bar-table-wrapper" style="max-width: 150px;"><table class="bar-table"><thead><tr>`;
         s.target.forEach(a => html += `<th>${a.score.toFixed(1)}</th>`);
         html += `</tr></thead><tbody><tr>`;
         s.target.forEach(a => {
@@ -144,17 +151,31 @@ function renderMonitoringPage(s) {
     return html;
 }
 
-// Запуск при загрузке
-async function initMonitoring() {
+// Загрузка книги и рендеринг страницы
+async function loadAndRender(gid, offset) {
     try {
-        const response = await fetch(XLSX_URL);
-        if (!response.ok) throw new Error("Ошибка загрузки");
+        let workbook = cachedWorkbook;
 
-        const buffer = await response.arrayBuffer();
-        const workbook = XLSX.read(buffer, { type: 'array' });
-        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        // Если документ XLSX еще не загружен с сервера — загружаем его один раз
+        if (!workbook) {
+            const response = await fetch(XLSX_URL);
+            if (!response.ok) throw new Error("Ошибка загрузки");
+            const buffer = await response.arrayBuffer();
+            workbook = XLSX.read(buffer, { type: 'array' });
+            cachedWorkbook = workbook; // Кэшируем всю структуру книги в памяти
+        }
 
-        const currentSpecData = parseBlock(sheet, SPEC_OFFSET);
+        // Поиск вкладки. По умолчанию берем первый лист (Бюджет),
+        // если передан gid платного (отличный от '0'), переключаемся на вторую вкладку книги.
+        let sheetName = workbook.SheetNames[0];
+        if (gid !== '0') {
+            if (workbook.SheetNames.length > 1) {
+                sheetName = workbook.SheetNames[1]; // Вторая вкладка в Excel (Платное отделение)
+            }
+        }
+
+        const sheet = workbook.Sheets[sheetName];
+        const currentSpecData = parseBlock(sheet, offset);
 
         if (currentSpecData) {
             document.getElementById('monitor-content').innerHTML = renderMonitoringPage(currentSpecData);
@@ -164,36 +185,62 @@ async function initMonitoring() {
     } catch (error) {
         console.error(error);
         document.getElementById('loading-overlay').innerHTML = `
-            <div style="color: red; padding: 20px; font-weight: 500;">
-                ⚠️ Ошибка загрузки данных мониторинга.
-            </div>`;
+            <div style="color: red; padding: 20px; font-weight: 500;">
+                ⚠️ Ошибка загрузки данных мониторинга.
+            </div>`;
     }
+}
+
+// Функция мгновенного переключения направления приема (Бюджет / Платно)
+async function switchCategory(category) {
+    if (currentCategory === category) return;
+    currentCategory = category;
+
+    // Скрываем текущий контент и показываем текстовую заглушку загрузки
+    document.getElementById('monitor-content').style.display = 'none';
+    document.getElementById('loading-overlay').style.display = 'block';
+    document.getElementById('loading-overlay').innerHTML = `
+        <div style="text-align: center; padding: 20px; color: #666; font-style: italic;">
+            Загрузка отделения...
+        </div>`;
+
+    let targetGid = '0';
+    let targetOffset = typeof SPEC_OFFSET !== 'undefined' ? SPEC_OFFSET : 0;
+
+    if (category === 'budget') {
+        targetGid = typeof GID_BUDGET !== 'undefined' ? GID_BUDGET : (typeof GID !== 'undefined' ? GID : '0');
+        targetOffset = typeof SPEC_OFFSET_BUDGET !== 'undefined' ? SPEC_OFFSET_BUDGET : (typeof SPEC_OFFSET !== 'undefined' ? SPEC_OFFSET : 0);
+    } else {
+        // Для Платного отделения. Если в HTML не задан GID_PAID, '1' служит флагом перехода на 2-ю вкладку
+        targetGid = typeof GID_PAID !== 'undefined' ? GID_PAID : '1';
+        targetOffset = typeof SPEC_OFFSET_PAID !== 'undefined' ? SPEC_OFFSET_PAID : (typeof SPEC_OFFSET !== 'undefined' ? SPEC_OFFSET : 0);
+    }
+
+    // Рендерим страницу из кэша
+    await loadAndRender(targetGid, targetOffset);
+}
+
+// Первоначальный запуск при открытии страницы
+async function initMonitoring() {
+    const startGid = typeof GID !== 'undefined' ? GID : '0';
+    const startOffset = typeof SPEC_OFFSET !== 'undefined' ? SPEC_OFFSET : 0;
+    await loadAndRender(startGid, startOffset);
 }
 
 window.addEventListener('DOMContentLoaded', initMonitoring);
 
 // Автоматическое сохранение текущей страницы в историю просмотров
 (function () {
-    // Получаем название специальности из <title> страницы и текущий путь
     const specTitle = document.title;
     const specUrl = window.location.pathname;
 
-    // Игнорируем главную страницу и пустые переходы
     if (specTitle && specUrl && !specUrl.endsWith('index.html') && !specUrl.endsWith('/')) {
         let history = JSON.parse(localStorage.getItem('recently_viewed_specs')) || [];
-
-        // Удаляем страницу из истории, если она там уже была (для обновления ее позиции на первую строчку)
         history = history.filter(item => item.url !== specUrl);
-
-        // Добавляем текущую страницу в начало массива
         history.unshift({ title: specTitle, url: specUrl });
-
-        // Ограничиваем размер истории ровно 3 ссылками
         if (history.length > 3) {
             history.pop();
         }
-
-        // Записываем обновленный список в localStorage
         localStorage.setItem('recently_viewed_specs', JSON.stringify(history));
     }
 })();

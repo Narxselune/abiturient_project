@@ -7,10 +7,18 @@
     <link rel="stylesheet" href="../../css/main.css">
 </head>
 <body>
+    <!-- Черно-белая кнопка-домик (вынесена за рамки белого окна, находится на фоне) -->
+    <a href="../../index.html" class="btn-home" title="На главную">
+        <svg viewBox="0 0 24 24">
+            <rect x="16" y="4" width="3" height="5" />
+            <path d="M12 2.5L2 10.5h2v10a1 1 0 0 0 1 1h6v-6h2v6h6a1 1 0 0 0 1-1v-10h2L12 2.5z" />
+        </svg>
+    </a>
+
     <div class="container">
         <header>
             <a href="vo_main.html" class="btn-back">← Назад</a>
-            <h1>Информация по специальностям ВО</h1>
+            <h1>Информация по<br>специальностям ВО</h1>
         </header>
 
         <main>
@@ -23,6 +31,7 @@
                     </select>
                 </div>
 
+                <!-- Контейнер для отображения (будет перерисовываться динамически) -->
                 <div class="slider-book">
                     <h3 id="vo-spec-title">Загрузка...</h3>
                     <p id="vo-spec-text" style="margin-top: 15px; color: #555; line-height: 1.6;"></p>
@@ -37,30 +46,55 @@
         </main>
     </div>
 
+    <!-- Лайтбокс для увеличения картинки на весь экран -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <img id="lightbox-img" class="lightbox-content" src="" alt="Просмотр">
+    </div>
+
     <script>
-        // Данные для Базы 11 классов (строго 5 специальностей)
+        // Данные для Базы 11 классов (выводятся картинки из папки VO_11)
         const voData11 = [
-            { title: "Специальность 1 (ВО, 11 кл.)", text: "" },
-            { title: "Специальность 2 (ВО, 11 кл.)", text: "" },
-            { title: "Специальность 3 (ВО, 11 кл.)", text: "" },
-            { title: "Специальность 4 (ВО, 11 кл.)", text: "" },
-            { title: "Специальность 5 (ВО, 11 кл.)", text: "" }
+            { img: "../../VO_11/photo_1.jpeg" },
+            { img: "../../VO_11/photo_2.jpeg" },
+            { img: "../../VO_11/photo_3.jpeg" },
+            { img: "../../VO_11/photo_4.jpeg" },
+            { img: "../../VO_11/photo_5.jpeg" }
         ];
 
-        // Данные для базы ССО (строго 3 специальности)
+        // Данные для базы ССО (пока текстовые плейсхолдеры)
         const voDataSso = [
-            { title: "Специальность 1 (ВО на базе ССО)", text: "" },
-            { title: "Специальность 2 (ВО на базе ССО)", text: "" },
-            { title: "Специальность 3 (ВО на базе ССО)", text: "" }
+            { title: "Специальность 1 (ВО на базе ССО)", text: "Описание специальности..." },
+            { title: "Специальность 2 (ВО на базе ССО)", text: "Описание специальности..." },
+            { title: "Специальность 3 (ВО на базе ССО)", text: "Описание специальности..." }
         ];
 
         let currentVoData = voData11;
         let currentVoIndex = 0;
 
+        // Интерактивное отображение содержимого слайдера
         function updateVoSlider() {
             const item = currentVoData[currentVoIndex];
-            document.getElementById("vo-spec-title").innerText = item.title;
-            document.getElementById("vo-spec-text").innerText = item.text;
+            const sliderBook = document.querySelector(".slider-book");
+
+            if (item.img) {
+                // Если элемент — изображение, форматируем блок и выводим тег <img>
+                sliderBook.style.padding = "10px";
+                sliderBook.style.display = "flex";
+                sliderBook.style.alignItems = "center";
+                sliderBook.style.justifyContent = "center";
+                sliderBook.style.minHeight = "340px";
+                sliderBook.innerHTML = `<img class="slider-book-img" src="${item.img}" alt="Специальность" onclick="openLightbox(this.src)">`;
+            } else {
+                // Если элемент текстовый, возвращаем базовые отступы
+                sliderBook.style.padding = "40px 20px";
+                sliderBook.style.display = "block";
+                sliderBook.style.minHeight = "250px";
+                sliderBook.innerHTML = `
+                        <h3 id="vo-spec-title" style="margin-bottom: 15px;">${item.title}</h3>
+                        <p id="vo-spec-text" style="color: #555; line-height: 1.6;">${item.text}</p>
+                    `;
+            }
             document.getElementById("vo-page-num").innerText = `${currentVoIndex + 1} / ${currentVoData.length}`;
         }
 
@@ -71,7 +105,7 @@
             } else {
                 currentVoData = voDataSso;
             }
-            currentVoIndex = 0; // Сбрасываем на первую страницу при смене базы
+            currentVoIndex = 0;
             updateVoSlider();
         }
 
@@ -79,7 +113,7 @@
             if (currentVoIndex < currentVoData.length - 1) {
                 currentVoIndex++;
             } else {
-                currentVoIndex = 0; // закольцовываем
+                currentVoIndex = 0;
             }
             updateVoSlider();
         }
@@ -88,13 +122,48 @@
             if (currentVoIndex > 0) {
                 currentVoIndex--;
             } else {
-                currentVoIndex = currentVoData.length - 1; // закольцовываем в обратную сторону
+                currentVoIndex = currentVoData.length - 1;
             }
             updateVoSlider();
         }
 
-        // Первичная инициализация при открытии страницы
+        // Логика управления Лайтбоксом (Модальным окном)
+        function openLightbox(src) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            lightboxImg.src = src;
+            lightbox.classList.add('active');
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+        }
+
         window.onload = updateVoSlider;
+
+        // Скрипт плавных анимированных переходов между страницами
+        document.addEventListener('DOMContentLoaded', () => {
+            const links = document.querySelectorAll('a');
+            links.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href && !href.startsWith('#') && !href.startsWith('javascript:') && link.hostname === window.location.hostname) {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const targetUrl = link.href;
+                        const container = document.querySelector('.container');
+                        if (container) {
+                            container.style.transition = 'opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)';
+                            container.style.opacity = '0';
+                            container.style.transform = 'translateY(-6px)';
+                        }
+                        setTimeout(() => {
+                            window.location.href = targetUrl;
+                        }, 220);
+                    });
+                }
+            });
+        });
     </script>
 </body>
 </html>

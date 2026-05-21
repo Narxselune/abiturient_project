@@ -1,26 +1,54 @@
 /* main.css */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300..900&display=swap');
+
+/* Анимация для ультра-плавного появления страниц */
+@keyframes pageFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(6px); /* Ещё более мягкий и плавный сдвиг */
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+html {
+    overflow-y: scroll; /* Предотвращает скачки макета из-за появления полосы прокрутки */
+    background-color: #F1EEFF; /* Исключает белые вспышки при перезагрузке страниц */
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* Установлен новый читаемый шрифт Nunito */
+    font-family: 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
     background-color: #F1EEFF;
     color: #000000;
-    display: block;
+    /* Перевод в flex-режим для центрирования окна по центру экрана на всех страницах */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 40px 20px;
     min-height: 100vh;
 }
 
 .container {
-    max-width: 1000px;
-    margin: 0 auto;
+    width: 100%;
+    max-width: 800px; /* Компактная ширина окна */
     background-color: #FFFFFF;
-    border-radius: 12px;
+    border-radius: 24px; /* Увеличено закругление до 24px как на главной */
     padding: 30px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    position: relative;
+    /* Смягченный плавный тайминг для ультра-плавного эффекта */
+    animation: pageFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    will-change: transform, opacity;
 }
 
 header {
@@ -34,8 +62,8 @@ header {
 
     /* Защита от наложения заголовков на кнопку "Назад" */
     header h1, header h2 {
-        padding-left: 110px;
-        padding-right: 110px;
+        padding-left: 120px;
+        padding-right: 120px;
     }
 
 h1 {
@@ -45,7 +73,7 @@ h1 {
 }
 
 h2 {
-    font-size: 20px;
+    font-size: 24px;
     color: #444444;
     margin-bottom: 20px;
 }
@@ -76,7 +104,35 @@ nav ul {
                 background-color: #F1EEFF;
             }
 
-/* --- Кнопки --- */
+/* --- Черно-белая кнопка Домой (на фоне в правом углу экрана) --- */
+.btn-home {
+    position: fixed; /* Фиксирует кнопку в углу экрана, вне белого окна */
+    top: 25px;
+    right: 25px;
+    width: 36px; /* Размер уменьшен для аккуратности */
+    height: 36px;
+    text-decoration: none;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 9999; /* Поверх всех элементов */
+    opacity: 0.8;
+}
+
+    .btn-home:hover {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+
+    .btn-home svg {
+        width: 36px; /* Размер уменьшен для аккуратности */
+        height: 36px;
+        fill: #333333; /* Мягкий серый цвет заголовков */
+    }
+
+/* --- Кнопки для всех внутренних страниц --- */
 .btn-grid {
     display: block;
     margin-top: 20px;
@@ -86,18 +142,19 @@ nav ul {
 .btn-item {
     display: block;
     width: 100%;
-    max-width: 420px;
-    margin: 0 auto 16px auto !important; /* !important переопределяет внешние отступы до 16px */
-    padding: 15px 20px;
+    max-width: 550px; /* Увеличено с 450px до 550px для более широкого и просторного вида */
+    margin: 0 auto 20px auto !important; /* Увеличен отступ между кнопками до 20px */
+    padding: 18px 30px; /* Кнопки стали выше и шире */
     background-color: #8CBEFF;
     color: #000000;
     text-decoration: none;
     text-align: center;
     font-weight: bold;
-    border-radius: 8px;
+    border-radius: 24px; /* Закругление приведено к единому стилю в 24px */
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     transition: transform 0.2s, background-color 0.2s;
     box-sizing: border-box;
+    font-size: 23px; /* Увеличено с 19px до 23px для лучшей читаемости */
 }
 
     .btn-item:hover {
@@ -124,11 +181,12 @@ nav ul {
         margin-bottom: 25px;
         padding-bottom: 5px;
         border-bottom: 2px solid #8CBEFF;
+        font-size: 22px; /* Увеличен размер заголовков в колонках */
     }
 
     /* Выравнивание кнопок внутри колонок */
     .column .btn-item {
-        max-width: 420px;
+        max-width: 550px; /* Ограничение длины кнопок в колонках */
         margin-left: auto !important;
         margin-right: auto !important;
     }
@@ -136,7 +194,7 @@ nav ul {
 /* Описание срока обучения */
 .spec-duration {
     display: block;
-    font-size: 14px;
+    font-size: 15px; /* Сделано крупнее */
     opacity: 0.8;
     margin-top: 8px; /* Дополнительный отступ сверху для разделения, чтобы текст не сливался */
     font-weight: normal;
@@ -149,7 +207,7 @@ nav ul {
     text-align: center;
     border: 1px solid #E0E0E0;
     padding: 20px;
-    border-radius: 8px;
+    border-radius: 24px; /* Скругление слайдера */
     background: #FAFAFA;
 }
 
@@ -170,10 +228,29 @@ nav ul {
     padding: 40px 20px;
     background: #FFFFFF;
     border: 2px solid #8CBEFF;
-    border-radius: 6px;
+    border-radius: 24px; /* Скругление книги в слайдере */
     min-height: 250px;
     box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
 }
+
+    .slider-book h3 {
+        font-size: 24px; /* Увеличено название в книге */
+    }
+
+/* Стилизация изображений внутри слайдера */
+.slider-book-img {
+    max-width: 100%;
+    max-height: 320px;
+    object-fit: contain;
+    border-radius: 16px; /* Закругление слайдов-картинок */
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    user-select: none;
+}
+
+    .slider-book-img:hover {
+        transform: scale(1.02); /* Легкий интерактивный наезд при наведении */
+    }
 
 .slider-nav-btns {
     margin-top: 15px;
@@ -183,7 +260,7 @@ nav ul {
     padding: 10px 20px;
     background-color: #8CBEFF;
     border: none;
-    border-radius: 4px;
+    border-radius: 24px; /* Скругление стрелок */
     font-weight: bold;
     cursor: pointer;
     margin: 0 10px;
@@ -191,6 +268,59 @@ nav ul {
 
     .btn-arrow:hover {
         background-color: #72aeff;
+    }
+
+/* --- Стили для Лайтбокса (Увеличение фото при клике) --- */
+.lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+    .lightbox.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+.lightbox-content {
+    max-width: 90%;
+    max-height: 85%;
+    border-radius: 16px; /* Округление модального окна */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transform: scale(0.93);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    user-select: none;
+    object-fit: contain;
+}
+
+.lightbox.active .lightbox-content {
+    transform: scale(1); /* Плавное увеличение */
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 25px;
+    right: 35px;
+    color: #ffffff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    user-select: none;
+}
+
+    .lightbox-close:hover {
+        transform: scale(1.15);
     }
 
 /* Таблицы мониторинга */
@@ -217,44 +347,67 @@ nav ul {
 
 /* --- Стили для карт специальностей (по ссылке) --- */
 .spec-card {
-    border-left: 5px solid #007bff;
-    border-top: 1px solid #E0E0E0;
-    border-right: 1px solid #E0E0E0;
-    border-bottom: 1px solid #E0E0E0;
-    border-radius: 8px;
-    padding: 20px;
-    margin: 20px 0;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    border-left: 6px solid #007bff;
+    border-top: 1px solid #E2E8F0;
+    border-right: 1px solid #E2E8F0;
+    border-bottom: 1px solid #E2E8F0;
+    border-radius: 24px; /* Увеличено до 24px для единства с контейнером */
+    padding: 18px 20px; /* Снижены внутренние отступы для компактности */
+    margin: 12px 0 25px 0; /* Оптимизированы внешние отступы */
+    background-color: #F8FAFC; /* Мягкий фоновый цвет карточки по макету */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
 }
 
 .spec-title {
-    font-size: 22px;
+    font-size: 26px; /* Компактное и аккуратное название */
     font-weight: bold;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
+    color: #1A202C;
 }
 
 .info-line {
-    margin-bottom: 10px;
-    font-size: 15px;
+    margin-bottom: 8px; /* Уплотнено расстояние между строками */
+    font-size: 16px; /* Высокочитаемый компактный размер текста */
+    color: #2D3748;
 }
 
     .info-line strong {
         color: #007bff;
+        font-weight: 700;
     }
 
-/* План приема / Бюджет */
+/* Кнопки переключения Бюджет / Платно */
 .badge-container {
-    display: inline-block;
-    margin-left: 10px;
+    display: inline-flex;
+    gap: 8px;
+    margin-left: 8px;
+    vertical-align: middle;
 }
 
 .badge {
     display: inline-block;
-    padding: 4px 12px;
-    border-radius: 12px;
-    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 24px; /* Скругление до 24px */
+    font-size: 13px;
     font-weight: bold;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0.45; /* Неактивные кнопки приглушены по умолчанию */
+    filter: grayscale(30%);
+    font-family: inherit;
+    outline: none;
 }
+
+    .badge:focus {
+        outline: none;
+    }
+
+    .badge.active {
+        opacity: 1; /* Полная видимость у активной кнопки */
+        filter: none;
+        box-shadow: 0 2px 6px rgba(0, 123, 255, 0.15);
+    }
 
 .badge-budget {
     background-color: #007bff;
@@ -265,61 +418,67 @@ nav ul {
     background-color: #D6E6FF;
     color: #007bff;
     border: 1px solid #8CBEFF;
-    margin-left: 5px;
 }
 
-/* Статистика блока "Всего подано" */
+/* Статистика блока "Всего подано" (внутри карточки) */
 .stat-box {
-    border: 1px solid #999;
-    border-radius: 10px;
-    padding: 12px 15px;
-    margin-top: 15px;
-    max-width: 400px;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px; /* Закругление до 16px для внутренних рамок */
+    padding: 10px 14px; /* Компактное заполнение */
+    margin-top: 12px;
+    max-width: 360px; /* Аккуратная узкая форма */
     background-color: #FFFFFF;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.01);
 }
 
 .stat-title {
     color: #007bff;
-    font-weight: bold;
-    margin-bottom: 8px;
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 6px;
 }
 
 .stat-row {
     margin-bottom: 4px;
+    font-size: 15px;
+    color: #4A5568;
 }
 
 /* Таблицы конкурса по баллам */
 .section-title {
     color: #007bff;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 18px; /* Оптимальный размер */
+    font-weight: 700;
     margin: 25px 0 10px 0;
 }
 
 .bar-table-wrapper {
     overflow-x: auto;
     margin-bottom: 20px;
+    border-radius: 16px; /* Скругление до 16px */
+    border: 1px solid #E2E8F0;
 }
 
 .bar-table {
     border-collapse: collapse;
     text-align: center;
-    font-size: 14px;
+    font-size: 15px;
     min-width: 100%;
+    background-color: #FFFFFF;
 }
 
     .bar-table th {
-        background-color: #E5E5E5;
-        color: #333333;
-        font-weight: normal;
-        border: 1px solid #CCCCCC;
-        padding: 8px 5px;
+        background-color: #F1F5F9;
+        color: #4A5568;
+        font-weight: 600;
+        border: 1px solid #E2E8F0;
+        padding: 8px 10px;
     }
 
     .bar-table td {
-        border: 1px solid #CCCCCC;
+        border: 1px solid #E2E8F0;
         font-weight: bold;
-        padding: 8px 5px;
+        padding: 10px 10px;
     }
 
 /* Цвета ячеек в соответствии с конкурсом */
@@ -346,14 +505,14 @@ nav ul {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 8px 16px;
-    background-color: transparent; /* Цвет как цвет фона контейнера */
+    padding: 10px 20px; /* Увеличен внутренний отступ */
+    background-color: transparent;
     color: #000000;
     text-decoration: none;
     border: 1px solid #D5D5D5; /* Серая обводка */
-    border-radius: 30px; /* Скругленная форма как на фото 3 */
-    font-weight: 600;
-    font-size: 14px;
+    border-radius: 30px; /* Скругленная форма */
+    font-weight: 700;
+    font-size: 16px; /* Размер шрифта увеличен до 16px */
     transition: all 0.2s ease;
 }
 
@@ -362,24 +521,46 @@ nav ul {
         border-color: #B5B5B5;
     }
 
-/* Адаптивность для мобильных экранов (перенос заголовка под кнопку назад) */
+/* Адаптивность для мобильных экранов */
 @media (max-width: 768px) {
+    body {
+        padding: 80px 15px 40px 15px; /* Дополнительный отступ сверху для мобильных, чтобы не перекрывать кнопки в углах */
+    }
+
     header {
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding-top: 50px; /* Освобождаем место сверху под кнопку */
+        padding-top: 10px;
+        margin-bottom: 20px;
     }
 
         header h1, header h2 {
             padding-left: 0;
             padding-right: 0;
+            font-size: 32px; /* Чуть уменьшаем заголовки на мобильном */
         }
 
     .btn-back {
-        left: 50%;
-        transform: translateX(-50%); /* Центрирование кнопки сверху на мобильных */
-        top: 0;
+        position: absolute;
+        left: 0;
+        top: -60px; /* Смещаем кнопку Назад наверх, над белым окном */
+    }
+
+    .btn-home {
+        top: 20px;
+        right: 20px;
+    }
+
+    /* Адаптация колонок: дневное сверху, заочное снизу */
+    .columns-container {
+        flex-direction: column;
+        gap: 30px;
+        margin-top: 15px;
+    }
+
+    .column {
+        width: 100%;
     }
 }
 
@@ -404,12 +585,12 @@ nav ul {
 
 /* Настройки полупрозрачного белого окна */
 .container-main {
-    max-width: 800px;
+    max-width: 900px;
     width: 100%;
     border-radius: 24px;
-    padding: 60px 50px;
-    /* Полупрозрачный белый цвет фона без эффекта размытия (стекла) */
-    background-color: rgba(255, 255, 255, 0.7) !important;
+    padding: 70px 50px;
+    /* Полупрозрачный белый цвет фона (альфа-канал 0.8) */
+    background-color: rgba(255, 255, 255, 0.8) !important;
     /* Более контрастная тень для читаемости поверх фотографии */
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
     text-align: center;
@@ -441,22 +622,33 @@ nav ul {
     width: 100%;
 }
 
-    /* Кнопки на главной странице */
+    /* Кнопки на главной странице (имеют приоритетный селектор над базовым .btn-item) */
     .btn-grid-main .btn-item {
         width: 100%;
-        max-width: 480px;
+        max-width: 620px; /* Уменьшено до 620px для аккуратности */
         margin: 0 !important;
         display: flex;
         align-items: center;
         justify-content: center;
         min-height: 65px;
         padding: 15px 30px;
-        font-size: 16px;
+        font-size: 22px;
+        font-weight: 600;
         line-height: 1.4;
-        border-radius: 12px;
+        border-radius: 24px; /* Единый стиль закругления кнопок */
         background-color: #8CBEFF;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+        white-space: nowrap; /* Запрет переноса на новую строку для настольных ПК */
     }
+
+/* Адаптивность для кнопок главной на телефонах */
+@media (max-width: 768px) {
+    .btn-grid-main .btn-item {
+        white-space: normal; /* Разрешаем перенос текста на узких экранах, чтобы кнопки не уходили за края */
+        font-size: 18px; /* Уменьшаем размер шрифта на смартфонах */
+        padding: 12px 20px;
+    }
+}
 
 /* --- Секция "Вы недавно смотрели" с выравниванием как на фото --- */
 .recently-viewed {
@@ -492,3 +684,108 @@ nav ul {
         .recently-viewed-links a:hover {
             text-decoration: underline;
         }
+
+/* ==========================================================================
+   СТИЛИ ДЛЯ СТРАНИЦЫ ПОИСКА ПО БАЛЛАМ (sso_9_classes.html)
+   ========================================================================== */
+
+.search-container {
+    position: relative;
+    width: 100%;
+    max-width: 550px; /* Увеличено с 450px до 550px для соответствия кнопкам */
+    margin: 0 auto 20px auto;
+}
+
+.score-search-input {
+    width: 100%;
+    padding: 14px 45px 14px 20px;
+    font-size: 18px;
+    border: 2px solid #8CBEFF;
+    border-radius: 24px; /* Закругление введено к единому стилю */
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-family: inherit;
+}
+
+    .score-search-input:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+    }
+
+.search-clear {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #A0AEC0;
+    cursor: pointer;
+    user-select: none;
+    display: none; /* Скрыт по умолчанию, показывается при вводе текста */
+}
+
+    .search-clear:hover {
+        color: #4A5568;
+    }
+
+/* Блок результатов поиска по среднему баллу */
+.search-results-box {
+    border: 2px solid #8CBEFF;
+    border-radius: 24px; /* Закругление введено к единому стилю */
+    background-color: #FFFFFF;
+    margin-top: 10px;
+    margin-bottom: 25px;
+    width: 100%;
+    max-width: 550px; /* Увеличено с 450px до 550px для соответствия кнопкам */
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+    text-align: left;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.search-result-item {
+    padding: 14px 16px;
+    border-bottom: 1px solid #E2E8F0;
+    transition: background-color 0.2s;
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+    .search-result-item:hover {
+        background-color: #F8FAFC;
+    }
+
+    .search-result-item:last-child {
+        border-bottom: none;
+    }
+
+.search-result-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #1A202C;
+    margin-bottom: 4px;
+}
+
+.search-result-info {
+    font-size: 15px;
+    color: #718096;
+    line-height: 1.5;
+}
+
+/* Цветные классы для подсветки результатов */
+.text-green {
+    color: #2ecc71;
+    font-weight: bold;
+}
+
+.text-yellow {
+    color: #f39c12; /* Приближенный к оранжевому по Photo 2 */
+    font-weight: bold;
+}
+
+.text-red {
+    color: #e74c3c;
+    font-weight: bold;
+}
