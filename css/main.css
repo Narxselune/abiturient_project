@@ -493,7 +493,7 @@ nav ul {
 .info-line {
     margin-bottom: 8px; /* Уплотнено расстояние между строками */
     font-size: 16px; /* Высокочитаемый компактный размер текста */
-    color: #2D3748;
+    color: #000000;
 }
 
 .dark-mode .info-line {
@@ -587,11 +587,11 @@ nav ul {
 .stat-row {
     margin-bottom: 4px;
     font-size: 15px;
-    color: #4A5568;
+    color: #000000;
 }
 
 .dark-mode .stat-row {
-    color: #CCCCCC;
+    color: #E2E8F0;
 }
 
 /* Таблицы конкурса по баллам */
