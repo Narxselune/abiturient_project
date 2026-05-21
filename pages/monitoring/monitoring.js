@@ -80,9 +80,9 @@ function renderMonitoringPage(s) {
         <div class="info-line"><strong>Форма обучения:</strong> ${s.educationForm}</div>
         <div class="info-line"><strong>Прием осуществляется на основе:</strong> ${s.base}</div>
         <div class="info-line"><strong>Срок обучения:</strong> ${s.duration}</div>
-        <div class="info-line"><strong>План приема:</strong> ${s.plan} | <b>Целевой план:</b> ${s.planTarget}</div>
+        <div class="info-line"><strong>План приема:</strong> ${s.plan} | <strong>Целевой план:</strong> ${s.planTarget}</div>
         <div class="stat-box">
-            <div class="stat-title">Всего заявлений подано: ${totalAll}</div>
+            <div class="info-line"><strong>Всего заявлений подано:</strong> ${totalAll}</div>
             <div class="stat-row">По общему конкурсу: ${totalCommon}</div>
             <div class="stat-row">Льготные вне конкурса: ${totalLgota}</div>
             <div class="stat-row">Целевые: ${totalTarget}</div>
