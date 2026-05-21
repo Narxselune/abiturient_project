@@ -133,13 +133,13 @@
         const XLSX_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=xlsx`;
 
         const specsConfig = [
-            { id: 1, name: "Техническая эксплуатация систем и сетей телекоммуникаций (Дневное)", offset: 356, hasPaid: false, url: "../monitoring/mon_sso_11_dnev_spec1.html" },
-            { id: 2, name: "Техническая эксплуатация систем радиосвязи, радиовещания и телевидения (Дневное)", offset: 388, hasPaid: false, url: "../monitoring/mon_sso_11_dnev_spec2.html" },
-            { id: 3, name: "Почтовая деятельность (Дневное)", offset: 420, hasPaid: false, url: "../monitoring/mon_sso_11_dnev_spec3.html" },
-            { id: 4, name: "Тестирование программного обеспечения (Дневное)", offset: 324, hasPaid: false, url: "../monitoring/mon_sso_11_dnev_spec4.html" },
-            { id: 5, name: "Техническая эксплуатация систем и сетей телекоммуникаций (Заочное)", offset: 454, hasPaid: false, url: "../monitoring/mon_sso_11_zaoch_spec5.html" },
-            { id: 6, name: "Техническая эксплуатация систем радиосвязи, радиовещания и телевидения (Заочное)", offset: 486, hasPaid: false, url: "../monitoring/mon_sso_11_zaoch_spec6.html" },
-            { id: 7, name: "Почтовая деятельность (Заочное)", offset: 518, hasPaid: false, url: "../monitoring/mon_sso_11_zaoch_spec7.html" }
+            { id: 1, name: "Техническая эксплуатация систем и сетей телекоммуникаций (Дневное)", offset: 356, hasPaid: true, offsetPaid: 372, url: "../monitoring/mon_sso_11_dnev_spec1.html" },
+            { id: 2, name: "Техническая эксплуатация систем радиосвязи, радиовещания и телевидения (Дневное)", offset: 388, hasPaid: true, offsetPaid: 404, url: "../monitoring/mon_sso_11_dnev_spec2.html" },
+            { id: 3, name: "Почтовая деятельность (Дневное)", offset: 420, hasPaid: true, offsetPaid: 436, url: "../monitoring/mon_sso_11_dnev_spec3.html" },
+            { id: 4, name: "Тестирование программного обеспечения (Дневное)", offset: 324, hasPaid: true, offsetPaid: 340, url: "../monitoring/mon_sso_11_dnev_spec4.html" },
+            { id: 5, name: "Техническая эксплуатация систем и сетей телекоммуникаций (Заочное)", offset: 454, hasPaid: true, offsetPaid: 470, url: "../monitoring/mon_sso_11_zaoch_spec5.html" },
+            { id: 6, name: "Техническая эксплуатация систем радиосвязи, радиовещания и телевидения (Заочное)", offset: 486, hasPaid: true, offsetPaid: 502, url: "../monitoring/mon_sso_11_zaoch_spec6.html" },
+            { id: 7, name: "Почтовая деятельность (Заочное)", offset: 518, hasPaid: true, offsetPaid: 534, url: "../monitoring/mon_sso_11_zaoch_spec7.html" }
         ];
 
         let workbookCache = null;
