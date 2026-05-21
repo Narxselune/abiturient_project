@@ -179,7 +179,6 @@ async function switchCategory(category) {
     if (currentCategory === category) return;
     currentCategory = category;
 
-    // Скрываем текущий контент и показываем текстовую заглушку загрузки
     document.getElementById('monitor-content').style.display = 'none';
     document.getElementById('loading-overlay').style.display = 'block';
     document.getElementById('loading-overlay').innerHTML = `
@@ -203,7 +202,6 @@ async function switchCategory(category) {
 
 // Первоначальный запуск при открытии страницы
 async function initMonitoring() {
-    // По умолчанию всегда загружаем бюджетную версию при старте
     const startGid = typeof GID_BUDGET !== 'undefined' ? GID_BUDGET : (typeof GID !== 'undefined' ? GID : '0');
     const startOffset = typeof SPEC_OFFSET_BUDGET !== 'undefined' ? SPEC_OFFSET_BUDGET : (typeof SPEC_OFFSET !== 'undefined' ? SPEC_OFFSET : 0);
 
@@ -211,6 +209,23 @@ async function initMonitoring() {
 }
 
 window.addEventListener('DOMContentLoaded', initMonitoring);
+
+// Автоматическое исправление регистра кнопки "Назад" и удаление дублирующихся домиков
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Принудительно меняем строчную "← назад" на заглавную "← Назад"
+    const backBtn = document.querySelector('.btn-back');
+    if (backBtn) {
+        backBtn.innerHTML = '← Назад';
+    }
+
+    // 2. Находим все кнопки "Домой" на странице и удаляем дубликаты (оставляем только первую)
+    const homeButtons = document.querySelectorAll('.btn-home');
+    if (homeButtons.length > 1) {
+        for (let i = 1; i < homeButtons.length; i++) {
+            homeButtons[i].remove();
+        }
+    }
+});
 
 // Автоматическое сохранение текущей страницы в историю просмотров
 (function () {

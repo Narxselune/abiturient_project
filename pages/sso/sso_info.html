@@ -10,9 +10,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Информация по специальностям ССО</title>
     <link rel="stylesheet" href="../../css/main.css">
+
+    <style>
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: rgba(0, 0, 0, 0.35);
+            }
+
+        .dark-mode ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+            .dark-mode ::-webkit-scrollbar-thumb:hover {
+                background: rgba(255, 255, 255, 0.35);
+            }
+
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+        }
+
+        .dark-mode * {
+            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+        }
+
+        .btn-home svg, .btn-theme svg {
+            fill: currentColor !important;
+        }
+    </style>
 </head>
 <body>
-    <!-- Кнопки Домой и Переключения темы вне белого окна -->
     <a href="../../index.html" class="btn-home" title="На главную">
         <svg viewBox="0 0 24 24">
             <rect x="16" y="4" width="3" height="5" />
@@ -22,13 +62,6 @@
     <a href="javascript:void(0)" class="btn-theme" onclick="toggleTheme()" title="Переключить тему">
         <svg id="theme-icon" viewBox="0 0 24 24">
             <path d="M12.3 22h-.1c-5.5 0-10-4.5-10-10 0-4.8 3.5-9 8.3-9.8.5-.1 1 .2 1.2.7.2.5 0 1.1-.4 1.4-3.5 2.5-4.2 7.4-1.7 10.9 2.5 3.5 7.4 4.2 10.9 1.7.4-.3 1-.3 1.4.1.4.4.5.9.2 1.4-1.8 2.3-4.5 3.6-7.8 3.6z" />
-        </svg>
-    </a>
-    <!-- Черно-белая кнопка-домик (вынесена за рамки белого окна, находится на фоне) -->
-    <a href="../../index.html" class="btn-home" title="На главную">
-        <svg viewBox="0 0 24 24">
-            <rect x="16" y="4" width="3" height="5" />
-            <path d="M12 2.5L2 10.5h2v10a1 1 0 0 0 1 1h6v-6h2v6h6a1 1 0 0 0 1-1v-10h2L12 2.5z" />
         </svg>
     </a>
 
@@ -49,7 +82,6 @@
                     </select>
                 </div>
 
-                <!-- Контейнер для отображения (будет перерисовываться динамически) -->
                 <div class="slider-book">
                     <h3 id="spec-title">Загрузка...</h3>
                     <p id="spec-text" style="margin-top: 15px; color: #555; line-height: 1.6;"></p>
@@ -64,14 +96,12 @@
         </main>
     </div>
 
-    <!-- Лайтбокс для увеличения картинки на весь экран -->
     <div id="lightbox" class="lightbox" onclick="closeLightbox()">
         <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
         <img id="lightbox-img" class="lightbox-content" src="" alt="Просмотр">
     </div>
 
     <script>
-        // Данные для Базы 9 классов (выводятся картинки из папки SSO)
         const data9 = [
             { img: "../../SSO/photo_1.jpeg" },
             { img: "../../SSO/photo_2.jpeg" },
@@ -82,7 +112,6 @@
             { img: "../../SSO/photo_7.jpeg" }
         ];
 
-        // Данные для Базы 11 классов (пока текстовые плейсхолдеры)
         const data11 = [
             { img: "../../SSO/photo_1.jpeg" },
             { img: "../../SSO/photo_2.jpeg" },
@@ -90,7 +119,6 @@
             { img: "../../SSO/photo_5.jpeg" }
         ];
 
-        // Данные для базы ПТО (текстовые плейсхолдеры)
         const dataPto = [
             { img: "../../SSO/photo_5.jpeg" }
         ];
@@ -98,13 +126,11 @@
         let currentData = data9;
         let currentIndex = 0;
 
-        // Интерактивное отображение содержимого слайдера
         function updateSlider() {
             const item = currentData[currentIndex];
             const sliderBook = document.querySelector(".slider-book");
 
             if (item.img) {
-                // Если элемент — изображение, форматируем блок и выводим тег <img>
                 sliderBook.style.padding = "10px";
                 sliderBook.style.display = "flex";
                 sliderBook.style.alignItems = "center";
@@ -112,14 +138,13 @@
                 sliderBook.style.minHeight = "340px";
                 sliderBook.innerHTML = `<img class="slider-book-img" src="${item.img}" alt="Специальность" onclick="openLightbox(this.src)">`;
             } else {
-                // Если элемент текстовый, возвращаем базовые отступы
                 sliderBook.style.padding = "40px 20px";
                 sliderBook.style.display = "block";
                 sliderBook.style.minHeight = "250px";
                 sliderBook.innerHTML = `
-                                <h3 id="spec-title" style="margin-bottom: 15px;">${item.title}</h3>
-                                <p id="spec-text" style="color: #555; line-height: 1.6;">${item.text}</p>
-                            `;
+                                    <h3 id="spec-title" style="margin-bottom: 15px;">${item.title}</h3>
+                                    <p id="spec-text" style="color: #555; line-height: 1.6;">${item.text}</p>
+                                `;
             }
             document.getElementById("page-num").innerText = `${currentIndex + 1} / ${currentData.length}`;
         }
@@ -157,7 +182,6 @@
             updateSlider();
         }
 
-        // Логика управления Лайтбоксом (Модальным окном)
         function openLightbox(src) {
             const lightbox = document.getElementById('lightbox');
             const lightboxImg = document.getElementById('lightbox-img');
@@ -170,9 +194,37 @@
             lightbox.classList.remove('active');
         }
 
+        document.addEventListener('keydown', (e) => {
+            const activeEl = document.activeElement;
+            if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.tagName === 'SELECT')) {
+                return;
+            }
+
+            if (e.key === 'ArrowLeft') {
+                prevPage();
+                const lightbox = document.getElementById('lightbox');
+                if (lightbox && lightbox.classList.contains('active')) {
+                    const activeImg = currentData[currentIndex].img;
+                    if (activeImg) {
+                        document.getElementById('lightbox-img').src = activeImg;
+                    }
+                }
+            } else if (e.key === 'ArrowRight') {
+                nextPage();
+                const lightbox = document.getElementById('lightbox');
+                if (lightbox && lightbox.classList.contains('active')) {
+                    const activeImg = currentData[currentIndex].img;
+                    if (activeImg) {
+                        document.getElementById('lightbox-img').src = activeImg;
+                    }
+                }
+            } else if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+
         window.onload = updateSlider;
 
-        // Скрипт плавных анимированных переходов между страницами
         document.addEventListener('DOMContentLoaded', () => {
             const links = document.querySelectorAll('a');
             links.forEach(link => {
@@ -215,28 +267,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             const isDark = document.documentElement.classList.contains('dark-mode');
             updateThemeIcon(isDark);
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const links = document.querySelectorAll('a');
-            links.forEach(link => {
-                const href = link.getAttribute('href');
-                if (href && !href.startsWith('#') && !href.startsWith('javascript:') && link.hostname === window.location.hostname) {
-                    link.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        const targetUrl = link.href;
-                        const container = document.querySelector('.container');
-                        if (container) {
-                            container.style.transition = 'opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)';
-                            container.style.opacity = '0';
-                            container.style.transform = 'translateY(-6px)';
-                        }
-                        setTimeout(() => {
-                            window.location.href = targetUrl;
-                        }, 220);
-                    });
-                }
-            });
         });
     </script>
 </body>
