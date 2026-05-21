@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Главная страница — Система мониторинга</title>
     <link rel="stylesheet" href="css/main.css">
-
+    
     <!-- Моментальное определение темы до отрисовки для предотвращения вспышек -->
     <script>
         if (localStorage.getItem('theme') === 'dark') {
@@ -85,9 +85,9 @@
             const history = JSON.parse(localStorage.getItem('recently_viewed_specs')) || [];
             const container = document.getElementById('recently-viewed-container');
             const linksContainer = document.getElementById('recent-links');
-
+            
             if (history.length > 0) {
-                linksContainer.innerHTML = '';
+                linksContainer.innerHTML = ''; 
                 history.forEach(item => {
                     const a = document.createElement('a');
                     a.href = item.url;

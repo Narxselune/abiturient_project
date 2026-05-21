@@ -43,6 +43,7 @@ body {
     padding: 40px 20px;
     min-height: 100vh;
     transition: background-color 0.3s ease, color 0.3s ease;
+    position: relative; /* Необходимо для абсолютного позиционирования кнопок на фоне */
 }
 
 /* Глобальные стили для темной темы */
@@ -138,7 +139,7 @@ nav ul {
 
 /* --- Черно-белая кнопка Домой (на фоне, домик левее) --- */
 .btn-home {
-    position: fixed; /* Фиксирует кнопку в углу экрана, вне белого окна */
+    position: absolute; /* Уходит наверх при прокрутке */
     top: 25px;
     right: 75px; /* Сдвинута левее для освобождения места под переключатель темы */
     width: 36px;
@@ -158,20 +159,9 @@ nav ul {
         opacity: 1;
     }
 
-    .btn-home svg {
-        width: 36px;
-        height: 36px;
-        fill: #333333; /* Мягкий серый цвет заголовков */
-        transition: fill 0.3s ease;
-    }
-
-.dark-mode .btn-home svg {
-    fill: #CCCCCC; /* В темной теме домик светлеет */
-}
-
 /* --- Кнопка переключения темы (на фоне, солнце/луна правее) --- */
 .btn-theme {
-    position: fixed;
+    position: absolute; /* Уходит наверх при прокрутке */
     top: 25px;
     right: 25px; /* Находится в самом крайнем правом углу */
     width: 36px;
@@ -191,21 +181,28 @@ nav ul {
         opacity: 1;
     }
 
-    .btn-theme svg {
-        width: 36px;
-        height: 36px;
-        fill: #333333;
-        transition: fill 0.3s ease;
+    /* --- ЕДИНЫЙ ЦВЕТ ДЛЯ ВСЕХ КНОПОК НАВИГАЦИИ (ДОМИК И ТЕМА) --- */
+
+    /* В светлой теме: мягкий темно-серый цвет заголовков */
+    .btn-home svg,
+    .btn-home svg *,
+    .btn-theme svg,
+    .btn-theme svg * {
+        fill: #333333 !important;
+        stroke: #333333 !important;
+        transition: fill 0.3s ease, stroke 0.3s ease;
     }
 
-/* Солнце в темной теме теперь гарантированно чисто белое */
+/* В темной теме: единый матовый платиновый цвет */
+.dark-mode .btn-home svg,
+.dark-mode .btn-home svg *,
 .dark-mode .btn-theme svg,
 .dark-mode .btn-theme svg * {
     fill: #CCCCCC !important;
     stroke: #CCCCCC !important;
 }
 
-/* --- Кнопки для всех внутренних страниц --- */
+/* --- Кнопки для всех внутренних страниц (Стиль приведен к главной) --- */
 .btn-grid {
     display: block;
     margin-top: 20px;
@@ -222,12 +219,13 @@ nav ul {
     color: #000000;
     text-decoration: none;
     text-align: center;
-    font-weight: bold;
-    border-radius: 12px; /* Радиус скругления приведен к единому стилю */
+    font-weight: 600; /* Изменено с bold на 600 для точного соответствия главной */
+    border-radius: 24px !important; /* Принудительный единый стиль сильного закругления кнопок */
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     transition: transform 0.2s, background-color 0.2s, color 0.2s;
     box-sizing: border-box;
-    font-size: 23px; /* Увеличено с 19px до 23px для лучшей читаемости */
+    font-size: 22px; /* Приведено к размеру шрифта главной */
+    line-height: 1.4; /* Высота строки как на главной */
 }
 
     .btn-item:hover {
@@ -305,6 +303,11 @@ nav ul {
 
 .slider-controls {
     margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap; /* Позволяет аккуратно переносить элементы на новую строку на узких экранах */
 }
 
 .select-level {
@@ -358,6 +361,11 @@ nav ul {
 
 .slider-nav-btns {
     margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: nowrap; /* Полностью предотвращает перенос кнопок навигации */
 }
 
 .btn-arrow {
@@ -367,7 +375,8 @@ nav ul {
     border-radius: 24px; /* Скругление стрелок */
     font-weight: bold;
     cursor: pointer;
-    margin: 0 10px;
+    margin: 0;
+    transition: background-color 0.2s, color 0.2s;
 }
 
 .dark-mode .btn-arrow {
@@ -552,7 +561,7 @@ nav ul {
 
     /* Активное состояние кнопок для темной темы */
     .dark-mode .badge.active {
-        background-color: #477fc9;
+        background-color: #007bff;
         color: #ffffff;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     }
@@ -561,9 +570,9 @@ nav ul {
 .stat-box {
     border: 1px solid #E2E8F0;
     border-radius: 16px; /* Закругление до 16px для внутренних рамок */
-    padding: 10px 14px; /* Компактное заполнение */
+    padding: 10px 14px; /* Компактное заполнениие */
     margin-top: 12px;
-    max-width: 360px; /* Аккуратная узкая форма */
+    max-width: 360px; /* Опрятная узкая форма */
     background-color: #FFFFFF;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.01);
 }
@@ -722,7 +731,24 @@ nav ul {
 /* Адаптивность для мобильных экранов */
 @media (max-width: 768px) {
     body {
-        padding: 90px 15px 40px 15px; /* Дополнительный отступ сверху для мобильных, чтобы не перекрывать кнопки в углах */
+        display: flex !important; /* На телефонах сохраняем flexbox для надежного вертикального выравнивания окон */
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 95px 15px 40px 15px !important; /* Свободный верхний отступ под кнопки в углах на фоне */
+        position: relative !important;
+    }
+
+    /* Исключение для главной страницы: восстанавливаем центрирование по горизонтали и вертикали */
+    .body-main {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 90px 15px 40px 15px !important;
+    }
+
+    .container {
+        padding: 24px 15px; /* Компактные отступы внутри контейнера */
+        position: relative !important; /* Возвращено относительное позиционирование для стабильности всех слайдеров */
     }
 
     header {
@@ -731,6 +757,7 @@ nav ul {
         align-items: center;
         padding-top: 10px;
         margin-bottom: 20px;
+        position: relative; /* Возвращено относительное позиционирование для стабильности заголовков */
     }
 
         header h1, header h2 {
@@ -739,21 +766,42 @@ nav ul {
             font-size: 32px; /* Чуть уменьшаем заголовки на мобильном */
         }
 
+    /* Кнопка "Назад" на телефоне позиционируется относительно шапки, но выталкивается наверх на фиолетовый фон */
     .btn-back {
-        position: absolute;
-        left: 0;
-        top: -70px; /* Смещаем кнопку Назад наверх, над белым окном */
+        position: absolute !important; /* Абсолютная привязка к шапке, но выталкивается наверх */
+        left: 0 !important; /* Выравнивание по левому краю белого окна */
+        top: -93px !important; /* Идеально выравниваем по высоте (25px от верха экрана) с домиком и темой! */
+        padding: 8px 15px;
+        font-size: 14px;
+        border-radius: 30px;
+        z-index: 9999 !important;
     }
 
     .btn-home {
-        top: 20px;
-        right: 70px; /* Сохраняем отступ на телефоне */
+        position: absolute; /* Изменено с fixed на absolute для прокрутки */
+        top: 25px;
+        right: 60px; /* Сохраняем отступ на телефоне */
+        width: 32px;
+        height: 32px;
     }
 
+        .btn-home svg {
+            width: 32px;
+            height: 32px;
+        }
+
     .btn-theme {
-        top: 20px;
-        right: 20px;
+        position: absolute; /* Изменено с fixed на absolute для прокрутки */
+        top: 25px;
+        right: 15px;
+        width: 32px;
+        height: 32px;
     }
+
+        .btn-theme svg {
+            width: 32px;
+            height: 32px;
+        }
 
     /* Адаптация колонок: дневное сверху, заочное снизу */
     .columns-container {
@@ -764,6 +812,112 @@ nav ul {
 
     .column {
         width: 100%;
+    }
+
+        .column h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+    /* Адаптивность карт специальностей на смартфонах */
+    .spec-card {
+        padding: 15px;
+        border-radius: 16px;
+    }
+
+    .spec-title {
+        font-size: 20px;
+    }
+
+    .info-line {
+        font-size: 14px;
+    }
+
+    .stat-box {
+        max-width: 100%;
+        border-radius: 12px;
+    }
+
+    .bar-table {
+        font-size: 13px;
+    }
+
+        .bar-table th, .bar-table td {
+            padding: 6px 4px;
+        }
+
+    /* Слайдеры на смартфонах */
+    .slider-container {
+        border-radius: 16px;
+    }
+
+    .slider-book {
+        padding: 20px 15px;
+        border-radius: 16px;
+        min-height: 200px;
+    }
+
+        .slider-book h3 {
+            font-size: 20px;
+        }
+
+    .slider-book-img {
+        max-height: 220px;
+    }
+
+    /* --- Адаптивность Главной страницы --- */
+    .container-main {
+        padding: 40px 20px !important; /* Убираем сильное сжатие кнопок */
+    }
+
+    .title-main {
+        font-size: 28px !important; /* Сжатие шрифта названия */
+    }
+
+    .btn-grid-main .btn-item {
+        font-size: 18px;
+        padding: 12px 20px;
+        white-space: normal; /* Разрешаем перенос текста на телефонах */
+    }
+
+    .recently-viewed {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .recently-viewed-links {
+        align-items: center;
+    }
+
+    /* Поле поиска по баллам */
+    .search-container, .search-results-box {
+        max-width: 100%;
+    }
+
+    .score-search-input {
+        font-size: 16px;
+        padding: 12px 40px 12px 15px;
+        border-radius: 16px;
+    }
+
+    /* Кнопки переключения в слайдере */
+    .btn-arrow {
+        padding: 8px 14px; /* Компактный отступ на смартфонах */
+        font-size: 14px;
+        margin: 0;
+    }
+
+    #page-num, #vo-page-num {
+        font-size: 14px;
+    }
+
+    /* Поле выбора баз (Селектор) на мобильных */
+    .select-level {
+        width: 100%;
+        max-width: 280px; /* Аккуратный размер для экранов телефонов */
+        font-size: 14px;
+        padding: 6px 10px;
     }
 }
 
@@ -778,7 +932,6 @@ nav ul {
     justify-content: center;
     min-height: 100vh;
     padding: 20px;
- 
 }
 
 /* Настройки полупрозрачного белого окна */
@@ -843,7 +996,7 @@ nav ul {
         font-size: 22px;
         font-weight: 600;
         line-height: 1.4;
-        border-radius: 12px; /* Единый стиль закругления кнопок */
+        border-radius: 24px !important; /* Принудительный единый стиль сильного закругления кнопок */
         background-color: #8CBEFF;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
         white-space: nowrap; /* Запрет переноса на новую строку для настольных ПК */
