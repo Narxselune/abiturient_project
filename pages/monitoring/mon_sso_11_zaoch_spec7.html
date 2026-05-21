@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Почтовая деятельность</title>
+    <link rel="stylesheet" href="../../css/main.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <script>
+        // ИНДИВИДУАЛЬНЫЕ НАСТРОЙКИ ДЛЯ ЭТОЙ СТРАНИЦЫ
+        const SHEET_ID = '1uFwZs-jzJiUkZk6U266bo4QbmwjAjoUcc0pKAabWhos';
+        const GID = '0';
+        const SPEC_OFFSET = 518;
+    </script>
+
+    <script src="monitoring.js"></script>
+</head>
+<body>
+    <!-- Кнопка Домой в правом углу на фоне -->
+    <a href="../../index.html" class="btn-home" title="На главную">
+        <svg viewBox="0 0 24 24">
+            <rect x="16" y="4" width="3" height="5" />
+            <path d="M12 2.5L2 10.5h2v10a1 1 0 0 0 1 1h6v-6h2v6h6a1 1 0 0 0 1-1v-10h2L12 2.5z" />
+        </svg>
+    </a>
+    <div class="container">
+        <header style="text-align: left; border: none; padding: 0;">
+            <a href="../sso/sso_11_classes.html" class="btn-back">← назад</a>
+        </header>
+
+        <div id="loading-overlay" style="text-align: center; padding: 20px; color: #666; font-style: italic;">
+            Загрузка данных из таблицы...
+        </div>
+
+        <main id="monitor-content" style="display: none;">
+        </main>
+    </div>
+</body>
+</html>
