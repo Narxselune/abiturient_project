@@ -17,7 +17,13 @@
 html {
     overflow-y: scroll; /* Предотвращает скачки макета из-за появления полосы прокрутки */
     background-color: #F1EEFF; /* Исключает белые вспышки при перезагрузке страниц */
+    transition: background-color 0.3s ease;
 }
+
+    /* Настройки HTML для темной темы */
+    html.dark-mode {
+        background-color: #5A5766; /* Сланцево-серый фон темной темы */
+    }
 
 * {
     box-sizing: border-box;
@@ -36,6 +42,13 @@ body {
     justify-content: center;
     padding: 40px 20px;
     min-height: 100vh;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Глобальные стили для темной темы */
+.dark-mode body {
+    background-color: #5A5766;
+    color: #FFFFFF;
 }
 
 .container {
@@ -44,11 +57,17 @@ body {
     background-color: #FFFFFF;
     border-radius: 24px; /* Увеличено закругление до 24px как на главной */
     padding: 30px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     position: relative;
     /* Смягченный плавный тайминг для ультра-плавного эффекта */
     animation: pageFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     will-change: transform, opacity;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dark-mode .container {
+    background-color: #222222; /* Графитовый фон плашки в темной теме */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
 }
 
 header {
@@ -60,11 +79,15 @@ header {
     min-height: 45px; /* Защита от схлопывания шапки */
 }
 
-    /* Защита от наложения заголовков на кнопку "Назад" */
-    header h1, header h2 {
-        padding-left: 120px;
-        padding-right: 120px;
-    }
+.dark-mode header {
+    border-bottom: 2px solid #3A3B3D;
+}
+
+/* Защита от наложения заголовков на кнопки в углах экрана */
+header h1, header h2 {
+    padding-left: 120px;
+    padding-right: 120px;
+}
 
 h1 {
     font-size: 40px;
@@ -72,10 +95,19 @@ h1 {
     margin-bottom: 10px;
 }
 
+/* Мягкий светлый оттенок шрифта вместо броского белого */
+.dark-mode h1 {
+    color: #E2E8F0;
+}
+
 h2 {
     font-size: 24px;
     color: #444444;
     margin-bottom: 20px;
+}
+
+.dark-mode h2 {
+    color: #CBD5E1;
 }
 
 /* Навигация и списки */
@@ -104,12 +136,12 @@ nav ul {
                 background-color: #F1EEFF;
             }
 
-/* --- Черно-белая кнопка Домой (на фоне в правом углу экрана) --- */
+/* --- Черно-белая кнопка Домой (на фоне, домик левее) --- */
 .btn-home {
     position: fixed; /* Фиксирует кнопку в углу экрана, вне белого окна */
     top: 25px;
-    right: 25px;
-    width: 36px; /* Размер уменьшен для аккуратности */
+    right: 75px; /* Сдвинута левее для освобождения места под переключатель темы */
+    width: 36px;
     height: 36px;
     text-decoration: none;
     transition: transform 0.2s ease, opacity 0.2s ease;
@@ -127,10 +159,51 @@ nav ul {
     }
 
     .btn-home svg {
-        width: 36px; /* Размер уменьшен для аккуратности */
+        width: 36px;
         height: 36px;
         fill: #333333; /* Мягкий серый цвет заголовков */
+        transition: fill 0.3s ease;
     }
+
+.dark-mode .btn-home svg {
+    fill: #CCCCCC; /* В темной теме домик светлеет */
+}
+
+/* --- Кнопка переключения темы (на фоне, солнце/луна правее) --- */
+.btn-theme {
+    position: fixed;
+    top: 25px;
+    right: 25px; /* Находится в самом крайнем правом углу */
+    width: 36px;
+    height: 36px;
+    text-decoration: none;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 9999;
+    opacity: 0.8;
+}
+
+    .btn-theme:hover {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+
+    .btn-theme svg {
+        width: 36px;
+        height: 36px;
+        fill: #333333;
+        transition: fill 0.3s ease;
+    }
+
+/* Солнце в темной теме теперь гарантированно чисто белое */
+.dark-mode .btn-theme svg,
+.dark-mode .btn-theme svg * {
+    fill: #CCCCCC !important;
+    stroke: #CCCCCC !important;
+}
 
 /* --- Кнопки для всех внутренних страниц --- */
 .btn-grid {
@@ -142,7 +215,7 @@ nav ul {
 .btn-item {
     display: block;
     width: 100%;
-    max-width: 550px; /* Увеличено с 450px до 550px для более широкого и просторного вида */
+    max-width: 450px; /* Компактная ширина кнопок */
     margin: 0 auto 20px auto !important; /* Увеличен отступ между кнопками до 20px */
     padding: 18px 30px; /* Кнопки стали выше и шире */
     background-color: #8CBEFF;
@@ -150,9 +223,9 @@ nav ul {
     text-decoration: none;
     text-align: center;
     font-weight: bold;
-    border-radius: 24px; /* Закругление приведено к единому стилю в 24px */
+    border-radius: 12px; /* Радиус скругления приведен к единому стилю */
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    transition: transform 0.2s, background-color 0.2s;
+    transition: transform 0.2s, background-color 0.2s, color 0.2s;
     box-sizing: border-box;
     font-size: 23px; /* Увеличено с 19px до 23px для лучшей читаемости */
 }
@@ -160,6 +233,16 @@ nav ul {
     .btn-item:hover {
         transform: translateY(-2px);
         background-color: #72aeff;
+    }
+
+/* Кнопки в темной теме (матовый сине-серый цвет по референсу 15) */
+.dark-mode .btn-item {
+    background-color: #3B4B5E;
+    color: #FFFFFF;
+}
+
+    .dark-mode .btn-item:hover {
+        background-color: #4A5D75;
     }
 
 /* --- Вид колонок --- */
@@ -184,12 +267,16 @@ nav ul {
         font-size: 22px; /* Увеличен размер заголовков в колонках */
     }
 
-    /* Выравнивание кнопок внутри колонок */
-    .column .btn-item {
-        max-width: 550px; /* Ограничение длины кнопок в колонках */
-        margin-left: auto !important;
-        margin-right: auto !important;
-    }
+.dark-mode .column h3 {
+    border-bottom: 2px solid #3B4B5E;
+}
+
+/* Выравнивание кнопок внутри колонок */
+.column .btn-item {
+    max-width: 450px; /* Ограничение длины кнопок в колонках */
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
 
 /* Описание срока обучения */
 .spec-duration {
@@ -211,6 +298,11 @@ nav ul {
     background: #FAFAFA;
 }
 
+.dark-mode .slider-container {
+    background-color: #2D2D2D;
+    border: 1px solid #3A3B3D;
+}
+
 .slider-controls {
     margin-bottom: 15px;
 }
@@ -223,6 +315,12 @@ nav ul {
     background-color: #FFFFFF;
 }
 
+.dark-mode .select-level {
+    background-color: #222222;
+    color: #FFFFFF;
+    border: 1px solid #3A3B3D;
+}
+
 .slider-book {
     margin: 20px 0;
     padding: 40px 20px;
@@ -233,9 +331,15 @@ nav ul {
     box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
 }
 
-    .slider-book h3 {
-        font-size: 24px; /* Увеличено название в книге */
-    }
+.dark-mode .slider-book {
+    background-color: #222222;
+    border: 2px solid #3B4B5E;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.4);
+}
+
+.slider-book h3 {
+    font-size: 24px; /* Увеличено название в книге */
+}
 
 /* Стилизация изображений внутри слайдера */
 .slider-book-img {
@@ -266,9 +370,18 @@ nav ul {
     margin: 0 10px;
 }
 
-    .btn-arrow:hover {
-        background-color: #72aeff;
-    }
+.dark-mode .btn-arrow {
+    background-color: #3B4B5E;
+    color: #FFFFFF;
+}
+
+.btn-arrow:hover {
+    background-color: #72aeff;
+}
+
+.dark-mode .btn-arrow:hover {
+    background-color: #4A5D75;
+}
 
 /* --- Стили для Лайтбокса (Увеличение фото при клике) --- */
 .lightbox {
@@ -356,6 +469,14 @@ nav ul {
     margin: 12px 0 25px 0; /* Оптимизированы внешние отступы */
     background-color: #F8FAFC; /* Мягкий фоновый цвет карточки по макету */
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.dark-mode .spec-card {
+    background-color: #2D2D2D; /* Тёмный цвет карточки */
+    border-top: 1px solid #3A3B3D;
+    border-right: 1px solid #3A3B3D;
+    border-bottom: 1px solid #3A3B3D;
 }
 
 .spec-title {
@@ -365,16 +486,28 @@ nav ul {
     color: #1A202C;
 }
 
+.dark-mode .spec-title {
+    color: #FFFFFF;
+}
+
 .info-line {
     margin-bottom: 8px; /* Уплотнено расстояние между строками */
     font-size: 16px; /* Высокочитаемый компактный размер текста */
-    color: #000000;
+    color: #2D3748;
 }
 
-    .info-line strong {
-        color: #007bff;
-        font-weight: 700;
-    }
+.dark-mode .info-line {
+    color: #E2E8F0;
+}
+
+.info-line strong {
+    color: #007bff;
+    font-weight: 700;
+}
+
+.dark-mode .info-line strong {
+    color: #8CBEFF;
+}
 
 /* Кнопки переключения Бюджет / Платно */
 .badge-container {
@@ -384,41 +517,45 @@ nav ul {
     vertical-align: middle;
 }
 
+/* Базовое выключенное состояние (выглядит как «платка» на фото 22) */
 .badge {
     display: inline-block;
     padding: 6px 14px;
     border-radius: 24px; /* Скругление до 24px */
     font-size: 13px;
     font-weight: bold;
-    border: 1px solid transparent;
+    border: none;
     cursor: pointer;
-    transition: all 0.2s ease;
-    opacity: 0.45; /* Неактивные кнопки приглушены по умолчанию */
-    filter: grayscale(30%);
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
     font-family: inherit;
     outline: none;
+    background-color: #D6E6FF; /* Нежно-голубой цвет неактивной кнопки */
+    color: #8CBEFF; /* Приглушенный голубой текст */
 }
 
     .badge:focus {
         outline: none;
     }
 
+    /* Активное состояние кнопки (выглядит как «бюджет» на фото 22) */
     .badge.active {
-        opacity: 1; /* Полная видимость у активной кнопки */
-        filter: none;
+        background-color: #007bff; /* Насыщенный синий */
+        color: #ffffff; /* Белый текст */
         box-shadow: 0 2px 6px rgba(0, 123, 255, 0.15);
     }
 
-.badge-budget {
-    background-color: #007bff;
-    color: #ffffff;
+/* Выключенное состояние кнопок для темной темы */
+.dark-mode .badge {
+    background-color: #2D3D52;
+    color: #5F7C9E;
 }
 
-.badge-paid {
-    background-color: #D6E6FF;
-    color: #007bff;
-    border: 1px solid #8CBEFF;
-}
+    /* Активное состояние кнопок для темной темы */
+    .dark-mode .badge.active {
+        background-color: #007bff;
+        color: #ffffff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
 
 /* Статистика блока "Всего подано" (внутри карточки) */
 .stat-box {
@@ -431,21 +568,30 @@ nav ul {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.01);
 }
 
+.dark-mode .stat-box {
+    background-color: #222222;
+    border: 1px solid #3A3B3D;
+}
+
 .stat-title {
     color: #007bff;
     font-weight: 700;
     font-size: 16px;
     margin-bottom: 6px;
 }
-    .stat-title strong {
-        color: #000000;
-        font-weight: 700;
-    }
+
+.dark-mode .stat-title {
+    color: #8CBEFF;
+}
 
 .stat-row {
     margin-bottom: 4px;
     font-size: 15px;
-    color: #000000;
+    color: #4A5568;
+}
+
+.dark-mode .stat-row {
+    color: #CCCCCC;
 }
 
 /* Таблицы конкурса по баллам */
@@ -456,11 +602,19 @@ nav ul {
     margin: 25px 0 10px 0;
 }
 
+.dark-mode .section-title {
+    color: #8CBEFF;
+}
+
 .bar-table-wrapper {
     overflow-x: auto;
     margin-bottom: 20px;
     border-radius: 16px; /* Скругление до 16px */
     border: 1px solid #E2E8F0;
+}
+
+.dark-mode .bar-table-wrapper {
+    border: 1px solid #3A3B3D;
 }
 
 .bar-table {
@@ -471,19 +625,33 @@ nav ul {
     background-color: #FFFFFF;
 }
 
-    .bar-table th {
-        background-color: #F1F5F9;
-        color: #4A5568;
-        font-weight: 600;
-        border: 1px solid #E2E8F0;
-        padding: 8px 10px;
-    }
+.dark-mode .bar-table {
+    background-color: #222222;
+}
 
-    .bar-table td {
-        border: 1px solid #E2E8F0;
-        font-weight: bold;
-        padding: 10px 10px;
-    }
+.bar-table th {
+    background-color: #F1F5F9;
+    color: #4A5568;
+    font-weight: 600;
+    border: 1px solid #E2E8F0;
+    padding: 8px 10px;
+}
+
+.dark-mode .bar-table th {
+    background-color: #2D2D2D;
+    color: #E2E8F0;
+    border: 1px solid #3A3B3D;
+}
+
+.bar-table td {
+    border: 1px solid #E2E8F0;
+    font-weight: bold;
+    padding: 10px 10px;
+}
+
+.dark-mode .bar-table td {
+    border: 1px solid #3A3B3D;
+}
 
 /* Цвета ячеек в соответствии с конкурсом */
 .cell-green {
@@ -499,6 +667,22 @@ nav ul {
 .cell-red {
     background-color: #EF5350;
     color: #000000;
+}
+
+/* Настройка цветов конкурса под тёмную тему для комфортного восприятия */
+.dark-mode .cell-green {
+    background-color: #2E7D32;
+    color: #FFFFFF;
+}
+
+.dark-mode .cell-yellow {
+    background-color: #F9A825;
+    color: #000000;
+}
+
+.dark-mode .cell-red {
+    background-color: #C62828;
+    color: #FFFFFF;
 }
 
 /* Кнопка "Назад" во всех разделах */
@@ -520,15 +704,25 @@ nav ul {
     transition: all 0.2s ease;
 }
 
-    .btn-back:hover {
-        background-color: #F1EEFF; /* Легкая подсветка при наведении */
-        border-color: #B5B5B5;
-    }
+.dark-mode .btn-back {
+    color: #FFFFFF;
+    border: 1px solid #555555;
+}
+
+.btn-back:hover {
+    background-color: #F1EEFF; /* Легкая подсветка при наведении */
+    border-color: #B5B5B5;
+}
+
+.dark-mode .btn-back:hover {
+    background-color: #2D2D2D;
+    border-color: #777777;
+}
 
 /* Адаптивность для мобильных экранов */
 @media (max-width: 768px) {
     body {
-        padding: 80px 15px 40px 15px; /* Дополнительный отступ сверху для мобильных, чтобы не перекрывать кнопки в углах */
+        padding: 90px 15px 40px 15px; /* Дополнительный отступ сверху для мобильных, чтобы не перекрывать кнопки в углах */
     }
 
     header {
@@ -548,10 +742,15 @@ nav ul {
     .btn-back {
         position: absolute;
         left: 0;
-        top: -60px; /* Смещаем кнопку Назад наверх, над белым окном */
+        top: -70px; /* Смещаем кнопку Назад наверх, над белым окном */
     }
 
     .btn-home {
+        top: 20px;
+        right: 70px; /* Сохраняем отступ на телефоне */
+    }
+
+    .btn-theme {
         top: 20px;
         right: 20px;
     }
@@ -579,17 +778,12 @@ nav ul {
     justify-content: center;
     min-height: 100vh;
     padding: 20px;
-    /* Настройки фона: изображение центрируется и масштабируется во весь экран */
-    background-image: url('https://static.tildacdn.biz/tild6439-6463-4233-b933-613135396466/eee.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+ 
 }
 
 /* Настройки полупрозрачного белого окна */
 .container-main {
-    max-width: 800px;
+    max-width: 750px; /* Уменьшено с 900px до 750px */
     width: 100%;
     border-radius: 24px;
     padding: 70px 50px;
@@ -598,6 +792,11 @@ nav ul {
     /* Более контрастная тень для читаемости поверх фотографии */
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
     text-align: center;
+    transition: background-color 0.3s;
+}
+
+.dark-mode .container-main {
+    background-color: rgba(30, 30, 30, 0.8) !important;
 }
 
 /* Шапка главной страницы */
@@ -617,11 +816,16 @@ nav ul {
     padding-right: 0;
 }
 
+/* Мягкий светлый оттенок шрифта вместо броского белого */
+.dark-mode .title-main {
+    color: #E2E8F0;
+}
+
 /* Вертикальная сетка для кнопок (друг под другом) */
 .btn-grid-main {
     display: flex;
     flex-direction: column;
-    gap: 23px;
+    gap: 18px;
     align-items: center;
     width: 100%;
 }
@@ -629,21 +833,31 @@ nav ul {
     /* Кнопки на главной странице (имеют приоритетный селектор над базовым .btn-item) */
     .btn-grid-main .btn-item {
         width: 100%;
-        max-width: 550px; /* Уменьшено до 620px для аккуратности */
+        max-width: 550px; /* Уменьшено с 620px до 550px для более аккуратной формы */
         margin: 0 !important;
         display: flex;
         align-items: center;
         justify-content: center;
-   
         min-height: 65px;
         padding: 15px 30px;
         font-size: 22px;
         font-weight: 600;
-        line-height: 1.7;
-        border-radius: 24px; /* Единый стиль закругления кнопок */
+        line-height: 1.4;
+        border-radius: 12px; /* Единый стиль закругления кнопок */
         background-color: #8CBEFF;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
         white-space: nowrap; /* Запрет переноса на новую строку для настольных ПК */
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+/* Кнопки главной страницы в темной теме (матовый цвет по референсу 15) */
+.dark-mode .btn-grid-main .btn-item {
+    background-color: #3B4B5E !important;
+    color: #FFFFFF !important;
+}
+
+    .dark-mode .btn-grid-main .btn-item:hover {
+        background-color: #4A5D75 !important;
     }
 
 /* Адаптивность для кнопок главной на телефонах */
@@ -667,6 +881,10 @@ nav ul {
     gap: 8px; /* Небольшой зазор между заголовком и списком ссылок */
 }
 
+.dark-mode .recently-viewed {
+    color: #E2E8F0;
+}
+
 .recently-viewed-title {
     white-space: nowrap;
     font-weight: 500;
@@ -676,7 +894,7 @@ nav ul {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 4px;
+    gap: 10px; /* Увеличено расстояние между ссылками, чтобы они не слипались */
 }
 
     .recently-viewed-links a {
@@ -686,9 +904,13 @@ nav ul {
         font-weight: 500;
     }
 
-        .recently-viewed-links a:hover {
-            text-decoration: underline;
-        }
+.dark-mode .recently-viewed-links a {
+    color: #8CBEFF;
+}
+
+.recently-viewed-links a:hover {
+    text-decoration: underline;
+}
 
 /* ==========================================================================
    СТИЛИ ДЛЯ СТРАНИЦЫ ПОИСКА ПО БАЛЛАМ (sso_9_classes.html)
@@ -712,10 +934,16 @@ nav ul {
     font-family: inherit;
 }
 
-    .score-search-input:focus {
-        border-color: #007bff;
-        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
-    }
+.dark-mode .score-search-input {
+    background-color: #222222;
+    color: #FFFFFF;
+    border: 2px solid #3B4B5E;
+}
+
+.score-search-input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
 
 .search-clear {
     position: absolute;
@@ -749,6 +977,11 @@ nav ul {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
+.dark-mode .search-results-box {
+    background-color: #222222;
+    border: 2px solid #3B4B5E;
+}
+
 .search-result-item {
     padding: 14px 16px;
     border-bottom: 1px solid #E2E8F0;
@@ -762,9 +995,13 @@ nav ul {
         background-color: #F8FAFC;
     }
 
-    .search-result-item:last-child {
-        border-bottom: none;
-    }
+.dark-mode .search-result-item:hover {
+    background-color: #2D2D2D;
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
 
 .search-result-name {
     font-size: 18px;
@@ -773,10 +1010,18 @@ nav ul {
     margin-bottom: 4px;
 }
 
+.dark-mode .search-result-name {
+    color: #FFFFFF;
+}
+
 .search-result-info {
     font-size: 15px;
     color: #718096;
     line-height: 1.5;
+}
+
+.dark-mode .search-result-info {
+    color: #A0AEC0;
 }
 
 /* Цветные классы для подсветки результатов */
