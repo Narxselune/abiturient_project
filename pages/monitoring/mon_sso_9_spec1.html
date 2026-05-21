@@ -11,12 +11,17 @@
     <title>Разработка и сопровождение веб-ресурсов</title>
     <link rel="stylesheet" href="../../css/main.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
     <script>
         // ИНДИВИДУАЛЬНЫЕ НАСТРОЙКИ ДЛЯ ЭТОЙ СТРАНИЦЫ
         const SHEET_ID = '1uFwZs-jzJiUkZk6U266bo4QbmwjAjoUcc0pKAabWhos';
-        const GID = '0';
-        const SPEC_OFFSET = 116; // Для вебресурсов это строка 127 в Excel
+
+        // Настройки для Бюджета
+        const GID_BUDGET = '0';
+        const SPEC_OFFSET_BUDGET = 116;
+
+        // Настройки для Платного
+        const GID_PAID = '0'; 
+        const SPEC_OFFSET_PAID = 132;
     </script>
 
     <script src="monitoring.js"></script>
@@ -44,11 +49,11 @@
     </a>
     <div class="container">
         <header style="text-align: left; border: none; padding: 0;">
-            <a href="../sso/sso_9_classes.html" class="btn-back">← назад</a>
+            <a href="../sso/sso_9_classes.html" class="btn-back">← Назад</a>
         </header>
 
         <div id="loading-overlay" style="text-align: center; padding: 20px; color: #666; font-style: italic;">
-            Загрузка данных из таблицы...
+            Загрузка данных...
         </div>
 
         <main id="monitor-content" style="display: none;">

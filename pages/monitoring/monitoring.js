@@ -1,11 +1,6 @@
 ﻿// monitoring.js
 
-// Переменная GID берется из настроек конкретной страницы (если задана) или по умолчанию 0
-const CURRENT_GID = typeof GID !== 'undefined' ? GID : '0';
-const XLSX_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=xlsx&id=${SHEET_ID}&gid=${CURRENT_GID}`;
-
-// Глобальные переменные для переключения бюджета/платного и кэширования всей таблицы
-let cachedWorkbook = null;
+// Глобальные переменные для переключения бюджета/платного
 let currentCategory = 'budget';
 
 // Чтение ячейки Excel
@@ -151,29 +146,17 @@ function renderMonitoringPage(s) {
     return html;
 }
 
-// Загрузка книги и рендеринг страницы
+// Загрузка конкретного листа и рендеринг страницы
 async function loadAndRender(gid, offset) {
     try {
-        let workbook = cachedWorkbook;
+        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=xlsx&id=${SHEET_ID}&gid=${gid}`;
 
-        // Если документ XLSX еще не загружен с сервера — загружаем его один раз
-        if (!workbook) {
-            const response = await fetch(XLSX_URL);
-            if (!response.ok) throw new Error("Ошибка загрузки");
-            const buffer = await response.arrayBuffer();
-            workbook = XLSX.read(buffer, { type: 'array' });
-            cachedWorkbook = workbook; // Кэшируем всю структуру книги в памяти
-        }
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Ошибка загрузки");
+        const buffer = await response.arrayBuffer();
+        const workbook = XLSX.read(buffer, { type: 'array' });
 
-        // Поиск вкладки. По умолчанию берем первый лист (Бюджет),
-        // если передан gid платного (отличный от '0'), переключаемся на вторую вкладку книги.
-        let sheetName = workbook.SheetNames[0];
-        if (gid !== '0') {
-            if (workbook.SheetNames.length > 1) {
-                sheetName = workbook.SheetNames[1]; // Вторая вкладка в Excel (Платное отделение)
-            }
-        }
-
+        const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
         const currentSpecData = parseBlock(sheet, offset);
 
@@ -191,7 +174,7 @@ async function loadAndRender(gid, offset) {
     }
 }
 
-// Функция мгновенного переключения направления приема (Бюджет / Платно)
+// Функция переключения направления приема (Бюджет / Платно)
 async function switchCategory(category) {
     if (currentCategory === category) return;
     currentCategory = category;
@@ -201,29 +184,29 @@ async function switchCategory(category) {
     document.getElementById('loading-overlay').style.display = 'block';
     document.getElementById('loading-overlay').innerHTML = `
         <div style="text-align: center; padding: 20px; color: #666; font-style: italic;">
-            Загрузка отделения...
+            Загрузка данных...
         </div>`;
 
     let targetGid = '0';
-    let targetOffset = typeof SPEC_OFFSET !== 'undefined' ? SPEC_OFFSET : 0;
+    let targetOffset = 0;
 
     if (category === 'budget') {
         targetGid = typeof GID_BUDGET !== 'undefined' ? GID_BUDGET : (typeof GID !== 'undefined' ? GID : '0');
         targetOffset = typeof SPEC_OFFSET_BUDGET !== 'undefined' ? SPEC_OFFSET_BUDGET : (typeof SPEC_OFFSET !== 'undefined' ? SPEC_OFFSET : 0);
     } else {
-        // Для Платного отделения. Если в HTML не задан GID_PAID, '1' служит флагом перехода на 2-ю вкладку
         targetGid = typeof GID_PAID !== 'undefined' ? GID_PAID : '1';
         targetOffset = typeof SPEC_OFFSET_PAID !== 'undefined' ? SPEC_OFFSET_PAID : (typeof SPEC_OFFSET !== 'undefined' ? SPEC_OFFSET : 0);
     }
 
-    // Рендерим страницу из кэша
     await loadAndRender(targetGid, targetOffset);
 }
 
 // Первоначальный запуск при открытии страницы
 async function initMonitoring() {
-    const startGid = typeof GID !== 'undefined' ? GID : '0';
-    const startOffset = typeof SPEC_OFFSET !== 'undefined' ? SPEC_OFFSET : 0;
+    // По умолчанию всегда загружаем бюджетную версию при старте
+    const startGid = typeof GID_BUDGET !== 'undefined' ? GID_BUDGET : (typeof GID !== 'undefined' ? GID : '0');
+    const startOffset = typeof SPEC_OFFSET_BUDGET !== 'undefined' ? SPEC_OFFSET_BUDGET : (typeof SPEC_OFFSET !== 'undefined' ? SPEC_OFFSET : 0);
+
     await loadAndRender(startGid, startOffset);
 }
 
