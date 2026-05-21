@@ -552,7 +552,7 @@ nav ul {
 
     /* Активное состояние кнопок для темной темы */
     .dark-mode .badge.active {
-        background-color: #007bff;
+        background-color: #477fc9;
         color: #ffffff;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     }
