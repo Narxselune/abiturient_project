@@ -10,6 +10,7 @@ function getCell(sheet, r, c) {
 }
 
 // Парсинг данных из Excel
+// Парсинг данных из Excel (Универсальный под ССО и ВО)
 function parseBlock(sheet, offset) {
     // Проверяем, включен ли режим Высшего Образования (ВО) в HTML-файле специальности
     const isVoMode = typeof IS_VO !== 'undefined' && IS_VO;
@@ -36,24 +37,29 @@ function parseBlock(sheet, offset) {
         const outOfCompetitionTotal = parseInt(getCell(sheet, offset, 9), 10) || 0;
         const totalLgota = noExamsTotal + outOfCompetitionTotal;
 
-        // Парсинг заявлений по интервалам баллов (шаг 5 баллов, колонки начинаются с L (индекс 11))
+        // Парсинг заявлений по интервалам баллов (шаг 5 баллов, колонки начинаются с M (индекс 12))
         let applications = [];
-        let startCol = 11;
+        let startCol = 12;
         let currentMax = maxScore;
+
+        // Шапка таблицы ВО с баллами (строка 32 в Excel для 11 кл, и строка 64 для сокращенного ССО)
+        // Рассчитываем строку шапки: она находится на несколько строк выше текущей специальности
+        // Для первой группы ВО шапка гарантированно на строке 31 (индекс), для сокращенного - на строке 63.
+        const headerRowIndex = maxScore === 300 ? 63 : 31;
 
         for (let col = startCol; col <= 100; col++) {
             let count = parseInt(getCell(sheet, offset, col), 10) || 0;
-            let currentMin = currentMax - 4;
-            let label = `${currentMax}-${currentMin}`;
 
-            // Проверяем наличие заголовка, чтобы случайно не уйти в бесконечное чтение пустых ячеек
-            let headerVal = getCell(sheet, offset - 1, col) || getCell(sheet, offset - 2, col);
-            if (!headerVal && count === 0 && currentMax < (maxScore - 50)) {
+            // Читаем точный заголовок интервала баллов из шапки таблицы
+            let rawHeader = getCell(sheet, headerRowIndex, col);
+            let label = rawHeader ? rawHeader.toString().trim() : "";
+
+            // Если заголовок в шапке закончился — останавливаем цикл
+            if (!label) {
                 break;
             }
 
             if (count > 0) {
-                // Сохраняем и строковый ярлык интервала, и числовое значение (для правильной сортировки)
                 applications.push({ score: currentMax, label: label, count });
             }
             currentMax -= 5;
