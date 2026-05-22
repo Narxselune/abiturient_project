@@ -120,6 +120,30 @@ function parseBlock(sheet, offset) {
 function renderMonitoringPage(s) {
     const isVoMode = !!s.isVo;
 
+    // Проверяем условия для вывода сообщения об отсутствии набора на платное отделение
+    const noPaidExists = (typeof SPEC_OFFSET_PAID === 'undefined');
+    const isPaidPlanZero = (s.plan === 0);
+
+    if (currentCategory === 'paid' && (noPaidExists || isPaidPlanZero)) {
+        return `
+        <div class="spec-card">
+            <h1 class="spec-title">${s.name}</h1>
+            <div class="info-line">
+                <strong>Прием:</strong>
+                <div class="badge-container">
+                    <button class="badge badge-budget ${currentCategory === 'budget' ? 'active' : ''}" onclick="switchCategory('budget')">за счет средств бюджета</button>
+                    <button class="badge badge-paid ${currentCategory === 'paid' ? 'active' : ''}" onclick="switchCategory('paid')">на платной основе</button>
+                </div>
+            </div>
+            <div class="info-line"><strong>Форма обучения:</strong> ${s.educationForm}</div>
+            <div class="info-line"><strong>Прием осуществляется на основе:</strong> ${s.base}</div>
+            <div class="info-line"><strong>Срок обучения:</strong> ${s.duration}</div>
+            <div class="no-paid-msg">
+                Набор на платной основе не осуществляется
+            </div>
+        </div>`;
+    }
+
     let lgotaCount = 0;
     s.lgota.forEach(app => { lgotaCount += app.count; });
 
@@ -279,8 +303,15 @@ async function switchCategory(category) {
         targetGid = typeof GID_BUDGET !== 'undefined' ? GID_BUDGET : (typeof GID !== 'undefined' ? GID : '0');
         targetOffset = typeof SPEC_OFFSET_BUDGET !== 'undefined' ? SPEC_OFFSET_BUDGET : (typeof SPEC_OFFSET !== 'undefined' ? SPEC_OFFSET : 0);
     } else {
-        targetGid = typeof GID_PAID !== 'undefined' ? GID_PAID : '1';
-        targetOffset = typeof SPEC_OFFSET_PAID !== 'undefined' ? SPEC_OFFSET_PAID : (typeof SPEC_OFFSET !== 'undefined' ? SPEC_OFFSET : 0);
+        // Если платный офсет не определен, безопасно задействуем бюджетный офсет,
+        // чтобы считать название специальности и корректно отрисовать заглушку "Нет набора"
+        if (typeof SPEC_OFFSET_PAID === 'undefined') {
+            targetGid = typeof GID_BUDGET !== 'undefined' ? GID_BUDGET : (typeof GID !== 'undefined' ? GID : '0');
+            targetOffset = typeof SPEC_OFFSET_BUDGET !== 'undefined' ? SPEC_OFFSET_BUDGET : (typeof SPEC_OFFSET !== 'undefined' ? SPEC_OFFSET : 0);
+        } else {
+            targetGid = typeof GID_PAID !== 'undefined' ? GID_PAID : (typeof GID !== 'undefined' ? GID : '0');
+            targetOffset = SPEC_OFFSET_PAID;
+        }
     }
 
     await loadAndRender(targetGid, targetOffset);

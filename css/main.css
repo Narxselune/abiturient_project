@@ -728,6 +728,25 @@ nav ul {
     border-color: #777777;
 }
 
+/* Сообщение об отсутствии набора на платное */
+.no-paid-msg {
+    margin-top: 25px;
+    padding: 20px;
+    border-radius: 16px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+    color: #EF5350;
+    background-color: rgba(239, 83, 80, 0.1);
+    border: 1px dashed #EF5350;
+}
+
+.dark-mode .no-paid-msg {
+    color: #E57373;
+    background-color: rgba(229, 115, 115, 0.1);
+    border: 1px dashed #E57373;
+}
+
 /* Адаптивность для мобильных экранов */
 @media (max-width: 768px) {
     body {
