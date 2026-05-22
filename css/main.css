@@ -1255,3 +1255,259 @@ nav ul {
 .btn-home svg, .btn-theme svg {
     fill: currentColor !important;
 }
+
+/* ==========================================================================
+   СТИЛИ ДЛЯ ПСЕВДО-ИИ ПОМОЩНИКА (ЧАТ-БОТА)
+   ========================================================================== */
+
+.ai-widget {
+    position: fixed;
+    bottom: 25px;
+    left: 25px; /* Размещаем в левом нижнем углу экрана */
+    z-index: 10000;
+    font-family: inherit;
+}
+
+/* Кнопка запуска виджета */
+.ai-toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+    .ai-toggle-btn:hover {
+        transform: scale(1.05);
+        background-color: #0056b3;
+    }
+
+    .ai-toggle-btn svg {
+        fill: #ffffff !important;
+    }
+
+/* Окно чата */
+.ai-window {
+    position: absolute;
+    bottom: 60px;
+    left: 0;
+    width: 350px;
+    height: 480px;
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid #E2E8F0;
+    animation: pageFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.dark-mode .ai-window {
+    background-color: #222222;
+    border: 1px solid #3A3B3D;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+}
+
+/* Шапка чата */
+.ai-header {
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dark-mode .ai-header {
+    background-color: #3B4B5E;
+}
+
+.ai-bot-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ai-bot-avatar {
+    font-size: 24px;
+}
+
+.ai-bot-name {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.ai-bot-status {
+    font-size: 11px;
+    opacity: 0.8;
+}
+
+.ai-close-btn {
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+/* Область сообщений */
+.ai-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background-color: #F8FAFC;
+}
+
+.dark-mode .ai-messages {
+    background-color: #1A1A1A;
+}
+
+.ai-message {
+    max-width: 85%;
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+    .ai-message.bot {
+        background-color: #E2E8F0;
+        color: #1A202C;
+        align-self: flex-start;
+        border-bottom-left-radius: 4px;
+    }
+
+.dark-mode .ai-message.bot {
+    background-color: #2D2D2D;
+    color: #E2E8F0;
+}
+
+.ai-message.user {
+    background-color: #007bff;
+    color: #ffffff;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+}
+
+.dark-mode .ai-message.user {
+    background-color: #3B4B5E;
+}
+
+/* Быстрые вопросы */
+.ai-quick-questions {
+    padding: 10px;
+    background-color: #ffffff;
+    border-top: 1px solid #E2E8F0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.dark-mode .ai-quick-questions {
+    background-color: #222222;
+    border-top: 1px solid #3A3B3D;
+}
+
+.ai-quick-questions button {
+    background-color: #F1F5F9;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    font-family: inherit;
+    color: #1A202C;
+}
+
+.dark-mode .ai-quick-questions button {
+    background-color: #2D2D2D;
+    border: 1px solid #3A3B3D;
+    color: #E2E8F0;
+}
+
+.ai-quick-questions button:hover {
+    background-color: #E2E8F0;
+}
+
+.dark-mode .ai-quick-questions button:hover {
+    background-color: #3B4B5E;
+}
+
+/* Поле ввода */
+.ai-input-container {
+    padding: 10px;
+    background-color: #ffffff;
+    border-top: 1px solid #E2E8F0;
+    display: flex;
+    gap: 8px;
+}
+
+.dark-mode .ai-input-container {
+    background-color: #222222;
+    border-top: 1px solid #3A3B3D;
+}
+
+.ai-input-container input {
+    flex: 1;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 8px 12px;
+    font-size: 14px;
+    outline: none;
+    font-family: inherit;
+}
+
+.dark-mode .ai-input-container input {
+    background-color: #1A1A1A;
+    color: #FFFFFF;
+    border: 1px solid #3A3B3D;
+}
+
+.ai-input-container button {
+    background-color: #007bff;
+    border: none;
+    border-radius: 12px;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.dark-mode .ai-input-container button {
+    background-color: #3B4B5E;
+}
+
+.ai-input-container button svg {
+    fill: #ffffff !important;
+}
+
+/* Адаптивность под мобилки */
+@media (max-width: 480px) {
+    .ai-widget {
+        bottom: 15px;
+        left: 15px;
+        right: 15px;
+    }
+
+    .ai-window {
+        width: 100%;
+        height: 400px;
+        bottom: 55px;
+    }
+}
