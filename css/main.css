@@ -751,7 +751,7 @@ nav ul {
 @media (max-width: 768px) {
     body {
         display: flex !important; /* На телефонах сохраняем flexbox для надежного вертикального выравнивания окон */
-        align-items: center !important;
+        align-items: flex-start !important; /* Изменено с center на flex-start для фиксированного положения контента сверху */
         justify-content: center !important;
         padding: 95px 15px 40px 15px !important; /* Свободный верхний отступ под кнопки в углах на фоне */
         position: relative !important;
@@ -785,19 +785,21 @@ nav ul {
             font-size: 32px; /* Чуть уменьшаем заголовки на мобильном */
         }
 
-    /* Кнопка "Назад" на телефоне позиционируется относительно шапки, но выталкивается наверх на фиолетовый фон */
+    /* Кнопка "Назад" на телефоне теперь жестко закреплена на уровне верхних кнопок навигации */
     .btn-back {
-        position: absolute !important; /* Абсолютная привязка к шапке, но выталкивается наверх */
-        left: 0 !important; /* Выравнивание по левому краю белого окна */
-        top: -93px !important; /* Идеально выравниваем по высоте (25px от верха экрана) с домиком и темой! */
+        position: absolute !important;
+        left: 0 !important;
+        top: -93px !important; /* Размещается ровно на 25px от верха экрана, на фиолетовом фоне */
         padding: 8px 15px;
         font-size: 14px;
         border-radius: 30px;
         z-index: 9999 !important;
+        background-color: transparent !important;
+        box-shadow: none !important;
     }
 
     .btn-home {
-        position: absolute; /* Изменено с fixed на absolute для прокрутки */
+        position: absolute; /* Возвращено к absolute */
         top: 25px;
         right: 60px; /* Сохраняем отступ на телефоне */
         width: 32px;
@@ -810,7 +812,7 @@ nav ul {
         }
 
     .btn-theme {
-        position: absolute; /* Изменено с fixed на absolute для прокрутки */
+        position: absolute; /* Возвращено к absolute */
         top: 25px;
         right: 15px;
         width: 32px;
