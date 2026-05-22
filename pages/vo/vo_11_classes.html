@@ -10,6 +10,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Абитуриентам после 11 класса — ВО</title>
     <link rel="stylesheet" href="../../css/main.css">
+
+   
+
+    <!-- Подключение библиотеки XLSX для фонового парсинга и расчета шансов поступления -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
     <!-- Кнопки Домой и Переключения темы вне белого окна -->
@@ -24,22 +29,25 @@
             <path d="M12.3 22h-.1c-5.5 0-10-4.5-10-10 0-4.8 3.5-9 8.3-9.8.5-.1 1 .2 1.2.7.2.5 0 1.1-.4 1.4-3.5 2.5-4.2 7.4-1.7 10.9 2.5 3.5 7.4 4.2 10.9 1.7.4-.3 1-.3 1.4.1.4.4.5.9.2 1.4-1.8 2.3-4.5 3.6-7.8 3.6z" />
         </svg>
     </a>
-    <!-- Кнопка Домой в правом углу на фоне -->
-    <a href="../../index.html" class="btn-home" title="На главную">
-        <svg viewBox="0 0 24 24">
-            <rect x="16" y="4" width="3" height="5" />
-            <path d="M12 2.5L2 10.5h2v10a1 1 0 0 0 1 1h6v-6h2v6h6a1 1 0 0 0 1-1v-10h2L12 2.5z" />
-        </svg>
-    </a>
+
     <div class="container">
         <header>
             <a href="vo_main.html" class="btn-back">← Назад</a>
             <h1>Абитуриентам после 11 класса</h1>
-            <h2>Общее высшее образование </h2>
+            <h2>Общее высшее образование</h2>
         </header>
 
         <main>
-            <div class="btn-grid">
+            <!-- Поле ввода балла ВО (Калькулятор шансов) -->
+            <div class="search-container">
+                <input type="text" id="score-search" class="score-search-input" placeholder="Введите ваш балл (0-400)" disabled>
+                <span id="search-clear-btn" class="search-clear" onclick="clearSearch()">&times;</span>
+            </div>
+
+            <!-- Блок результатов -->
+            <div id="search-results" class="search-results-box" style="display: none;"></div>
+
+            <div class="btn-grid" id="default-btn-grid">
                 <a href="../monitoring/mon_vo_11_spec1.html" class="btn-item">Автоматизация технологических процессов и производств<br><span class="spec-duration">(4 года)</span></a>
                 <a href="../monitoring/mon_vo_11_spec2.html" class="btn-item">Системы и сети инфокоммуникаций<br><span class="spec-duration">(4 года)</span></a>
                 <a href="../monitoring/mon_vo_11_spec3.html" class="btn-item">Прикладная информатика<br><span class="spec-duration">(4 года)</span></a>
@@ -48,28 +56,193 @@
             </div>
         </main>
     </div>
-    <script>
-        const moonSvg = `<path d="M12.3 22h-.1c-5.5 0-10-4.5-10-10 0-4.8 3.5-9 8.3-9.8.5-.1 1 .2 1.2.7.2.5 0 1.1-.4 1.4-3.5 2.5-4.2 7.4-1.7 10.9 2.5 3.5 7.4 4.2 10.9 1.7.4-.3 1-.3 1.4.1.4.4.5.9.2 1.4-1.8 2.3-4.5 3.6-7.8 3.6z" />`;
-        const sunSvg = `<circle cx="12" cy="12" r="5" /><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke-width="2" stroke-linecap="round" stroke="currentColor" />`;
 
-        function updateThemeIcon(isDark) {
-            const icon = document.getElementById('theme-icon');
-            if (icon) {
-                icon.innerHTML = isDark ? sunSvg : moonSvg;
+    <script>
+        const SHEET_ID = '1uFwZs-jzJiUkZk6U266bo4QbmwjAjoUcc0pKAabWhos';
+        const XLSX_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=xlsx`;
+
+        // Специальности ВО с их точными строковыми индексами в Excel (offset), взятыми из присланных файлов специальностей
+        const specsConfig = [
+            { id: 1, name: "Автоматизация технологических процессов и производств", offset: 32, url: "../monitoring/mon_vo_11_spec1.html" },
+            { id: 2, name: "Системы и сети инфокоммуникаций", offset: 33, url: "../monitoring/mon_vo_11_spec2.html" },
+            { id: 3, name: "Прикладная информатика", offset: 34, url: "../monitoring/mon_vo_11_spec3.html" },
+            { id: 4, name: "Цифровые клиентские сервисы и почтово-логистические системы", offset: 35, url: "../monitoring/mon_vo_11_spec4.html" },
+            { id: 5, name: "Маркетинг", offset: 36, url: "../monitoring/mon_vo_11_spec5.html" }
+        ];
+
+        let workbookCache = null;
+
+        function getCell(sheet, r, c) {
+            if (!sheet) return '';
+            const addr = XLSX.utils.encode_cell({ r, c });
+            return sheet[addr] ? sheet[addr].v : '';
+        }
+
+        // Интервальный парсинг для Высшего Образования (ВО) согласно структуре в monitoring.js
+        function parseBlockDataVO(sheet, offset) {
+            const plan = parseInt(getCell(sheet, offset, 4), 10) || 0;
+            const maxScore = 400;
+
+            let applications = [];
+            let startCol = 11; // L
+            let currentMax = maxScore;
+
+            for (let col = startCol; col <= 100; col++) {
+                let count = parseInt(getCell(sheet, offset, col), 10) || 0;
+                let currentMin = currentMax - 4;
+                let label = `${currentMax}-${currentMin}`;
+
+                // ИСПРАВЛЕНО: Для предотвращения сбоя при проверке относительных пустых ячеек (offset - 1)
+                // используется фиксированная шапка общего блока ВО (строки с индексами 31 и 30)
+                let headerVal = getCell(sheet, 31, col) || getCell(sheet, 30, col);
+                if (!headerVal && count === 0 && currentMax < (maxScore - 50)) {
+                    break;
+                }
+
+                if (count > 0) {
+                    applications.push({ score: currentMax, minScore: currentMin, label: label, count });
+                }
+                currentMax -= 5;
+                if (currentMax < 0) break;
+            }
+            return { plan, applications };
+        }
+
+        async function loadDatabase() {
+            const searchInput = document.getElementById('score-search');
+            try {
+                const response = await fetch(XLSX_URL);
+                if (!response.ok) throw new Error();
+                const buffer = await response.arrayBuffer();
+                workbookCache = XLSX.read(buffer, { type: 'array' });
+
+                searchInput.disabled = false;
+                searchInput.placeholder = "Введите ваш балл (0-400)";
+            } catch (e) {
+                searchInput.placeholder = "⚠️ База данных недоступна";
             }
         }
 
-        function toggleTheme() {
-            const isDark = document.documentElement.classList.toggle('dark-mode');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            updateThemeIcon(isDark);
+        function clearSearch() {
+            const searchInput = document.getElementById('score-search');
+            searchInput.value = '';
+            document.getElementById('search-clear-btn').style.display = 'none';
+            document.getElementById('search-results').style.display = 'none';
+            document.getElementById('default-btn-grid').style.display = '';
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const isDark = document.documentElement.classList.contains('dark-mode');
-            updateThemeIcon(isDark);
-        });
+        // Подсчет позиции на основе ВО-интервалов
+        function getPositionVO(applications, userScore) {
+            let countAhead = 0;
+            applications.forEach(app => {
+                if (userScore < app.minScore) {
+                    countAhead += app.count;
+                } else if (userScore >= app.minScore && userScore <= app.score) {
+                    countAhead += app.count;
+                }
+            });
+            return countAhead + 1;
+        }
 
+        function getColorClass(position, plan) {
+            if (position <= plan) {
+                if (position >= plan * 0.9) {
+                    return 'text-yellow';
+                }
+                return 'text-green';
+            }
+            return 'text-red';
+        }
+
+        function handleSearchInput(e) {
+            // Ввод только целых чисел
+            let val = e.target.value.replace(/[^0-9]/g, '');
+
+            // Ограничение диапазона до 400
+            const checkNum = parseInt(val, 10);
+            if (!isNaN(checkNum) && checkNum > 400) {
+                val = '400';
+            }
+
+            e.target.value = val;
+
+            const clearBtn = document.getElementById('search-clear-btn');
+            const resultsBox = document.getElementById('search-results');
+            const defaultGrid = document.getElementById('default-btn-grid');
+
+            if (!val) {
+                clearSearch();
+                return;
+            }
+
+            clearBtn.style.display = 'block';
+            const userScore = parseInt(val, 10);
+
+            if (isNaN(userScore) || userScore < 0 || userScore > 400) {
+                resultsBox.innerHTML = `<div style="padding: 15px; text-align: center; color: #888;">Введите корректный балл от 0 до 400</div>`;
+                resultsBox.style.display = 'block';
+                defaultGrid.style.display = 'none';
+                return;
+            }
+
+            if (!workbookCache) return;
+
+            const sheet = workbookCache.Sheets[workbookCache.SheetNames[0]];
+            let calculatedSpecs = [];
+
+            specsConfig.forEach(spec => {
+                const specData = parseBlockDataVO(sheet, spec.offset);
+                const position = getPositionVO(specData.applications, userScore);
+
+                calculatedSpecs.push({
+                    name: spec.name,
+                    url: spec.url,
+                    position: position,
+                    plan: specData.plan,
+                    ratio: specData.plan > 0 ? (position / specData.plan) : Infinity
+                });
+            });
+
+            // Сортировка по вероятности прохождения
+            calculatedSpecs.sort((a, b) => {
+                const aPasses = a.plan > 0 && a.position <= a.plan;
+                const bPasses = b.plan > 0 && b.position <= b.plan;
+
+                let aPriority = 2;
+                if (aPasses) aPriority = 1;
+
+                let bPriority = 2;
+                if (bPasses) bPriority = 1;
+
+                if (aPriority !== bPriority) {
+                    return aPriority - bPriority;
+                }
+                return a.ratio - b.ratio;
+            });
+
+            let html = '';
+            calculatedSpecs.forEach(spec => {
+                const colorClass = getColorClass(spec.position, spec.plan);
+
+                html += `
+                                <a href="${spec.url}" class="search-result-item">
+                                    <div class="search-result-name">${spec.name}</div>
+                                    <div class="search-result-info">
+                                        <div class="search-budget-line">ваша позиция на бюджет: <span class="${colorClass}">${spec.position} из ${spec.plan}</span></div>
+                                    </div>
+                                </a>
+                            `;
+            });
+
+            resultsBox.innerHTML = html;
+            resultsBox.style.display = 'block';
+            defaultGrid.style.display = 'none';
+        }
+
+        document.getElementById('score-search').addEventListener('input', handleSearchInput);
+        window.onload = loadDatabase;
+
+        // Плавные переходы
         document.addEventListener('DOMContentLoaded', () => {
             const links = document.querySelectorAll('a');
             links.forEach(link => {
@@ -90,6 +263,28 @@
                     });
                 }
             });
+        });
+    </script>
+    <script>
+        const moonSvg = `<path d="M12.3 22h-.1c-5.5 0-10-4.5-10-10 0-4.8 3.5-9 8.3-9.8.5-.1 1 .2 1.2.7.2.5 0 1.1-.4 1.4-3.5 2.5-4.2 7.4-1.7 10.9 2.5 3.5 7.4 4.2 10.9 1.7.4-.3 1-.3 1.4.1.4.4.5.9.2 1.4-1.8 2.3-4.5 3.6-7.8 3.6z" />`;
+        const sunSvg = `<circle cx="12" cy="12" r="5" /><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke-width="2" stroke-linecap="round" stroke="currentColor" />`;
+
+        function updateThemeIcon(isDark) {
+            const icon = document.getElementById('theme-icon');
+            if (icon) {
+                icon.innerHTML = isDark ? sunSvg : moonSvg;
+            }
+        }
+
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.toggle('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateThemeIcon(isDark);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const isDark = document.documentElement.classList.contains('dark-mode');
+            updateThemeIcon(isDark);
         });
     </script>
 </body>
