@@ -244,12 +244,25 @@
                 const budgetData = parseBlockData(sheetBudget, spec.offset);
                 const budgetPos = getPosition(budgetData.applications, userScore);
 
+                let paidPos = 0;
+                let paidPlan = 0;
+
+                if (spec.hasPaid) {
+                    const paidData = parseBlockData(sheetBudget, spec.offsetPaid);
+                    paidPlan = paidData.plan;
+                    paidPos = getPosition(paidData.applications, userScore);
+                }
+
+                const budgetRatio = budgetData.plan > 0 ? (budgetPos / budgetData.plan) : Infinity;
+                const paidRatio = paidPlan > 0 ? (paidPos / paidPlan) : Infinity;
+                const bestRatio = Math.min(budgetRatio, paidRatio);
+
                 calculatedSpecs.push({
                     name: spec.name,
                     url: spec.url,
                     budget: { position: budgetPos, plan: budgetData.plan },
-                    paid: { position: 0, plan: 0, exists: spec.hasPaid },
-                    bestRatio: budgetData.plan > 0 ? (budgetPos / budgetData.plan) : Infinity
+                    paid: { position: paidPos, plan: paidPlan, exists: spec.hasPaid },
+                    bestRatio: bestRatio
                 });
             });
 
@@ -257,11 +270,22 @@
                 const aPassesBudget = a.budget.plan > 0 && a.budget.position <= a.budget.plan;
                 const bPassesBudget = b.budget.plan > 0 && b.budget.position <= b.budget.plan;
 
-                let aPriority = 2;
-                if (aPassesBudget) aPriority = 1;
+                const aPassesPaid = a.paid.exists && a.paid.plan > 0 && a.paid.position <= a.paid.plan;
+                const bPassesPaid = b.paid.exists && b.paid.plan > 0 && b.paid.position <= b.paid.plan;
 
-                let bPriority = 2;
-                if (bPassesBudget) bPriority = 1;
+                let aPriority = 3;
+                if (aPassesBudget) {
+                    aPriority = 1;
+                } else if (aPassesPaid) {
+                    aPriority = 2;
+                }
+
+                let bPriority = 3;
+                if (bPassesBudget) {
+                    bPriority = 1;
+                } else if (bPassesPaid) {
+                    bPriority = 2;
+                }
 
                 if (aPriority !== bPriority) {
                     return aPriority - bPriority;
@@ -272,17 +296,28 @@
             let html = '';
             calculatedSpecs.forEach(spec => {
                 const bClass = getColorClass(spec.budget.position, spec.budget.plan);
-                const paidHtml = `<div class="search-paid-line">ваша позиция на платное: прием не осуществляется</div>`;
+
+                let paidHtml = '';
+                if (spec.paid.exists) {
+                    if (spec.paid.plan > 0) {
+                        const pClass = getColorClass(spec.paid.position, spec.paid.plan);
+                        paidHtml = `<div class="search-paid-line">ваша позиция на платное: <span class="${pClass}">${spec.paid.position} из ${spec.paid.plan}</span></div>`;
+                    } else {
+                        paidHtml = `<div class="search-paid-line">ваша позиция на платное: нет мест / план не задан</div>`;
+                    }
+                } else {
+                    paidHtml = `<div class="search-paid-line">ваша позиция на платное: прием не осуществляется</div>`;
+                }
 
                 html += `
-                        <a href="${spec.url}" class="search-result-item">
-                            <div class="search-result-name">${spec.name}</div>
-                            <div class="search-result-info">
-                                <div class="search-budget-line">ваша позиция на бюджет: <span class="${bClass}">${spec.budget.position} из ${spec.budget.plan}</span></div>
-                                ${paidHtml}
-                            </div>
-                        </a>
-                    `;
+                                <a href="${spec.url}" class="search-result-item">
+                                    <div class="search-result-name">${spec.name}</div>
+                                    <div class="search-result-info">
+                                        <div class="search-budget-line">ваша позиция на бюджет: <span class="${bClass}">${spec.budget.position} из ${spec.budget.plan}</span></div>
+                                        ${paidHtml}
+                                    </div>
+                                </a>
+                            `;
             });
 
             resultsBox.innerHTML = html;
