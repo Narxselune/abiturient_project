@@ -9,52 +9,102 @@ function getCell(sheet, r, c) {
     return sheet[addr] ? sheet[addr].v : '';
 }
 
+// Вспомогательная функция: проверяет, объединена ли ячейка по вертикали, и находит суммарный план
+function getGroupedPlans(sheet, currentOffset) {
+    let totalPlan = 0;
+    let totalPlanTarget = 0;
+    let startRow = currentOffset;
+    let endRow = currentOffset;
+
+    // 1. Ищем начало объединенной группы (поднимаемся вверх, пока колонка G (индекс 6) пустая)
+    // В объединенных ячейках значение хранится только в самой первой (верхней) строке группы
+    while (startRow > 0) {
+        // Если на текущей строке колонка G заполнена, а на строке выше - нет названия специальности, значит мы нашли начало
+        const currentTotalVal = getCell(sheet, startRow, 6);
+        const prevTotalVal = getCell(sheet, startRow - 1, 6);
+        const prevName = getCell(sheet, startRow - 1, 3);
+
+        if (currentTotalVal !== "" && (prevTotalVal === "" || !prevName)) {
+            break; // Мы вверху группы
+        }
+        if (currentTotalVal === "" && prevName !== "") {
+            startRow--; // Поднимаемся выше, так как тут объединенная ячейка
+        } else {
+            break;
+        }
+    }
+
+    // 2. Ищем конец объединенной группы (опускаемся вниз, пока ячейки G пусты)
+    let checkRow = startRow + 1;
+    while (checkRow < 1000) {
+        const checkTotalVal = getCell(sheet, checkRow, 6);
+        const checkName = getCell(sheet, checkRow, 3);
+
+        // Если имя специальности есть, а ячейка общего числа заявлений (G) пустая - это часть группы
+        if (checkName !== "" && checkTotalVal === "") {
+            endRow = checkRow;
+            checkRow++;
+        } else {
+            break; // Группа закончилась
+        }
+    }
+
+    // 3. Суммируем планы из всех найденных строк группы
+    for (let r = startRow; r <= endRow; r++) {
+        totalPlan += parseInt(getCell(sheet, r, 4), 10) || 0;       // Колонка E (индекс 4)
+        totalPlanTarget += parseInt(getCell(sheet, r, 5), 10) || 0; // Колонка F (индекс 5)
+    }
+
+    return {
+        sumPlan: totalPlan,
+        sumPlanTarget: totalPlanTarget,
+        dataRow: startRow // Строка, с которой нужно читать объединенные баллы и общее число поданных
+    };
+}
+
 // Парсинг данных из Excel
-// Парсинг данных из Excel (Универсальный под ССО и ВО)
+// Парсинг данных из Excel
 function parseBlock(sheet, offset) {
-    // Проверяем, включен ли режим Высшего Образования (ВО) в HTML-файле специальности
     const isVoMode = typeof IS_VO !== 'undefined' && IS_VO;
 
     if (isVoMode) {
         // --- ЛОГИКА ДЛЯ ВЫСШЕГО ОБРАЗОВАНИЯ (ВО) ---
         const maxScore = typeof VO_MAX_SCORE !== 'undefined' ? VO_MAX_SCORE : 400;
 
-        // В ВО название специальности в колонке D (индекс 3)
-        const name = getCell(sheet, offset, 3);
+        // Определяем, есть ли объединение специальностей, и получаем суммарные планы
+        const groupInfo = getGroupedPlans(sheet, offset);
 
-        // План приема в колонке E (индекс 4)
-        const plan = parseInt(getCell(sheet, offset, 4), 10) || 0;
+        // Название специальности берем из ячейки
+        let rawName = getCell(sheet, offset, 3);
 
-        // План целевого приема в колонке F (индекс 5)
-        const planTarget = parseInt(getCell(sheet, offset, 5), 10) || 0;
+        // ОЧИСТКА НАЗВАНИЯ: удаляем круглые скобки и всё, что в них находится
+        const name = rawName.replace(/\s*\(.*?\)\s*/g, '').trim();
 
-        // Всего подано заявлений в колонке G (индекс 6)
-        const total = parseInt(getCell(sheet, offset, 6), 10) || 0;
+        // Планы приема используем СУММАРНЫЕ для всей группы
+        const plan = groupInfo.sumPlan;
+        const planTarget = groupInfo.sumPlanTarget;
 
-        // Для ВО целевой прием и льготы (без вступительных / вне конкурса) считываются из столбцов H (7), I (8), J (9)
-        const targetTotal = parseInt(getCell(sheet, offset, 7), 10) || 0;
-        const noExamsTotal = parseInt(getCell(sheet, offset, 8), 10) || 0;
-        const outOfCompetitionTotal = parseInt(getCell(sheet, offset, 9), 10) || 0;
+        // Все объединенные данные (баллы, всего подано) читаем из главной (верхней) строки группы
+        const mainRow = groupInfo.dataRow;
+        const total = parseInt(getCell(sheet, mainRow, 6), 10) || 0;
+
+        const targetTotal = parseInt(getCell(sheet, mainRow, 7), 10) || 0;
+        const noExamsTotal = parseInt(getCell(sheet, mainRow, 8), 10) || 0;
+        const outOfCompetitionTotal = parseInt(getCell(sheet, mainRow, 9), 10) || 0;
         const totalLgota = noExamsTotal + outOfCompetitionTotal;
 
-        // Парсинг заявлений по интервалам баллов (шаг 5 баллов, колонки начинаются с M (индекс 12))
+        // Парсинг заявлений по интервалам баллов
         let applications = [];
         let startCol = 12;
         let currentMax = maxScore;
 
-        // Шапка таблицы ВО с баллами (строка 32 в Excel для 11 кл, и строка 64 для сокращенного ССО)
-        // Рассчитываем строку шапки: она находится на несколько строк выше текущей специальности
-        // Для первой группы ВО шапка гарантированно на строке 31 (индекс), для сокращенного - на строке 63.
         const headerRowIndex = maxScore === 300 ? 63 : 31;
 
         for (let col = startCol; col <= 100; col++) {
-            let count = parseInt(getCell(sheet, offset, col), 10) || 0;
-
-            // Читаем точный заголовок интервала баллов из шапки таблицы
+            let count = parseInt(getCell(sheet, mainRow, col), 10) || 0;
             let rawHeader = getCell(sheet, headerRowIndex, col);
             let label = rawHeader ? rawHeader.toString().trim() : "";
 
-            // Если заголовок в шапке закончился — останавливаем цикл
             if (!label) {
                 break;
             }
@@ -66,7 +116,6 @@ function parseBlock(sheet, offset) {
             if (currentMax < 0) break;
         }
 
-        // Для ВО заполняем льготные и целевые списки на основе суммарных ячеек
         let lgota = [];
         if (totalLgota > 0) {
             lgota.push({ score: 0, label: "Льготный", count: totalLgota });
@@ -80,7 +129,9 @@ function parseBlock(sheet, offset) {
         const type = "Высшее образование";
         const educationForm = "дневная";
         const base = maxScore === 300 ? "среднего специального образования (сокращенный срок)" : "общего среднего образования (11 классов)";
-        const duration = maxScore === 300 ? "3-3.5 года" : "4 года";
+
+        // Использование индивидуального срока обучения DURATION из HTML, если задан
+        const duration = typeof DURATION !== 'undefined' ? DURATION : (maxScore === 300 ? "3-3.5 года" : "4 года");
 
         return {
             name, type, educationForm, base, duration, plan, planTarget,
