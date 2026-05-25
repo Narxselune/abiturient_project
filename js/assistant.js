@@ -663,15 +663,148 @@ function showQuickQuestions() {
     }
 }
 
-// Скрыть быстрые вопросы при потере фокуса (с небольшой задержкой, чтобы клик по кнопке успел обработаться)
+// Скрыть быстрые вопросы при потере фокуса
 function hideQuickQuestions() {
     setTimeout(() => {
         const quickQuestions = document.getElementById('ai-quick-questions');
         const activeEl = document.activeElement;
 
-        // Скрываем только если фокус не перешел на одну из кнопок быстрых вопросов
         if (quickQuestions && (!activeEl || !quickQuestions.contains(activeEl))) {
             quickQuestions.classList.remove('visible');
         }
     }, 200);
 }
+
+// --- ИНТЕРАКТИВНОЕ УПРАВЛЕНИЕ ОКНОМ: МУЛЬТИ-РЕСАЙЗ И DRAG-AND-DROP ---
+document.addEventListener('DOMContentLoaded', () => {
+    const win = document.getElementById('ai-window');
+    const header = document.querySelector('.ai-header');
+    if (!win || !header) return;
+
+    // --- 1. ЛОГИКА ИЗМЕНЕНИЯ РАЗМЕРА (МУЛЬТИ-РЕСАЙЗ) ---
+    const directions = ['r', 'l', 't', 'b', 'tr', 'tl', 'br', 'bl'];
+    directions.forEach(dir => {
+        const resizer = document.createElement('div');
+        resizer.className = `ai-resizer ${dir}`;
+        win.appendChild(resizer);
+
+        resizer.addEventListener('mousedown', initDrag);
+    });
+
+    let startX, startY, startWidth, startHeight, startLeft, startTop;
+    let activeResizer = null;
+
+    function initDrag(e) {
+        e.preventDefault();
+        e.stopPropagation(); // Защита от срабатывания перетаскивания при изменении размера
+        activeResizer = e.target;
+
+        startX = e.clientX;
+        startY = e.clientY;
+
+        const rect = win.getBoundingClientRect();
+        startWidth = rect.width;
+        startHeight = rect.height;
+        startLeft = rect.left;
+        startTop = rect.top;
+
+        document.addEventListener('mousemove', doDrag);
+        document.addEventListener('mouseup', stopDrag);
+    }
+
+    function doDrag(e) {
+        if (!activeResizer) return;
+
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        const classes = activeResizer.className;
+
+        let newWidth = startWidth;
+        let newHeight = startHeight;
+        let newLeft = startLeft;
+        let newTop = startTop;
+
+        if (classes.includes('r') || classes.includes('tr') || classes.includes('br')) {
+            newWidth = startWidth + dx;
+        }
+        if (classes.includes('l') || classes.includes('tl') || classes.includes('bl')) {
+            newWidth = startWidth - dx;
+            newLeft = startLeft + dx;
+        }
+        if (classes.includes('b') || classes.includes('br') || classes.includes('bl')) {
+            newHeight = startHeight + dy;
+        }
+        if (classes.includes('t') || classes.includes('tr') || classes.includes('tl')) {
+            newHeight = startHeight - dy;
+            newTop = startTop + dy;
+        }
+
+        const minW = 280, maxW = 600;
+        const minH = 350, maxH = 800;
+
+        if (newWidth >= minW && newWidth <= maxW) {
+            win.style.width = `${newWidth}px`;
+            if (classes.includes('l') || classes.includes('tl') || classes.includes('bl')) {
+                win.style.left = `${newLeft}px`;
+            }
+        }
+        if (newHeight >= minH && newHeight <= maxH) {
+            win.style.height = `${newHeight}px`;
+            if (classes.includes('t') || classes.includes('tr') || classes.includes('tl')) {
+                win.style.top = `${newTop}px`;
+            }
+        }
+    }
+
+    function stopDrag() {
+        activeResizer = null;
+        document.removeEventListener('mousemove', doDrag);
+        document.removeEventListener('mouseup', stopDrag);
+    }
+
+    // --- 2. ЛОГИКА ПЕРЕТАСКИВАНИЯ (DRAG-AND-DROP ЗА ШАПКУ) ---
+    let isDragging = false;
+    let dragOffsetX = 0;
+    let dragOffsetY = 0;
+
+    header.addEventListener('mousedown', (e) => {
+        // Перетаскивание доступно только по левой кнопке мыши и не на кнопке закрытия
+        if (e.button !== 0 || e.target.classList.contains('ai-close-btn')) return;
+
+        isDragging = true;
+
+        const rect = win.getBoundingClientRect();
+        dragOffsetX = e.clientX - rect.left;
+        dragOffsetY = e.clientY - rect.top;
+
+        document.addEventListener('mousemove', moveWindow);
+        document.addEventListener('mouseup', releaseWindow);
+    });
+
+    function moveWindow(e) {
+        if (!isDragging) return;
+
+        let left = e.clientX - dragOffsetX;
+        let top = e.clientY - dragOffsetY;
+
+        // Ограничиваем перемещение границами видимого экрана
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+        const rect = win.getBoundingClientRect();
+
+        if (left < 0) left = 0;
+        if (left + rect.width > screenWidth) left = screenWidth - rect.width;
+        if (top < 0) top = 0;
+        if (top + rect.height > screenHeight) top = screenHeight - rect.height;
+
+        win.style.left = `${left}px`;
+        win.style.top = `${top}px`;
+        win.style.bottom = 'auto'; // Отключаем привязку снизу
+    }
+
+    function releaseWindow() {
+        isDragging = false;
+        document.removeEventListener('mousemove', moveWindow);
+        document.removeEventListener('mouseup', releaseWindow);
+    }
+});

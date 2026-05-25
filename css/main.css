@@ -1263,7 +1263,7 @@ nav ul {
 .ai-widget {
     position: fixed;
     bottom: 25px;
-    left: 25px; /* Размещаем в левом нижнем углу экрана */
+    left: 25px; /* Изначальное положение кнопки в левом нижнем углу */
     z-index: 10000;
     font-family: inherit;
 }
@@ -1294,17 +1294,17 @@ nav ul {
         fill: #ffffff !important;
     }
 
-/* Окно чата (с возможностью изменения размеров) */
+/* Окно чата (свободное перемещение и изменение размеров) */
 .ai-window {
-    position: absolute;
-    bottom: 60px;
-    left: 0;
+    position: fixed; /* Фиксированное позиционирование относительно экрана для Drag-and-Drop */
+    bottom: 90px;
+    left: 25px;
     width: 350px;
     height: 480px;
-    min-width: 280px; /* Минимальная ширина при растягивании */
-    min-height: 350px; /* Минимальная высота при растягивании */
-    max-width: 600px; /* Максимальная ширина */
-    max-height: 800px; /* Максимальная высота */
+    min-width: 280px;
+    min-height: 350px;
+    max-width: 600px;
+    max-height: 700px;
     background-color: #ffffff;
     border-radius: 20px;
     box-shadow: 0 8px 30px rgba(0,0,0,0.15);
@@ -1313,8 +1313,7 @@ nav ul {
     overflow: hidden;
     border: 1px solid #E2E8F0;
     animation: pageFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    /* Разрешаем изменять размер окна */
-    resize: both;
+    resize: none;
 }
 
 .dark-mode .ai-window {
@@ -1323,7 +1322,78 @@ nav ul {
     box-shadow: 0 8px 30px rgba(0,0,0,0.4);
 }
 
-/* Шапка чата */
+/* --- Стили зон изменения размера (невидимые рамки по краям) --- */
+.ai-resizer {
+    position: absolute;
+    background: transparent;
+    z-index: 10005;
+}
+    /* Стороны */
+    .ai-resizer.r {
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 6px;
+        cursor: e-resize;
+    }
+
+    .ai-resizer.l {
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 6px;
+        cursor: w-resize;
+    }
+
+    .ai-resizer.t {
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 6px;
+        cursor: n-resize;
+    }
+
+    .ai-resizer.b {
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 6px;
+        cursor: s-resize;
+    }
+    /* Углы */
+    .ai-resizer.tr {
+        right: 0;
+        top: 0;
+        width: 10px;
+        height: 10px;
+        cursor: ne-resize;
+    }
+
+    .ai-resizer.tl {
+        left: 0;
+        top: 0;
+        width: 10px;
+        height: 10px;
+        cursor: nw-resize;
+    }
+
+    .ai-resizer.br {
+        right: 0;
+        bottom: 0;
+        width: 10px;
+        height: 10px;
+        cursor: se-resize;
+    }
+
+    .ai-resizer.bl {
+        left: 0;
+        bottom: 0;
+        width: 10px;
+        height: 10px;
+        cursor: sw-resize;
+    }
+
+/* Шапка чата (зона перетаскивания) */
 .ai-header {
     background-color: #007bff;
     color: #ffffff;
@@ -1331,6 +1401,8 @@ nav ul {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    cursor: move; /* Курсор в виде перекрестных стрелок указывает на возможность перетаскивания */
+    user-select: none; /* Предотвращает случайное выделение текста при таске */
 }
 
 .dark-mode .ai-header {
@@ -1412,47 +1484,46 @@ nav ul {
     background-color: #3B4B5E;
 }
 
-/* Быстрые вопросы (адаптивное скрытие) */
+/* --- Быстрые вопросы (адаптивное скрытие) --- */
 .ai-quick-questions {
-    padding: 10px;
+    padding: 0;
+    max-height: 0;
+    opacity: 0;
     background-color: #ffffff;
-    border-top: 1px solid #E2E8F0;
+    border-top: none;
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    transition: max-height 0.25s ease, opacity 0.2s ease, padding 0.25s ease;
+    transition: max-height 0.2s ease, opacity 0.15s ease, padding 0.2s ease;
     overflow: hidden;
 }
 
 .dark-mode .ai-quick-questions {
     background-color: #222222;
-    border-top: 1px solid #3A3B3D;
 }
 
-/* На настольных ПК всегда показываем быстрые вопросы */
+/* На компьютерах (ширина экрана более 768px) быстрые вопросы показаны всегда */
 @media (min-width: 769px) {
     .ai-quick-questions {
-        max-height: 150px;
-        opacity: 1;
+        max-height: 150px !important;
+        opacity: 1 !important;
+        padding: 10px !important;
+        border-top: 1px solid #E2E8F0 !important;
+    }
+
+    .dark-mode .ai-quick-questions {
+        border-top: 1px solid #3A3B3D !important;
     }
 }
 
-/* На мобильных экранах скрываем вопросы по умолчанию и показываем только при фокусе */
+/* На мобильных устройствах раскрывается только при добавлении класса JS */
 @media (max-width: 768px) {
-    .ai-quick-questions {
-        max-height: 0;
-        opacity: 0;
-        padding: 0 10px; /* Убираем вертикальные отступы во время скрытия */
-        border-top: none;
+    .ai-quick-questions.visible {
+        max-height: 150px;
+        opacity: 1;
+        padding: 10px;
+        border-top: 1px solid #E2E8F0;
     }
-
-        /* Класс, который JS будет добавлять при фокусе */
-        .ai-quick-questions.visible {
-            max-height: 150px;
-            opacity: 1;
-            padding: 10px;
-            border-top: 1px solid #E2E8F0;
-        }
 
     .dark-mode .ai-quick-questions.visible {
         border-top: 1px solid #3A3B3D;
