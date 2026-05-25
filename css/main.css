@@ -1272,8 +1272,8 @@ nav ul {
 .ai-toggle-btn {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 12px 20px;
+    justify-content: center;
+    padding: 12px 24px; /* Немного увеличили боковые отступы */
     background-color: #007bff;
     color: #ffffff;
     border: none;
@@ -1294,13 +1294,17 @@ nav ul {
         fill: #ffffff !important;
     }
 
-/* Окно чата */
+/* Окно чата (с возможностью изменения размеров) */
 .ai-window {
     position: absolute;
     bottom: 60px;
     left: 0;
     width: 350px;
     height: 480px;
+    min-width: 280px; /* Минимальная ширина при растягивании */
+    min-height: 350px; /* Минимальная высота при растягивании */
+    max-width: 600px; /* Максимальная ширина */
+    max-height: 800px; /* Максимальная высота */
     background-color: #ffffff;
     border-radius: 20px;
     box-shadow: 0 8px 30px rgba(0,0,0,0.15);
@@ -1309,6 +1313,8 @@ nav ul {
     overflow: hidden;
     border: 1px solid #E2E8F0;
     animation: pageFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    /* Разрешаем изменять размер окна */
+    resize: both;
 }
 
 .dark-mode .ai-window {
@@ -1406,7 +1412,7 @@ nav ul {
     background-color: #3B4B5E;
 }
 
-/* Быстрые вопросы */
+/* Быстрые вопросы (адаптивное скрытие) */
 .ai-quick-questions {
     padding: 10px;
     background-color: #ffffff;
@@ -1414,11 +1420,43 @@ nav ul {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
+    transition: max-height 0.25s ease, opacity 0.2s ease, padding 0.25s ease;
+    overflow: hidden;
 }
 
 .dark-mode .ai-quick-questions {
     background-color: #222222;
     border-top: 1px solid #3A3B3D;
+}
+
+/* На настольных ПК всегда показываем быстрые вопросы */
+@media (min-width: 769px) {
+    .ai-quick-questions {
+        max-height: 150px;
+        opacity: 1;
+    }
+}
+
+/* На мобильных экранах скрываем вопросы по умолчанию и показываем только при фокусе */
+@media (max-width: 768px) {
+    .ai-quick-questions {
+        max-height: 0;
+        opacity: 0;
+        padding: 0 10px; /* Убираем вертикальные отступы во время скрытия */
+        border-top: none;
+    }
+
+        /* Класс, который JS будет добавлять при фокусе */
+        .ai-quick-questions.visible {
+            max-height: 150px;
+            opacity: 1;
+            padding: 10px;
+            border-top: 1px solid #E2E8F0;
+        }
+
+    .dark-mode .ai-quick-questions.visible {
+        border-top: 1px solid #3A3B3D;
+    }
 }
 
 .ai-quick-questions button {

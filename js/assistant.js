@@ -654,3 +654,24 @@ function generateBotResponse(userText) {
         appendMessage(defaultReply, 'bot');
     }, 400);
 }
+
+// Показать быстрые вопросы при фокусе на поле ввода
+function showQuickQuestions() {
+    const quickQuestions = document.getElementById('ai-quick-questions');
+    if (quickQuestions) {
+        quickQuestions.classList.add('visible');
+    }
+}
+
+// Скрыть быстрые вопросы при потере фокуса (с небольшой задержкой, чтобы клик по кнопке успел обработаться)
+function hideQuickQuestions() {
+    setTimeout(() => {
+        const quickQuestions = document.getElementById('ai-quick-questions');
+        const activeEl = document.activeElement;
+
+        // Скрываем только если фокус не перешел на одну из кнопок быстрых вопросов
+        if (quickQuestions && (!activeEl || !quickQuestions.contains(activeEl))) {
+            quickQuestions.classList.remove('visible');
+        }
+    }, 200);
+}
