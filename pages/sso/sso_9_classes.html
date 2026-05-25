@@ -131,7 +131,12 @@
 
             const dotIndex = val.indexOf('.');
             if (dotIndex !== -1) {
-                val = val.substring(0, dotIndex + 1) + val.substring(dotIndex + 1).replace(/\./g, '');
+                const integerPart = val.substring(0, dotIndex);
+                let fractionalPart = val.substring(dotIndex + 1).replace(/\./g, '');
+                if (fractionalPart.length > 1) {
+                    fractionalPart = fractionalPart.substring(0, 1);
+                }
+                val = integerPart + '.' + fractionalPart;
             }
 
             const checkNum = parseFloat(val);
@@ -236,14 +241,14 @@
                 }
 
                 html += `
-                        <a href="${spec.url}" class="search-result-item">
-                            <div class="search-result-name">${spec.name}</div>
-                            <div class="search-result-info">
-                                <div class="search-budget-line">ваша позиция на бюджет: <span class="${bClass}">${spec.budget.position} из ${spec.budget.plan}</span></div>
-                                ${paidHtml}
-                            </div>
-                        </a>
-                    `;
+                            <a href="${spec.url}" class="search-result-item">
+                                <div class="search-result-name">${spec.name}</div>
+                                <div class="search-result-info">
+                                    <div class="search-budget-line">ваша позиция на бюджет: <span class="${bClass}">${spec.budget.position} из ${spec.budget.plan}</span></div>
+                                    ${paidHtml}
+                                </div>
+                            </a>
+                        `;
             });
 
             resultsBox.innerHTML = html;

@@ -1511,3 +1511,69 @@ nav ul {
         bottom: 55px;
     }
 }
+/* ==========================================================================
+   СТИЛИ ТАЙМЕРА ОБРАТНОГО ОТСЧЕТА (ВКЛЮЧАЯ СОСТОЯНИЕ "НЕ НАЧАЛСЯ")
+   ========================================================================== */
+.countdown-timer {
+    float: right;
+    margin-top: 5px;
+    font-size: 14px;
+    font-weight: 700;
+    background-color: #F1F5F9;
+    color: #475569;
+    padding: 8px 16px;
+    border-radius: 30px;
+    border: 1px solid #E2E8F0;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+}
+
+.dark-mode .countdown-timer {
+    background-color: #2D2D2D;
+    color: #E2E8F0;
+    border: 1px solid #3A3B3D;
+}
+
+.countdown-timer .timer-icon {
+    width: 16px;
+    height: 25px;
+    fill: currentColor;
+}
+
+/* Оформление таймера: Прием документов еще не начался */
+.countdown-timer.not-started {
+    background-color: #FEF3C7;
+    color: #D97706;
+    border-color: #FCD34D;
+}
+
+.dark-mode .countdown-timer.not-started {
+    background-color: #78350F;
+    color: #FBBF24;
+    border-color: #D97706;
+}
+
+/* Оформление таймера: Прием документов завершен */
+.countdown-timer.expired {
+    background-color: #FEE2E2;
+    color: #EF4444;
+    border-color: #FCA5A5;
+}
+
+.dark-mode .countdown-timer.expired {
+    background-color: #450A0A;
+    color: #F87171;
+    border-color: #7F1D1D;
+}
+
+@media (max-width: 768px) {
+    .countdown-timer {
+        float: none;
+        margin-top: 15px;
+        display: inline-flex;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}

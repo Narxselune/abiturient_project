@@ -2,6 +2,116 @@
 
 // Глобальные переменные для переключения бюджета/платного
 let currentCategory = 'budget';
+let timerInterval = null;
+
+// ==========================================================================
+// НАСТРОЙКИ СРОКОВ ПРИЕМНОЙ КАМПАНИИ 2026
+// (Вы можете менять эти даты для тестирования таймера)
+// ==========================================================================
+function getCampaignDates() {
+    const isVo = typeof IS_VO !== 'undefined' && IS_VO;
+    const year = 2026; // Расчетный год
+
+    let startDate, endDate, startLabel;
+
+    // Обратите внимание: месяцы в JS Date начинаются с 0 (0 - январь, 6 - июль, 7 - август)
+    if (isVo) {
+        // --- ВЫСШЕЕ ОБРАЗОВАНИЕ (ВО) ---
+        if (currentCategory === 'budget') {
+            // Бюджет ВО: с 17 июля по 25 июля включительно (отсчет до 26 июля)
+            startDate = new Date(year, 6, 17, 9, 0, 0);   // <<< НАЧАЛО ПРИЕМА ВО БЮДЖЕТ (17 июля 09:00)
+            endDate = new Date(year, 6, 26, 0, 0, 0);     // <<< КОНЕЦ ПРИЕМА ВО БЮДЖЕТ (по 25 июля включительно)
+            startLabel = "17 июля";
+        } else {
+            // Платно ВО: с 17 июля по 2 августа включительно (отсчет до 3 августа)
+            startDate = new Date(year, 6, 17, 9, 0, 0);   // <<< НАЧАЛО ПРИЕМА ВО ПЛАТНО (17 июля 09:00)
+            endDate = new Date(year, 7, 3, 0, 0, 0);      // <<< КОНЕЦ ПРИЕМА ВО ПЛАТНО (по 2 августа включительно)
+            startLabel = "17 июля";
+        }
+    } else {
+        // --- СРЕДНЕЕ СПЕЦИАЛЬНОЕ ОБРАЗОВАНИЕ (ССО) ---
+        if (currentCategory === 'budget') {
+            // Бюджет ССО: с 20 июля по 3августа включительно (отсчет до 4 августа)
+            startDate = new Date(year, 6, 20, 9, 0, 0);   // <<< НАЧАЛО ПРИЕМА ССО БЮДЖЕТ (20 июля 09:00)
+            endDate = new Date(year, 7, 4, 0, 0, 0);      // <<< КОНЕЦ ПРИЕМА ССО БЮДЖЕТ (по 3 августа включительно)
+            startLabel = "20 июля";
+        } else {
+            // Платно ССО: с 20 июля по 14 августа включительно (отсчет до 15 августа)
+            startDate = new Date(year, 6, 20, 9, 0, 0);   // <<< НАЧАЛО ПРИЕМА ССО ПЛАТНО (20 июля 09:00)
+            endDate = new Date(year, 7, 15, 0, 0, 0);     // <<< КОНЕЦ ПРИЕМА ССО ПЛАТНО (по 14 августа включительно)
+            startLabel = "20 июля";
+        }
+    }
+
+    return { startDate, endDate, startLabel };
+}
+// ==========================================================================
+
+// Запуск и обновление обратного отсчета
+function startCountdown() {
+    if (timerInterval) clearInterval(timerInterval);
+
+    const timerEl = document.getElementById('countdown-timer');
+    if (!timerEl) return;
+
+    const update = () => {
+        const { startDate, endDate, startLabel } = getCampaignDates();
+        const now = new Date();
+
+        // 1. Состояние: Прием документов еще не начался
+        if (now < startDate) {
+            timerEl.className = 'countdown-timer not-started';
+            timerEl.innerHTML = `
+                <svg class="timer-icon" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                Прием документов начнется ${startLabel}
+            `;
+            return;
+        }
+
+        const diff = endDate - now;
+
+        // 2. Состояние: Прием документов завершен
+        if (diff <= 0) {
+            timerEl.className = 'countdown-timer expired';
+            timerEl.innerHTML = `
+                <svg class="timer-icon" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                Прием документов завершен
+            `;
+            return;
+        }
+
+        // 3. Состояние: Активный прием документов
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        timerEl.className = 'countdown-timer';
+        timerEl.innerHTML = `
+            <svg class="timer-icon" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+            До конца приема: ${days}д ${hours}ч ${minutes}м ${seconds}с
+        `;
+    };
+
+    update();
+    timerInterval = setInterval(update, 1000);
+}
+
+// Встраивание элемента таймера в шапку страницы
+function injectTimerElement() {
+    const header = document.querySelector('header');
+    if (!header) return;
+
+    let timerEl = document.getElementById('countdown-timer');
+    if (!timerEl) {
+        timerEl = document.createElement('div');
+        timerEl.id = 'countdown-timer';
+        timerEl.className = 'countdown-timer';
+        header.appendChild(timerEl);
+    }
+
+    startCountdown();
+}
 
 // Чтение ячейки Excel
 function getCell(sheet, r, c) {
@@ -16,53 +126,46 @@ function getGroupedPlans(sheet, currentOffset) {
     let startRow = currentOffset;
     let endRow = currentOffset;
 
-    // 1. Ищем начало объединенной группы (поднимаемся вверх, пока колонка G (индекс 6) пустая)
-    // В объединенных ячейках значение хранится только в самой первой (верхней) строке группы
     while (startRow > 0) {
-        // Если на текущей строке колонка G заполнена, а на строке выше - нет названия специальности, значит мы нашли начало
         const currentTotalVal = getCell(sheet, startRow, 6);
         const prevTotalVal = getCell(sheet, startRow - 1, 6);
         const prevName = getCell(sheet, startRow - 1, 3);
 
         if (currentTotalVal !== "" && (prevTotalVal === "" || !prevName)) {
-            break; // Мы вверху группы
+            break;
         }
         if (currentTotalVal === "" && prevName !== "") {
-            startRow--; // Поднимаемся выше, так как тут объединенная ячейка
+            startRow--;
         } else {
             break;
         }
     }
 
-    // 2. Ищем конец объединенной группы (опускаемся вниз, пока ячейки G пусты)
     let checkRow = startRow + 1;
     while (checkRow < 1000) {
         const checkTotalVal = getCell(sheet, checkRow, 6);
         const checkName = getCell(sheet, checkRow, 3);
 
-        // Если имя специальности есть, а ячейка общего числа заявлений (G) пустая - это часть группы
         if (checkName !== "" && checkTotalVal === "") {
             endRow = checkRow;
             checkRow++;
         } else {
-            break; // Группа закончилась
+            break;
         }
     }
 
-    // 3. Суммируем планы из всех найденных строк группы
     for (let r = startRow; r <= endRow; r++) {
-        totalPlan += parseInt(getCell(sheet, r, 4), 10) || 0;       // Колонка E (индекс 4)
-        totalPlanTarget += parseInt(getCell(sheet, r, 5), 10) || 0; // Колонка F (индекс 5)
+        totalPlan += parseInt(getCell(sheet, r, 4), 10) || 0;
+        totalPlanTarget += parseInt(getCell(sheet, r, 5), 10) || 0;
     }
 
     return {
         sumPlan: totalPlan,
         sumPlanTarget: totalPlanTarget,
-        dataRow: startRow // Строка, с которой нужно читать объединенные баллы и общее число поданных
+        dataRow: startRow
     };
 }
 
-// Парсинг данных из Excel
 // Парсинг данных из Excel
 function parseBlock(sheet, offset) {
     const isVoMode = typeof IS_VO !== 'undefined' && IS_VO;
@@ -70,21 +173,14 @@ function parseBlock(sheet, offset) {
     if (isVoMode) {
         // --- ЛОГИКА ДЛЯ ВЫСШЕГО ОБРАЗОВАНИЯ (ВО) ---
         const maxScore = typeof VO_MAX_SCORE !== 'undefined' ? VO_MAX_SCORE : 400;
-
-        // Определяем, есть ли объединение специальностей, и получаем суммарные планы
         const groupInfo = getGroupedPlans(sheet, offset);
 
-        // Название специальности берем из ячейки
         let rawName = getCell(sheet, offset, 3);
-
-        // ОЧИСТКА НАЗВАНИЯ: удаляем круглые скобки и всё, что в них находится
         const name = rawName.replace(/\s*\(.*?\)\s*/g, '').trim();
 
-        // Планы приема используем СУММАРНЫЕ для всей группы
         const plan = groupInfo.sumPlan;
         const planTarget = groupInfo.sumPlanTarget;
 
-        // Все объединенные данные (баллы, всего подано) читаем из главной (верхней) строки группы
         const mainRow = groupInfo.dataRow;
         const total = parseInt(getCell(sheet, mainRow, 6), 10) || 0;
 
@@ -93,7 +189,6 @@ function parseBlock(sheet, offset) {
         const outOfCompetitionTotal = parseInt(getCell(sheet, mainRow, 9), 10) || 0;
         const totalLgota = noExamsTotal + outOfCompetitionTotal;
 
-        // Парсинг заявлений по интервалам баллов
         let applications = [];
         let startCol = 12;
         let currentMax = maxScore;
@@ -129,8 +224,6 @@ function parseBlock(sheet, offset) {
         const type = "Высшее образование";
         const educationForm = "дневная";
         const base = maxScore === 300 ? "среднего специального образования (сокращенный срок)" : "общего среднего образования (11 классов)";
-
-        // Использование индивидуального срока обучения DURATION из HTML, если задан
         const duration = typeof DURATION !== 'undefined' ? DURATION : (maxScore === 300 ? "3-3.5 года" : "4 года");
 
         return {
@@ -173,11 +266,9 @@ function parseBlock(sheet, offset) {
     }
 }
 
-// Генерация HTML-структуры под твой дизайн
+// Генерация HTML-структуры под дизайн
 function renderMonitoringPage(s) {
     const isVoMode = !!s.isVo;
-
-    // Проверяем условия для вывода сообщения об отсутствии набора на платное отделение
     const noPaidExists = (typeof SPEC_OFFSET_PAID === 'undefined');
     const isPaidPlanZero = (s.plan === 0);
 
@@ -234,7 +325,6 @@ function renderMonitoringPage(s) {
         <div class="info-line">
             <strong>Прием:</strong>
             <div class="badge-container">
-                <!-- Кнопки выбора категории (бюджет / платно) -->
                 <button class="badge badge-budget ${currentCategory === 'budget' ? 'active' : ''}" onclick="switchCategory('budget')">за счет средств бюджета</button>
                 <button class="badge badge-paid ${currentCategory === 'paid' ? 'active' : ''}" onclick="switchCategory('paid')">на платной основе</button>
             </div>
@@ -331,6 +421,24 @@ async function loadAndRender(gid, offset) {
             document.getElementById('monitor-content').innerHTML = renderMonitoringPage(currentSpecData);
             document.getElementById('loading-overlay').style.display = 'none';
             document.getElementById('monitor-content').style.display = 'block';
+
+            // Проверяем, активен ли прием для выбранной вкладки (бюджет/платно)
+            const noPaidExists = (typeof SPEC_OFFSET_PAID === 'undefined');
+            const isPaidPlanZero = (currentSpecData.plan === 0);
+            const isPaidNotActive = (currentCategory === 'paid' && (noPaidExists || isPaidPlanZero));
+
+            if (isPaidNotActive) {
+                // Если прием на платной основе не осуществляется, удаляем таймер
+                const existingTimer = document.getElementById('countdown-timer');
+                if (existingTimer) existingTimer.remove();
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                }
+            } else {
+                // Иначе встраиваем таймер в шапку
+                injectTimerElement();
+            }
         }
     } catch (error) {
         console.error(error);
@@ -341,7 +449,7 @@ async function loadAndRender(gid, offset) {
     }
 }
 
-// Функция переключения направления приема (Бюджет / Платно)
+// Функция переключения направления приема
 async function switchCategory(category) {
     if (currentCategory === category) return;
     currentCategory = category;
@@ -360,8 +468,6 @@ async function switchCategory(category) {
         targetGid = typeof GID_BUDGET !== 'undefined' ? GID_BUDGET : (typeof GID !== 'undefined' ? GID : '0');
         targetOffset = typeof SPEC_OFFSET_BUDGET !== 'undefined' ? SPEC_OFFSET_BUDGET : (typeof SPEC_OFFSET !== 'undefined' ? SPEC_OFFSET : 0);
     } else {
-        // Если платный офсет не определен, безопасно задействуем бюджетный офсет,
-        // чтобы считать название специальности и корректно отрисовать заглушку "Нет набора"
         if (typeof SPEC_OFFSET_PAID === 'undefined') {
             targetGid = typeof GID_BUDGET !== 'undefined' ? GID_BUDGET : (typeof GID !== 'undefined' ? GID : '0');
             targetOffset = typeof SPEC_OFFSET_BUDGET !== 'undefined' ? SPEC_OFFSET_BUDGET : (typeof SPEC_OFFSET !== 'undefined' ? SPEC_OFFSET : 0);
@@ -374,7 +480,7 @@ async function switchCategory(category) {
     await loadAndRender(targetGid, targetOffset);
 }
 
-// Первоначальный запуск при открытии страницы
+// Первоначальный запуск
 async function initMonitoring() {
     const startGid = typeof GID_BUDGET !== 'undefined' ? GID_BUDGET : (typeof GID !== 'undefined' ? GID : '0');
     const startOffset = typeof SPEC_OFFSET_BUDGET !== 'undefined' ? SPEC_OFFSET_BUDGET : (typeof SPEC_OFFSET !== 'undefined' ? SPEC_OFFSET : 0);
@@ -384,15 +490,13 @@ async function initMonitoring() {
 
 window.addEventListener('DOMContentLoaded', initMonitoring);
 
-// Автоматическое исправление регистра кнопки "Назад" и удаление дублирующихся домиков
+// Автоматическое исправление интерфейса
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Принудительно меняем строчную "← назад" на заглавную "← Назад"
     const backBtn = document.querySelector('.btn-back');
     if (backBtn) {
         backBtn.innerHTML = '← Назад';
     }
 
-    // 2. Находим все кнопки "Домой" на странице и удаляем дубликаты (оставляем только первую)
     const homeButtons = document.querySelectorAll('.btn-home');
     if (homeButtons.length > 1) {
         for (let i = 1; i < homeButtons.length; i++) {
@@ -401,7 +505,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Автоматическое сохранение текущей страницы в историю просмотров
+// Сохранение в историю просмотров
 (function () {
     const specTitle = document.title;
     const specUrl = window.location.pathname;
