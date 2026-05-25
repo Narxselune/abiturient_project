@@ -365,6 +365,12 @@ function toggleAssistant() {
 function sendQuickQuestion(questionText) {
     appendMessage(questionText, 'user');
     generateBotResponse(questionText);
+
+    // Принудительно скрываем плашку с быстрыми вопросами на мобильных после выбора вопроса
+    const quickQuestions = document.getElementById('ai-quick-questions');
+    if (quickQuestions) {
+        quickQuestions.classList.remove('visible');
+    }
 }
 
 // Отправка сообщения из поля ввода
@@ -663,16 +669,22 @@ function showQuickQuestions() {
     }
 }
 
-// Скрыть быстрые вопросы при потере фокуса
+// Скрыть быстрые вопросы при потере фокуса (с задержкой)
 function hideQuickQuestions() {
     setTimeout(() => {
         const quickQuestions = document.getElementById('ai-quick-questions');
         const activeEl = document.activeElement;
 
-        if (quickQuestions && (!activeEl || !quickQuestions.contains(activeEl))) {
+        // Скрываем плашку только если фокус ушел действительно на область переписки, 
+        // а не на сами кнопки быстрых вопросов
+        if (quickQuestions) {
+            if (activeEl && quickQuestions.contains(activeEl)) {
+                // Если фокус перешел на кнопку внутри плашки, не закрываем её раньше времени
+                return;
+            }
             quickQuestions.classList.remove('visible');
         }
-    }, 200);
+    }, 250); // Увеличили задержку до 250мс для надежной обработки нажатия на смартфонах
 }
 
 // --- ИНТЕРАКТИВНОЕ УПРАВЛЕНИЕ ОКНОМ: МУЛЬТИ-РЕСАЙЗ И DRAG-AND-DROP ---
