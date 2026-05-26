@@ -5,7 +5,7 @@
 @keyframes pageFadeIn {
     0% {
         opacity: 0;
-        transform: translateY(6px); /* Ещё более мягкий и плавный сдвиг */
+        transform: translateY(6px);
     }
 
     100% {
@@ -15,59 +15,73 @@
 }
 
 html {
-    overflow-y: scroll; /* Предотвращает скачки макета из-за появления полосы прокрутки */
-    background-color: #F1EEFF; /* Исключает белые вспышки при перезагрузке страниц */
+    overflow-y: scroll;
+    background-color: #F1EEFF;
     transition: background-color 0.3s ease;
 }
 
-    /* Настройки HTML для темной темы */
     html.dark-mode {
-        background-color: #5A5766; /* Сланцево-серый фон темной темы */
+        background-color: #5A5766;
     }
 
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    /* Установлен новый читаемый шрифт Nunito */
     font-family: 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
     background-color: #F1EEFF;
     color: #000000;
-    /* Перевод в flex-режим для центрирования окна по центру экрана на всех страницах */
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 40px 20px;
     min-height: 100vh;
     transition: background-color 0.3s ease, color 0.3s ease;
-    position: relative; /* Необходимо для абсолютного позиционирования кнопок на фоне */
+    position: relative;
 }
 
-/* Глобальные стили для темной темы */
 .dark-mode body {
     background-color: #5A5766;
     color: #FFFFFF;
 }
 
+/* Стили главной страницы и ее фоны (перенесены из index.html) */
+.body-main {
+    background-image: url('../Fon/litht.jpeg') !important; /* Относительный путь от css/ к Fon/ */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    transition: background-image 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 40px 20px;
+}
+
+.dark-mode .body-main {
+    background-image: url('../Fon/dark.jpeg') !important;
+}
+
 .container {
     width: 100%;
-    max-width: 800px; /* Компактная ширина окна */
+    max-width: 800px;
     background-color: #FFFFFF;
-    border-radius: 24px; /* Увеличено закругление до 24px как на главной */
+    border-radius: 24px;
     padding: 30px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     position: relative;
-    /* Смягченный плавный тайминг для ультра-плавного эффекта */
     animation: pageFadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     will-change: transform, opacity;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .dark-mode .container {
-    background-color: #222222; /* Графитовый фон плашки в темной теме */
+    background-color: #222222;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
 }
 
@@ -76,15 +90,14 @@ header {
     text-align: center;
     border-bottom: 2px solid #F1EEFF;
     padding-bottom: 20px;
-    position: relative; /* Относительное позиционирование для выравнивания кнопки Назад */
-    min-height: 45px; /* Защита от схлопывания шапки */
+    position: relative;
+    min-height: 45px;
 }
 
 .dark-mode header {
     border-bottom: 2px solid #3A3B3D;
 }
 
-/* Защита от наложения заголовков на кнопки в углах экрана */
 header h1, header h2 {
     padding-left: 120px;
     padding-right: 120px;
@@ -96,7 +109,6 @@ h1 {
     margin-bottom: 10px;
 }
 
-/* Мягкий светлый оттенок шрифта вместо броского белого */
 .dark-mode h1 {
     color: #E2E8F0;
 }
@@ -111,7 +123,6 @@ h2 {
     color: #CBD5E1;
 }
 
-/* Навигация и списки */
 nav ul {
     list-style: none;
     display: block;
@@ -137,11 +148,10 @@ nav ul {
                 background-color: #F1EEFF;
             }
 
-/* --- Черно-белая кнопка Домой (на фоне, домик левее) --- */
 .btn-home {
-    position: absolute; /* Уходит наверх при прокрутке */
+    position: absolute;
     top: 25px;
-    right: 75px; /* Сдвинута левее для освобождения места под переключатель темы */
+    right: 75px;
     width: 36px;
     height: 36px;
     text-decoration: none;
@@ -150,7 +160,7 @@ nav ul {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    z-index: 9999; /* Поверх всех элементов */
+    z-index: 9999;
     opacity: 0.8;
 }
 
@@ -159,11 +169,10 @@ nav ul {
         opacity: 1;
     }
 
-/* --- Кнопка переключения темы (на фоне, солнце/луна правее) --- */
 .btn-theme {
-    position: absolute; /* Уходит наверх при прокрутке */
+    position: absolute;
     top: 25px;
-    right: 25px; /* Находится в самом крайнем правом углу */
+    right: 25px;
     width: 36px;
     height: 36px;
     text-decoration: none;
@@ -181,9 +190,6 @@ nav ul {
         opacity: 1;
     }
 
-    /* --- ЕДИНЫЙ ЦВЕТ ДЛЯ ВСЕХ КНОПОК НАВИГАЦИИ (ДОМИК И ТЕМА) --- */
-
-    /* В светлой теме: мягкий темно-серый цвет заголовков */
     .btn-home svg,
     .btn-home svg *,
     .btn-theme svg,
@@ -193,7 +199,6 @@ nav ul {
         transition: fill 0.3s ease, stroke 0.3s ease;
     }
 
-/* В темной теме: единый матовый платиновый цвет */
 .dark-mode .btn-home svg,
 .dark-mode .btn-home svg *,
 .dark-mode .btn-theme svg,
@@ -202,7 +207,6 @@ nav ul {
     stroke: #CCCCCC !important;
 }
 
-/* --- Кнопки для всех внутренних страниц (Стиль приведен к главной) --- */
 .btn-grid {
     display: block;
     margin-top: 20px;
@@ -212,20 +216,20 @@ nav ul {
 .btn-item {
     display: block;
     width: 100%;
-    max-width: 450px; /* Компактная ширина кнопок */
-    margin: 0 auto 20px auto !important; /* Увеличен отступ между кнопками до 20px */
-    padding: 18px 30px; /* Кнопки стали выше и шире */
+    max-width: 450px;
+    margin: 0 auto 20px auto !important;
+    padding: 18px 30px;
     background-color: #8CBEFF;
     color: #000000;
     text-decoration: none;
     text-align: center;
-    font-weight: 600; /* Изменено с bold на 600 для точного соответствия главной */
-    border-radius: 12px !important; /* Принудительный единый стиль сильного закругления кнопок */
+    font-weight: 600;
+    border-radius: 12px !important;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     transition: transform 0.2s, background-color 0.2s, color 0.2s;
     box-sizing: border-box;
-    font-size: 22px; /* Приведено к размеру шрифта главной */
-    line-height: 1.4; /* Высота строки как на главной */
+    font-size: 22px;
+    line-height: 1.4;
 }
 
     .btn-item:hover {
@@ -233,7 +237,6 @@ nav ul {
         background-color: #72aeff;
     }
 
-/* Кнопки в темной теме (матовый сине-серый цвет по референсу 15) */
 .dark-mode .btn-item {
     background-color: #3B4B5E;
     color: #FFFFFF;
@@ -243,7 +246,6 @@ nav ul {
         background-color: #4A5D75;
     }
 
-/* --- Вид колонок --- */
 .columns-container {
     display: flex;
     gap: 40px;
@@ -262,37 +264,34 @@ nav ul {
         margin-bottom: 25px;
         padding-bottom: 5px;
         border-bottom: 2px solid #8CBEFF;
-        font-size: 22px; /* Увеличен размер заголовков в колонках */
+        font-size: 22px;
     }
 
 .dark-mode .column h3 {
     border-bottom: 2px solid #3B4B5E;
 }
 
-/* Выравнивание кнопок внутри колонок */
 .column .btn-item {
-    max-width: 450px; /* Ограничение длины кнопок в колонках */
+    max-width: 450px;
     margin-left: auto !important;
     margin-right: auto !important;
 }
 
-/* Описание срока обучения */
 .spec-duration {
     display: block;
-    font-size: 15px; /* Сделано крупнее */
+    font-size: 15px;
     opacity: 0.8;
-    margin-top: 8px; /* Дополнительный отступ сверху для разделения, чтобы текст не сливался */
+    margin-top: 8px;
     font-weight: normal;
 }
 
-/* Слайдер для описания специальностей */
 .slider-container {
     max-width: 500px;
     margin: 30px auto;
     text-align: center;
     border: 1px solid #E0E0E0;
     padding: 20px;
-    border-radius: 24px; /* Скругление слайдера */
+    border-radius: 24px;
     background: #FAFAFA;
 }
 
@@ -307,7 +306,7 @@ nav ul {
     justify-content: center;
     align-items: center;
     gap: 10px;
-    flex-wrap: wrap; /* Позволяет аккуратно переносить элементы на новую строку на узких экранах */
+    flex-wrap: wrap;
 }
 
 .select-level {
@@ -329,7 +328,7 @@ nav ul {
     padding: 40px 20px;
     background: #FFFFFF;
     border: 2px solid #8CBEFF;
-    border-radius: 24px; /* Скругление книги в слайдере */
+    border-radius: 24px;
     min-height: 250px;
     box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
 }
@@ -341,22 +340,21 @@ nav ul {
 }
 
 .slider-book h3 {
-    font-size: 24px; /* Увеличено название в книге */
+    font-size: 24px;
 }
 
-/* Стилизация изображений внутри слайдера */
 .slider-book-img {
     max-width: 100%;
     max-height: 320px;
     object-fit: contain;
-    border-radius: 16px; /* Закругление слайдов-картинок */
+    border-radius: 16px;
     cursor: pointer;
     transition: transform 0.2s ease;
     user-select: none;
 }
 
     .slider-book-img:hover {
-        transform: scale(1.02); /* Легкий интерактивный наезд при наведении */
+        transform: scale(1.02);
     }
 
 .slider-nav-btns {
@@ -365,14 +363,14 @@ nav ul {
     justify-content: center;
     align-items: center;
     gap: 10px;
-    flex-wrap: nowrap; /* Полностью предотвращает перенос кнопок навигации */
+    flex-wrap: nowrap;
 }
 
 .btn-arrow {
     padding: 10px 20px;
     background-color: #8CBEFF;
     border: none;
-    border-radius: 24px; /* Скругление стрелок */
+    border-radius: 24px;
     font-weight: bold;
     cursor: pointer;
     margin: 0;
@@ -392,7 +390,6 @@ nav ul {
     background-color: #4A5D75;
 }
 
-/* --- Стили для Лайтбокса (Увеличение фото при клике) --- */
 .lightbox {
     position: fixed;
     top: 0;
@@ -417,7 +414,7 @@ nav ul {
 .lightbox-content {
     max-width: 90%;
     max-height: 85%;
-    border-radius: 16px; /* Округление модального окна */
+    border-radius: 16px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     transform: scale(0.93);
     transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -426,7 +423,7 @@ nav ul {
 }
 
 .lightbox.active .lightbox-content {
-    transform: scale(1); /* Плавное увеличение */
+    transform: scale(1);
 }
 
 .lightbox-close {
@@ -445,7 +442,6 @@ nav ul {
         transform: scale(1.15);
     }
 
-/* Таблицы мониторинга */
 .monitoring-table {
     width: 100%;
     border-collapse: collapse;
@@ -467,29 +463,28 @@ nav ul {
         background-color: #F9F9F9;
     }
 
-/* --- Стили для карт специальностей (по ссылке) --- */
 .spec-card {
     border-left: 6px solid #007bff;
     border-top: 1px solid #E2E8F0;
     border-right: 1px solid #E2E8F0;
     border-bottom: 1px solid #E2E8F0;
-    border-radius: 24px; /* Увеличено до 24px для единства с контейнером */
-    padding: 18px 20px; /* Снижены внутренние отступы для компактности */
-    margin: 12px 0 25px 0; /* Оптимизированы внешние отступы */
-    background-color: #F8FAFC; /* Мягкий фоновый цвет карточки по макету */
+    border-radius: 24px;
+    padding: 18px 20px;
+    margin: 12px 0 25px 0;
+    background-color: #F8FAFC;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
     transition: background-color 0.3s, border-color 0.3s;
 }
 
 .dark-mode .spec-card {
-    background-color: #2D2D2D; /* Тёмный цвет карточки */
+    background-color: #2D2D2D;
     border-top: 1px solid #3A3B3D;
     border-right: 1px solid #3A3B3D;
     border-bottom: 1px solid #3A3B3D;
 }
 
 .spec-title {
-    font-size: 26px; /* Компактное и аккуратное название */
+    font-size: 26px;
     font-weight: bold;
     margin-bottom: 12px;
     color: #1A202C;
@@ -500,8 +495,8 @@ nav ul {
 }
 
 .info-line {
-    margin-bottom: 8px; /* Уплотнено расстояние между строками */
-    font-size: 16px; /* Высокочитаемый компактный размер текста */
+    margin-bottom: 8px;
+    font-size: 16px;
     color: #000000;
 }
 
@@ -518,7 +513,6 @@ nav ul {
     color: #8CBEFF;
 }
 
-/* Кнопки переключения Бюджет / Платно */
 .badge-container {
     display: inline-flex;
     gap: 8px;
@@ -526,11 +520,10 @@ nav ul {
     vertical-align: middle;
 }
 
-/* Базовое выключенное состояние (выглядит как «платка» на фото 22) */
 .badge {
     display: inline-block;
     padding: 6px 14px;
-    border-radius: 24px; /* Скругление до 24px */
+    border-radius: 24px;
     font-size: 13px;
     font-weight: bold;
     border: none;
@@ -538,41 +531,37 @@ nav ul {
     transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
     font-family: inherit;
     outline: none;
-    background-color: #D6E6FF; /* Нежно-голубой цвет неактивной кнопки */
-    color: #8CBEFF; /* Приглушенный голубой текст */
+    background-color: #D6E6FF;
+    color: #8CBEFF;
 }
 
     .badge:focus {
         outline: none;
     }
 
-    /* Активное состояние кнопки (выглядит как «бюджет» на фото 22) */
     .badge.active {
-        background-color: #007bff; /* Насыщенный синий */
-        color: #ffffff; /* Белый текст */
+        background-color: #007bff;
+        color: #ffffff;
         box-shadow: 0 2px 6px rgba(0, 123, 255, 0.15);
     }
 
-/* Выключенное состояние кнопок для темной темы */
 .dark-mode .badge {
     background-color: #2D3D52;
     color: #5F7C9E;
 }
 
-    /* Активное состояние кнопок для темной темы */
     .dark-mode .badge.active {
         background-color: #095e8f;
         color: #ffffff;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     }
 
-/* Статистика блока "Всего подано" (внутри карточки) */
 .stat-box {
     border: 1px solid #E2E8F0;
-    border-radius: 16px; /* Закругление до 16px для внутренних рамок */
-    padding: 10px 14px; /* Компактное заполнениие */
+    border-radius: 16px;
+    padding: 10px 14px;
     margin-top: 12px;
-    max-width: 360px; /* Опрятная узкая форма */
+    max-width: 360px;
     background-color: #FFFFFF;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.01);
 }
@@ -603,10 +592,9 @@ nav ul {
     color: #E2E8F0;
 }
 
-/* Таблицы конкурса по баллам */
 .section-title {
     color: #007bff;
-    font-size: 18px; /* Оптимальный размер */
+    font-size: 18px;
     font-weight: 700;
     margin: 25px 0 10px 0;
 }
@@ -618,7 +606,7 @@ nav ul {
 .bar-table-wrapper {
     overflow-x: auto;
     margin-bottom: 20px;
-    border-radius: 16px; /* Скругление до 16px */
+    border-radius: 16px;
     border: 1px solid #E2E8F0;
 }
 
@@ -662,7 +650,6 @@ nav ul {
     border: 1px solid #3A3B3D;
 }
 
-/* Цвета ячеек в соответствии с конкурсом */
 .cell-green {
     background-color: #66BB6A;
     color: #000000;
@@ -678,7 +665,6 @@ nav ul {
     color: #000000;
 }
 
-/* Настройка цветов конкурса под тёмную тему для комфортного восприятия */
 .dark-mode .cell-green {
     background-color: #2E7D32;
     color: #FFFFFF;
@@ -694,22 +680,21 @@ nav ul {
     color: #FFFFFF;
 }
 
-/* Кнопка "Назад" во всех разделах */
 .btn-back {
     position: absolute;
     left: 0;
-    top: 5px; /* Выравнивание по уровню первой строки заголовка */
+    top: 5px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 10px 20px; /* Увеличен внутренний отступ */
+    padding: 10px 20px;
     background-color: transparent;
     color: #000000;
     text-decoration: none;
-    border: 1px solid #D5D5D5; /* Серая обводка */
-    border-radius: 30px; /* Скругленная форма */
+    border: 1px solid #D5D5D5;
+    border-radius: 30px;
     font-weight: 700;
-    font-size: 16px; /* Размер шрифта увеличен до 16px */
+    font-size: 16px;
     transition: all 0.2s ease;
 }
 
@@ -719,7 +704,7 @@ nav ul {
 }
 
 .btn-back:hover {
-    background-color: #F1EEFF; /* Легкая подсветка при наведении */
+    background-color: #F1EEFF;
     border-color: #B5B5B5;
 }
 
@@ -728,7 +713,6 @@ nav ul {
     border-color: #777777;
 }
 
-/* Сообщение об отсутствии набора на платное */
 .no-paid-msg {
     margin-top: 25px;
     padding: 20px;
@@ -747,17 +731,15 @@ nav ul {
     border: 1px dashed #E57373;
 }
 
-/* Адаптивность для мобильных экранов */
 @media (max-width: 768px) {
     body {
-        display: flex !important; /* На телефонах сохраняем flexbox для надежного вертикального выравнивания окон */
-        align-items: flex-start !important; /* Изменено с center на flex-start для фиксированного положения контента сверху */
+        display: flex !important;
+        align-items: flex-start !important;
         justify-content: center !important;
-        padding: 95px 15px 40px 15px !important; /* Свободный верхний отступ под кнопки в углах на фоне */
+        padding: 95px 15px 40px 15px !important;
         position: relative !important;
     }
 
-    /* Исключение для главной страницы: восстанавливаем центрирование по горизонтали и вертикали */
     .body-main {
         display: flex !important;
         align-items: center !important;
@@ -766,8 +748,8 @@ nav ul {
     }
 
     .container {
-        padding: 24px 15px; /* Компактные отступы внутри контейнера */
-        position: relative !important; /* Возвращено относительное позиционирование для стабильности всех слайдеров */
+        padding: 24px 15px;
+        position: relative !important;
     }
 
     header {
@@ -776,20 +758,19 @@ nav ul {
         align-items: center;
         padding-top: 10px;
         margin-bottom: 20px;
-        position: relative; /* Возвращено относительное позиционирование для стабильности заголовков */
+        position: relative;
     }
 
         header h1, header h2 {
             padding-left: 0;
             padding-right: 0;
-            font-size: 32px; /* Чуть уменьшаем заголовки на мобильном */
+            font-size: 32px;
         }
 
-    /* Кнопка "Назад" на телефоне теперь жестко закреплена на уровне верхних кнопок навигации */
     .btn-back {
         position: absolute !important;
         left: 0 !important;
-        top: -93px !important; /* Размещается ровно на 25px от верха экрана, на фиолетовом фоне */
+        top: -93px !important;
         padding: 8px 15px;
         font-size: 14px;
         border-radius: 30px;
@@ -799,9 +780,9 @@ nav ul {
     }
 
     .btn-home {
-        position: absolute; /* Возвращено к absolute */
+        position: absolute;
         top: 25px;
-        right: 60px; /* Сохраняем отступ на телефоне */
+        right: 60px;
         width: 32px;
         height: 32px;
     }
@@ -812,7 +793,7 @@ nav ul {
         }
 
     .btn-theme {
-        position: absolute; /* Возвращено к absolute */
+        position: absolute;
         top: 25px;
         right: 15px;
         width: 32px;
@@ -824,7 +805,6 @@ nav ul {
             height: 32px;
         }
 
-    /* Адаптация колонок: дневное сверху, заочное снизу */
     .columns-container {
         flex-direction: column;
         gap: 30px;
@@ -840,7 +820,6 @@ nav ul {
             margin-bottom: 15px;
         }
 
-    /* Адаптивность карт специальностей на смартфонах */
     .spec-card {
         padding: 15px;
         border-radius: 16px;
@@ -867,7 +846,6 @@ nav ul {
             padding: 6px 4px;
         }
 
-    /* Слайдеры на смартфонах */
     .slider-container {
         border-radius: 16px;
     }
@@ -886,19 +864,18 @@ nav ul {
         max-height: 220px;
     }
 
-    /* --- Адаптивность Главной страницы --- */
     .container-main {
-        padding: 40px 20px !important; /* Убираем сильное сжатие кнопок */
+        padding: 40px 20px !important;
     }
 
     .title-main {
-        font-size: 25px !important; /* Сжатие шрифта названия */
+        font-size: 25px !important;
     }
 
     .btn-grid-main .btn-item {
         font-size: 18px;
         padding: 12px 20px;
-        white-space: normal; /* Разрешаем перенос текста на телефонах */
+        white-space: normal;
     }
 
     .recently-viewed {
@@ -911,7 +888,6 @@ nav ul {
         align-items: center;
     }
 
-    /* Поле поиска по баллам */
     .search-container, .search-results-box {
         max-width: 100%;
     }
@@ -922,9 +898,8 @@ nav ul {
         border-radius: 16px;
     }
 
-    /* Кнопки переключения в слайдере */
     .btn-arrow {
-        padding: 8px 14px; /* Компактный отступ на смартфонах */
+        padding: 8px 14px;
         font-size: 14px;
         margin: 0;
     }
@@ -933,37 +908,20 @@ nav ul {
         font-size: 14px;
     }
 
-    /* Поле выбора баз (Селектор) на мобильных */
     .select-level {
         width: 100%;
-        max-width: 280px; /* Аккуратный размер для экранов телефонов */
+        max-width: 280px;
         font-size: 14px;
         padding: 6px 10px;
     }
 }
 
-/* ==========================================================================
-   СТИЛИ ДЛЯ ГЛАВНОЙ СТРАНИЦЫ (index.html)
-   ========================================================================== */
-
-/* Центрирование контейнера и установка фонового изображения */
-.body-main {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 20px;
-}
-
-/* Настройки полупрозрачного белого окна */
 .container-main {
-    max-width: 750px; /* Уменьшено с 900px до 750px */
+    max-width: 750px;
     width: 100%;
     border-radius: 24px;
     padding: 70px 50px;
-    /* Полупрозрачный белый цвет фона (альфа-канал 0.8) */
     background-color: rgba(255, 255, 255, 0.8) !important;
-    /* Более контрастная тень для читаемости поверх фотографии */
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
     text-align: center;
     transition: background-color 0.3s;
@@ -973,7 +931,6 @@ nav ul {
     background-color: rgba(30, 30, 30, 0.8) !important;
 }
 
-/* Шапка главной страницы */
 .header-main {
     margin-bottom: 45px;
     border-bottom: none;
@@ -990,12 +947,10 @@ nav ul {
     padding-right: 0;
 }
 
-/* Мягкий светлый оттенок шрифта вместо броского белого */
 .dark-mode .title-main {
     color: #E2E8F0;
 }
 
-/* Вертикальная сетка для кнопок (друг под другом) */
 .btn-grid-main {
     display: flex;
     flex-direction: column;
@@ -1004,10 +959,9 @@ nav ul {
     width: 100%;
 }
 
-    /* Кнопки на главной странице (имеют приоритетный селектор над базовым .btn-item) */
     .btn-grid-main .btn-item {
         width: 100%;
-        max-width: 550px; /* Уменьшено с 620px до 550px для более аккуратной формы */
+        max-width: 550px;
         margin: 0 !important;
         display: flex;
         align-items: center;
@@ -1017,14 +971,13 @@ nav ul {
         font-size: 22px;
         font-weight: 600;
         line-height: 1.4;
-        border-radius: 12px !important; /* Принудительный единый стиль сильного закругления кнопок */
+        border-radius: 12px !important;
         background-color: #8CBEFF;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
-        white-space: nowrap; /* Запрет переноса на новую строку для настольных ПК */
+        white-space: nowrap;
         transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-/* Кнопки главной страницы в темной теме (матовый цвет по референсу 15) */
 .dark-mode .btn-grid-main .btn-item {
     background-color: #3B4B5E !important;
     color: #FFFFFF !important;
@@ -1034,25 +987,23 @@ nav ul {
         background-color: #4A5D75 !important;
     }
 
-/* Адаптивность для кнопок главной на телефонах */
 @media (max-width: 768px) {
     .btn-grid-main .btn-item {
-        white-space: normal; /* Разрешаем перенос текста на узких экранах, чтобы кнопки не уходили за края */
-        font-size: 18px; /* Уменьшаем размер шрифта на смартфонах */
+        white-space: normal;
+        font-size: 18px;
         padding: 12px 20px;
     }
 }
 
-/* --- Секция "Вы недавно смотрели" с выравниванием как на фото --- */
 .recently-viewed {
-    display: inline-flex; /* Использование inline-flex центрирует блок, сохраняя выравнивание внутри */
+    display: inline-flex;
     justify-content: center;
     align-items: flex-start;
     margin-top: 40px;
     font-size: 15px;
     color: #000000;
     text-align: left;
-    gap: 8px; /* Небольшой зазор между заголовком и списком ссылок */
+    gap: 8px;
 }
 
 .dark-mode .recently-viewed {
@@ -1068,7 +1019,7 @@ nav ul {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px; /* Увеличено расстояние между ссылками, чтобы они не слипались */
+    gap: 10px;
 }
 
     .recently-viewed-links a {
@@ -1086,14 +1037,10 @@ nav ul {
     text-decoration: underline;
 }
 
-/* ==========================================================================
-   СТИЛИ ДЛЯ СТРАНИЦЫ ПОИСКА ПО БАЛЛАМ (sso_9_classes.html)
-   ========================================================================== */
-
 .search-container {
     position: relative;
     width: 100%;
-    max-width: 550px; /* Увеличено с 450px до 550px для соответствия кнопкам */
+    max-width: 550px;
     margin: 0 auto 20px auto;
 }
 
@@ -1102,7 +1049,7 @@ nav ul {
     padding: 14px 45px 14px 20px;
     font-size: 18px;
     border: 2px solid #8CBEFF;
-    border-radius: 24px; /* Закругление введено к единому стилю */
+    border-radius: 24px;
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
     font-family: inherit;
@@ -1128,22 +1075,21 @@ nav ul {
     color: #A0AEC0;
     cursor: pointer;
     user-select: none;
-    display: none; /* Скрыт по умолчанию, показывается при вводе текста */
+    display: none;
 }
 
     .search-clear:hover {
         color: #4A5568;
     }
 
-/* Блок результатов поиска по среднему баллу */
 .search-results-box {
     border: 2px solid #8CBEFF;
-    border-radius: 24px; /* Закругление введено к единому стилю */
+    border-radius: 24px;
     background-color: #FFFFFF;
     margin-top: 10px;
     margin-bottom: 25px;
     width: 100%;
-    max-width: 550px; /* Увеличено с 450px до 550px для соответствия кнопкам */
+    max-width: 550px;
     margin-left: auto;
     margin-right: auto;
     overflow: hidden;
@@ -1198,14 +1144,13 @@ nav ul {
     color: #A0AEC0;
 }
 
-/* Цветные классы для подсветки результатов */
 .text-green {
     color: #2ecc71;
     font-weight: bold;
 }
 
 .text-yellow {
-    color: #f39c12; /* Приближенный к оранжевому по Photo 2 */
+    color: #f39c12;
     font-weight: bold;
 }
 
@@ -1213,9 +1158,7 @@ nav ul {
     color: #e74c3c;
     font-weight: bold;
 }
-/* ==========================================
-   ГЛОБАЛЬНЫЕ АККУРАТНЫЕ СКРОЛЛБАРЫ ДЛЯ ВСЕХ СТРАНИЦ
-   ========================================== */
+
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -1251,29 +1194,23 @@ nav ul {
     scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
 
-/* СИНХРОНИЗАЦИЯ ЦВЕТА ИКОНОК С ТЕМОЙ БЕЗ ИЗМЕНЕНИЯ ИХ РАЗМЕРА */
 .btn-home svg, .btn-theme svg {
     fill: currentColor !important;
 }
 
-/* ==========================================================================
-   СТИЛИ ДЛЯ ПСЕВДО-ИИ ПОМОЩНИКА (ЧАТ-БОТА)
-   ========================================================================== */
-
 .ai-widget {
     position: fixed;
     bottom: 25px;
-    left: 25px; /* Изначальное положение кнопки в левом нижнем углу */
+    left: 25px;
     z-index: 10000;
     font-family: inherit;
 }
 
-/* Кнопка запуска виджета */
 .ai-toggle-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 12px 24px; /* Немного увеличили боковые отступы */
+    padding: 12px 24px;
     background-color: #007bff;
     color: #ffffff;
     border: none;
@@ -1294,9 +1231,8 @@ nav ul {
         fill: #ffffff !important;
     }
 
-/* Окно чата (свободное перемещение и изменение размеров) */
 .ai-window {
-    position: fixed; /* Фиксированное позиционирование относительно экрана для Drag-and-Drop */
+    position: fixed;
     bottom: 90px;
     left: 25px;
     width: 350px;
@@ -1322,13 +1258,12 @@ nav ul {
     box-shadow: 0 8px 30px rgba(0,0,0,0.4);
 }
 
-/* --- Стили зон изменения размера (невидимые рамки по краям) --- */
 .ai-resizer {
     position: absolute;
     background: transparent;
     z-index: 10005;
 }
-    /* Стороны */
+
     .ai-resizer.r {
         right: 0;
         top: 0;
@@ -1360,7 +1295,7 @@ nav ul {
         height: 6px;
         cursor: s-resize;
     }
-    /* Углы */
+
     .ai-resizer.tr {
         right: 0;
         top: 0;
@@ -1393,7 +1328,6 @@ nav ul {
         cursor: sw-resize;
     }
 
-/* Шапка чата (зона перетаскивания) */
 .ai-header {
     background-color: #007bff;
     color: #ffffff;
@@ -1401,8 +1335,8 @@ nav ul {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    cursor: move; /* Курсор в виде перекрестных стрелок указывает на возможность перетаскивания */
-    user-select: none; /* Предотвращает случайное выделение текста при таске */
+    cursor: move;
+    user-select: none;
 }
 
 .dark-mode .ai-header {
@@ -1416,8 +1350,8 @@ nav ul {
 }
 
 .ai-bot-avatar {
-    width: 32px; /* Фиксированная ширина контейнера */
-    height: 32px; /* Фиксированная высота контейнера */
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1426,9 +1360,9 @@ nav ul {
     .ai-bot-avatar img {
         width: 100%;
         height: 100%;
-        object-fit: cover; /* Картинка масштабируется без искажений пропорций */
-        border-radius: 50%; /* Скругляет углы картинки до идеального круга */
-        border: 1px solid rgba(255, 255, 255, 0.4); /* Мягкая белая рамочка вокруг аватарки */
+        object-fit: cover;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.4);
     }
 
 .ai-bot-name {
@@ -1450,7 +1384,6 @@ nav ul {
     line-height: 1;
 }
 
-/* Область сообщений */
 .ai-messages {
     flex: 1;
     padding: 15px;
@@ -1496,7 +1429,6 @@ nav ul {
     background-color: #3B4B5E;
 }
 
-/* --- Быстрые вопросы (адаптивное скрытие) --- */
 .ai-quick-questions {
     padding: 0;
     max-height: 0;
@@ -1514,7 +1446,6 @@ nav ul {
     background-color: #222222;
 }
 
-/* На компьютерах (ширина экрана более 768px) быстрые вопросы показаны всегда */
 @media (min-width: 1290px) {
     .ai-quick-questions {
         max-height: 150px !important;
@@ -1528,7 +1459,6 @@ nav ul {
     }
 }
 
-/* На мобильных устройствах раскрывается только при добавлении класса JS */
 @media (max-width: 768px) {
     .ai-quick-questions.visible {
         max-height: 150px;
@@ -1568,7 +1498,6 @@ nav ul {
     background-color: #3B4B5E;
 }
 
-/* Поле ввода */
 .ai-input-container {
     padding: 10px;
     background-color: #ffffff;
@@ -1618,20 +1547,19 @@ nav ul {
     fill: #ffffff !important;
 }
 
-/* Адаптивность под мобилки (экраны 1290px и меньше) */
 @media (max-width: 1290px) {
     .ai-widget {
         bottom: 15px !important;
-        left: 2.5vw !important; /* Отступ слева 2.5% от экрана */
-        width: 95vw !important; /* Ширина виджета 95% от экрана */
+        left: 2.5vw !important;
+        width: 95vw !important;
     }
 
     .ai-window {
         position: fixed !important;
         bottom: 75px !important;
-        left: 2.5vw !important; /* Ровное центрирование окна чата по левому краю */
-        width: 95vw !important; /* Ширина чата ровно 95% ширины экрана */
-        height: 60vh !important; /* Высота чата ровно 60% высоты экрана */
+        left: 2.5vw !important;
+        width: 95vw !important;
+        height: 60vh !important;
         min-width: auto !important;
         max-width: none !important;
         min-height: auto !important;
@@ -1640,20 +1568,15 @@ nav ul {
         box-shadow: 0 8px 25px rgba(0,0,0,0.2) !important;
     }
 
-    /* Отключаем зоны изменения размера (ресайзеры) на телефонах */
     .ai-resizer {
         display: none !important;
     }
 
-    /* На мобильных перетаскивание шапки отключаем, так как окно зафиксировано */
     .ai-header {
         cursor: default !important;
     }
 }
 
-/* ==========================================================================
-   СТИЛИ ТАЙМЕРА ОБРАТНОГО ОТСЧЕТА (ВКЛЮЧАЯ СОСТОЯНИЕ "НЕ НАЧАЛСЯ")
-   ========================================================================== */
 .countdown-timer {
     float: right;
     margin-top: 5px;
@@ -1682,7 +1605,6 @@ nav ul {
     fill: currentColor;
 }
 
-/* Оформление таймера: Прием документов еще не начался */
 .countdown-timer.not-started {
     background-color: #FEF3C7;
     color: #D97706;
@@ -1695,7 +1617,6 @@ nav ul {
     border-color: #D97706;
 }
 
-/* Оформление таймера: Прием документов завершен */
 .countdown-timer.expired {
     background-color: #FEE2E2;
     color: #EF4444;
@@ -1717,9 +1638,7 @@ nav ul {
         margin-right: auto;
     }
 }
-/* ==========================================================================
-   СТИЛИ ДЛЯ ЛИЧНОГО КАБИНЕТА (ВЕРХНИЙ ЛЕВЫЙ УГОЛ)
-   ========================================================================== */
+
 .cabinet-toggle-btn {
     position: fixed;
     top: 25px;
@@ -1750,7 +1669,6 @@ nav ul {
         fill: currentColor;
     }
 
-/* Окно личного кабинета (позиционировано слева) */
 .cabinet-window {
     position: fixed;
     top: 85px;
@@ -1796,7 +1714,6 @@ nav ul {
     gap: 8px;
 }
 
-/* Вкладки */
 .cabinet-tabs {
     display: flex;
     border-bottom: 1px solid #E2E8F0;
@@ -1833,7 +1750,6 @@ nav ul {
     background-color: #222222;
 }
 
-/* Тело */
 .cabinet-body {
     flex: 1;
     padding: 15px;
@@ -1847,7 +1763,6 @@ nav ul {
     color: #E2E8F0;
 }
 
-/* Фильтры и элементы */
 .cab-checklist-filters {
     display: flex;
     flex-direction: column;
@@ -1906,7 +1821,6 @@ nav ul {
         opacity: 0.5;
     }
 
-/* Конструктор вопросов */
 .cab-quiz-question {
     font-weight: bold;
     margin-bottom: 12px;
@@ -1959,39 +1873,33 @@ nav ul {
     }
 }
 
-/* ==========================================================================
-   СТИЛИ ДЛЯ ЗАГОЛОВКА АКАДЕМИИ НА ФОНЕ (index.html)
-   ========================================================================== */
 .academy-bg-title {
     font-size: 50px;
-    font-weight: 1800;
-    color: #000000; /* Контрастный темно-серый цвет в светлой теме */
+    font-weight: 800;
+    color: #000000;
     text-align: center;
     margin-bottom: 25px;
-    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8), 0 4px 12px rgba(255, 255, 255, 0.5); /* Белое свечение вокруг букв для читаемости на фото */
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8), 0 4px 12px rgba(255, 255, 255, 0.5);
     max-width: 1800px;
     width: 100%;
     transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 
-/* Стилизация заголовка в темной теме */
 .dark-mode .academy-bg-title {
-    color: #E2E8F0; 
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 4px 12px rgba(0, 0, 0, 0.6); /* Темная подложка */
+    color: #E2E8F0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 4px 12px rgba(0, 0, 0, 0.6);
 }
 
-/* Адаптивность для экранов мобильных телефонов */
 @media (max-width: 1290px) {
     .academy-bg-title {
         text-align: center;
-        font-size: 33px; /* Компактный размер */
-        margin-top: 20px; /* Отступ сверху под кнопки в углах на фоне */
+        font-size: 33px;
+        margin-top: 20px;
         margin-bottom: 15px;
         padding: 0 10px;
     }
 }
 
-/* Кнопка "Назад" в тесте Личного кабинета */
 .cab-quiz-back-btn {
     background: transparent !important;
     border: none !important;
@@ -2000,11 +1908,10 @@ nav ul {
     appearance: none !important;
     -webkit-appearance: none !important;
     padding: 6px 12px !important;
-    color: #007bff !important; /* Насыщенный синий цвет */
+    color: #007bff !important;
     font-size: 14px !important;
     font-weight: 600 !important;
     cursor: pointer !important;
-    /* Принудительное выравнивание строго по левому краю */
     display: flex !important;
     align-items: center !important;
     justify-content: flex-start !important;
@@ -2018,19 +1925,136 @@ nav ul {
     transition: all 0.2s ease-in-out !important;
 }
 
-    /* Эффект наведения в светлой теме */
     .cab-quiz-back-btn:hover {
         color: #0056b3 !important;
         background-color: rgba(0, 123, 255, 0.08) !important;
     }
 
-/* Стили для темной темы */
 .dark-mode .cab-quiz-back-btn {
-    color: #63b3ed !important; /* Светлый голубой для читаемости на темном фоне */
+    color: #63b3ed !important;
 }
 
-    /* Эффект наведения в темной теме */
     .dark-mode .cab-quiz-back-btn:hover {
         color: #90cdf4 !important;
         background-color: rgba(99, 179, 237, 0.12) !important;
     }
+
+/* Стили быстрых вопросов (перенесены из index.html) */
+#ai-quick-questions.ai-quick-questions {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    padding: 10px 14px !important;
+    background: transparent !important;
+    border: none !important;
+    margin: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+    #ai-quick-questions.ai-quick-questions button {
+        background: #f1f5f9 !important;
+        border: 1px solid #cbd5e1 !important;
+        color: #1a202c !important;
+        padding: 6px 14px !important;
+        border-radius: 20px !important;
+        font-size: 13px !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        white-space: nowrap !important;
+        font-family: inherit !important;
+    }
+
+        #ai-quick-questions.ai-quick-questions button:hover {
+            background: #e2e8f0 !important;
+            border-color: #94a3b8 !important;
+        }
+
+.dark-mode #ai-quick-questions.ai-quick-questions button {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #f7fafc !important;
+}
+
+    .dark-mode #ai-quick-questions.ai-quick-questions button:hover {
+        background: rgba(255, 255, 255, 0.15) !important;
+        border-color: rgba(255, 255, 255, 0.3) !important;
+    }
+
+/* Медиа-запросы адаптации главной (перенесены из index.html) */
+@media (max-width: 1024px) {
+    .body-main {
+        background-attachment: scroll !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .cabinet-toggle-btn {
+        top: 15px !important;
+        left: 15px !important;
+    }
+
+    .cabinet-window {
+        position: fixed !important;
+        top: 15px !important;
+        left: 10px !important;
+        right: 10px !important;
+        width: calc(100% - 20px) !important;
+        max-width: calc(100% - 20px) !important;
+        max-height: calc(100vh - 30px) !important;
+        overflow-y: auto !important;
+        box-sizing: border-box !important;
+        z-index: 2000 !important;
+        transform: none !important;
+    }
+}
+/* Сброс стилей списков для меню с полным сокрытием маркеров */
+
+ul.btn-grid, ul.btn-grid-main {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+}
+
+ul.btn-grid-main {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 18px !important;
+    align-items: center !important;
+    margin-bottom: 0 !important; /* Убираем нижний отступ списка */
+}
+
+ul.btn-grid li {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+}
+
+ul.btn-grid-main li {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+}
+
+/* Корректировка положения блока истории просмотров */
+.recently-viewed {
+    display: inline-flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 24px !important; /* Уменьшаем отступ до 24px, чтобы поднять блок выше */
+    font-size: 15px;
+    color: #000000;
+    text-align: left;
+    gap: 8px;
+}

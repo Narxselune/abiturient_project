@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Уровень ССО — Панель управления</title>
+
+    <!-- Подключаем Bootstrap 5 CSS для интеграции фреймворка -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Подключаем основной файл стилей после Bootstrap -->
     <link rel="stylesheet" href="../../css/main.css">
 
     <!-- Моментальное определение темы до отрисовки для предотвращения вспышек -->
@@ -15,7 +20,7 @@
 </head>
 <body>
 
-    <!-- Черно-белая кнопка-домик (вынесена за рамки белого окна, домик левее) -->
+    <!-- Черно-белая кнопка-домик -->
     <a href="../../index.html" class="btn-home" title="На главную">
         <svg viewBox="0 0 24 24">
             <rect x="16" y="4" width="3" height="5" />
@@ -23,10 +28,9 @@
         </svg>
     </a>
 
-    <!-- Переключатель темы (Луна / Солнце, тема правее) -->
+    <!-- Переключатель темы -->
     <a href="javascript:void(0)" class="btn-theme" onclick="toggleTheme()" title="Переключить тему">
         <svg id="theme-icon" viewBox="0 0 24 24">
-            <!-- Иконка луны по умолчанию -->
             <path d="M12.3 22h-.1c-5.5 0-10-4.5-10-10 0-4.8 3.5-9 8.3-9.8.5-.1 1 .2 1.2.7.2.5 0 1.1-.4 1.4-3.5 2.5-4.2 7.4-1.7 10.9 2.5 3.5 7.4 4.2 10.9 1.7.4-.3 1-.3 1.4.1.4.4.5.9.2 1.4-1.8 2.3-4.5 3.6-7.8 3.6z" />
         </svg>
     </a>
@@ -37,18 +41,22 @@
             <h1>Абитуриентам<br>среднего специального<br>образования</h1>
         </header>
 
-        <main>
-            <div class="btn-grid">
-                <a href="sso_9_classes.html" class="btn-item">База 9 классов</a>
-                <a href="sso_11_classes.html" class="btn-item">База 11 классов</a>
-                <a href="sso_pto.html" class="btn-item">Профессионально-техническое образование (ПТО)</a>
-                <a href="sso_info.html" class="btn-item">Информация по специальностям ССО</a>
+        <!-- Структурирование при помощи Bootstrap-утилит Flexbox без изменения оригинального вида -->
+        <main class="container-fluid px-0">
+            <div class="row justify-content-center m-0">
+                <div class="col-12">
+                    <div class="d-flex flex-column align-items-center">
+                        <a href="sso_9_classes.html" class="btn-item">База 9 классов</a>
+                        <a href="sso_11_classes.html" class="btn-item">База 11 классов</a>
+                        <a href="sso_pto.html" class="btn-item">Профессионально-техническое образование (ПТО)</a>
+                        <a href="sso_info.html" class="btn-item">Информация по специальностям ССО</a>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
 
     <script>
-        // Иконки SVG для Солнца и Луны
         const moonSvg = `<path d="M12.3 22h-.1c-5.5 0-10-4.5-10-10 0-4.8 3.5-9 8.3-9.8.5-.1 1 .2 1.2.7.2.5 0 1.1-.4 1.4-3.5 2.5-4.2 7.4-1.7 10.9 2.5 3.5 7.4 4.2 10.9 1.7.4-.3 1-.3 1.4.1.4.4.5.9.2 1.4-1.8 2.3-4.5 3.6-7.8 3.6z" />`;
         const sunSvg = `<circle cx="12" cy="12" r="5" /><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke-width="2" stroke-linecap="round" stroke="currentColor" />`;
 
@@ -65,7 +73,6 @@
             updateThemeIcon(isDark);
         }
 
-        // Обновление иконки при старте
         document.addEventListener('DOMContentLoaded', () => {
             const isDark = document.documentElement.classList.contains('dark-mode');
             updateThemeIcon(isDark);

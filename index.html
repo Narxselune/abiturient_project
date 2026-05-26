@@ -3,126 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Главная страница — Система мониторинга</title>
+
+    <!-- Базовые SEO метатеги -->
+    <title>Главная страница — Система мониторинга Белорусской государственной академии связи</title>
+    <meta name="description" content="Интерактивный помощник абитуриента Белорусской государственной академии связи. Следите за ходом приема документов, оценивайте свои шансы и выбирайте специальность онлайн.">
+    <meta name="keywords" content="БГАС, Белорусская государственная академия связи, приемная комиссия БГАС, мониторинг БГАС, калькулятор баллов БГАС, поступление 2026, колледж БГАС, связь Минск">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://your-domain.by/index.html">
+
+    <!-- Open Graph метатеги (для Telegram, Viber, VK) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Система мониторинга абитуриентов БГАС — Выберите специальность">
+    <meta property="og:description" content="Узнайте проходные баллы, оцените свои шансы на поступление с помощью калькулятора и получите консультацию ассистента онлайн.">
+    <meta property="og:image" content="Fon/avatar.jpeg">
+    <meta property="og:url" content="https://your-domain.by/index.html">
+
+    <!-- Оптимизация загрузки (Performance: Resource Hints) -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Стили -->
     <link rel="stylesheet" href="css/main.css">
 
-    <!-- Моментальное определение темы до отрисовки для предотвращения вспышек -->
+    <!-- Моментальное определение темы до отрисовки для предотвращения вспышек (FOUC) -->
     <script>
-        if (localStorage.getItem('theme') === 'dark') {
-            document.documentElement.classList.add('dark-mode');
+        try {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        } catch (e) {
+            console.warn("Конфиденциальный режим или настройки браузера блокируют доступ к localStorage:", e);
         }
     </script>
-
-    <!-- Стили загрузки фонов, прописанные напрямую в файле (защита от CORS-блокировок file://) -->
-    <style>
-        .body-main {
-            background-image: url('Fon/litht.jpeg') !important; /* Светлая тема с расширением .jpeg */
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            transition: background-image 0.3s ease;
-            /* Режим flex-column для размещения заголовка академии НАД рамкой */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start; /* Начинаем контент сверху */
-            padding: 40px 20px;
-        }
-
-        /* При включенной темной теме картинка плавно сменяется на темную */
-        .dark-mode .body-main {
-            background-image: url('Fon/dark.jpeg') !important; /* Тёмная тема с расширением .jpeg */
-        }
-
-        /* Адаптивное закрепление кнопки личного кабинета в левом верхнем углу */
-        .cabinet-toggle-btn {
-            position: fixed !important;
-            top: 20px !important;
-            left: 20px !important;
-            z-index: 1000 !important;
-        }
-
-        /* Адаптивные отступы для экранов смартфонов */
-        @media (max-width: 768px) {
-            .cabinet-toggle-btn {
-                top: 15px !important;
-                left: 15px !important;
-            }
-        }
-
-        /* Устранение прыжков фона на смартфонах и планшетах при прокрутке */
-        @media (max-width: 1024px) {
-            .body-main {
-                background-attachment: scroll !important;
-            }
-        }
-
-        /* Адаптивное позиционирование окна Личного кабинета на мобильных устройствах */
-        @media (max-width: 768px) {
-            .cabinet-window {
-                position: fixed !important;
-                top: 15px !important;
-                left: 10px !important;
-                right: 10px !important;
-                width: calc(100% - 20px) !important;
-                max-width: calc(100% - 20px) !important;
-                max-height: calc(100vh - 30px) !important;
-                overflow-y: auto !important;
-                box-sizing: border-box !important;
-                z-index: 2000 !important;
-                transform: none !important;
-            }
-        }
-
-        /* Принудительное форматирование быстрых кнопок в горизонтальный ряд с переносом (как на фото 3) */
-        #ai-quick-questions.ai-quick-questions {
-            display: flex !important;
-            flex-direction: row !important;
-            flex-wrap: wrap !important;
-            gap: 6px !important;
-            padding: 10px 14px !important;
-            background: transparent !important;
-            border: none !important;
-            margin: 0 !important;
-            height: auto !important;
-            max-height: none !important;
-            overflow: visible !important;
-            opacity: 1 !important;
-            visibility: visible !important;
-        }
-
-            #ai-quick-questions.ai-quick-questions button {
-                background: rgba(255, 255, 255, 0.08) !important;
-                border: 1px solid rgba(255, 255, 255, 0.15) !important;
-                color: #f7fafc !important;
-                padding: 6px 14px !important;
-                border-radius: 20px !important;
-                font-size: 13px !important;
-                cursor: pointer !important;
-                transition: all 0.2s ease !important;
-                display: inline-flex !important;
-                align-items: center !important;
-                white-space: nowrap !important;
-                font-family: inherit !important;
-            }
-
-                #ai-quick-questions.ai-quick-questions button:hover {
-                    background: rgba(255, 255, 255, 0.15) !important;
-                    border-color: rgba(255, 255, 255, 0.3) !important;
-                }
-
-        .dark-mode #ai-quick-questions.ai-quick-questions button {
-            background: rgba(255, 255, 255, 0.05) !important;
-            border-color: rgba(255, 255, 255, 0.1) !important;
-            color: #e2e8f0 !important;
-        }
-    </style>
 
     <!-- Библиотеки React, ReactDOM и компилятор Babel для работы компонентов -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.3/babel.min.js"></script>
+
+    <!-- ПОДКЛЮЧЕНИЕ JQUERY И JQUERY UI (НЕОБХОДИМЫ ДЛЯ ИНТЕРФЕЙСА ЧАТА-АССИСТЕНТА) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css">
 </head>
 <body class="body-main">
     <!-- Переключатель темы (в правом верхнем углу экрана) -->
@@ -160,7 +84,7 @@
             <div class="ai-header">
                 <div class="ai-bot-info">
                     <div class="ai-bot-avatar">
-                        <img src="Fon/avatar.jpeg" alt="Ассистент">
+                        <img src="Fon/avatar.jpeg" alt="Ассистент приемной комиссии">
                     </div>
                     <div>
                         <div class="ai-bot-name">Ассистент приемной комиссии</div>
@@ -204,39 +128,49 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // ==========================================================================
-        // КОРНЕВОЙ КОМПОНЕНТ СТРАНИЦЫ
-        // ==========================================================================
         function HomepageApp() {
             const [recentSpecs, setRecentSpecs] = useState([]);
             const [isCabinetOpen, setIsCabinetOpen] = useState(false);
 
             useEffect(() => {
-                const history = JSON.parse(localStorage.getItem('recently_viewed_specs')) || [];
-                setRecentSpecs(history);
+                try {
+                    const history = JSON.parse(localStorage.getItem('recently_viewed_specs')) || [];
+                    setRecentSpecs(history);
+                } catch (e) {
+                    console.warn("Доступ к localStorage заблокирован:", e);
+                }
             }, []);
+
+            // Безопасное определение наличия компонента Кабинета (защита от падений и CORS-блокировок file://)
+            const CabinetComponent = typeof PersonalCabinet !== 'undefined' ? PersonalCabinet : null;
+
+            if (!CabinetComponent && window.location.protocol === 'file:') {
+                console.warn("Внимание: Вы запустили сайт через протокол file://. Мобильные и некоторые десктопные браузеры блокируют загрузку внешнего файла js/cabinet.js из-за CORS. Для полноценной работы Личного Кабинета используйте локальный веб-сервер (например, Live Server в VS Code) или загрузите проект на хостинг.");
+            }
 
             return (
                 <div>
-                    {/* Кнопка Личного кабинета (зафиксирована в левом верхнем углу через CSS) */}
-                    <button
-                        className="cabinet-toggle-btn"
-                        onClick={() => setIsCabinetOpen(prev => !prev)}
-                        title="Личный кабинет абитуриента"
-                    >
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                        </svg>
-                    </button>
+                    {/* Кнопка Личного кабинета */}
+                    {CabinetComponent && (
+                        <button
+                            className="cabinet-toggle-btn"
+                            onClick={() => setIsCabinetOpen(prev => !prev)}
+                            title="Личный кабинет абитуриента"
+                        >
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                            </svg>
+                        </button>
+                    )}
 
-                    {/* Выезжающее окно Личного кабинета (компонент загружается из js/cabinet.js) */}
-                    <PersonalCabinet isOpen={isCabinetOpen} onClose={() => setIsCabinetOpen(false)} />
+                    {/* Выезжающее окно Личного кабинета */}
+                    {CabinetComponent && <CabinetComponent isOpen={isCabinetOpen} onClose={() => setIsCabinetOpen(false)} />}
 
-                    {/* Сетка главного меню */}
-                    <div className="btn-grid-main">
-                        <a href="pages/sso/sso_main.html" className="btn-item">Среднее специальное образование (ССО)</a>
-                        <a href="pages/vo/vo_main.html" className="btn-item">Высшее образование (ВО)</a>
-                    </div>
+                    {/* Сетка главного меню в виде списка */}
+                    <ul className="btn-grid-main">
+                        <li><a href="pages/sso/sso_main.html" className="btn-item">Среднее специальное образование (ССО)</a></li>
+                        <li><a href="pages/vo/vo_main.html" className="btn-item">Высшее образование (ВО)</a></li>
+                    </ul>
 
                     {/* Вы недавно смотрели */}
                     {recentSpecs.length > 0 && (
@@ -273,9 +207,14 @@
         }
 
         function toggleTheme() {
-            const isDark = document.documentElement.classList.toggle('dark-mode');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            updateThemeIcon(isDark);
+            try {
+                const isDark = document.documentElement.classList.toggle('dark-mode');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                updateThemeIcon(isDark);
+            } catch (e) {
+                const isDark = document.documentElement.classList.toggle('dark-mode');
+                updateThemeIcon(isDark);
+            }
         }
 
         // Инициализация правильной иконки темы при загрузке страницы

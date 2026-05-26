@@ -29,7 +29,6 @@ const assistantDatabase = [
             '<b>Абитуриенты, не достигшие возраста 18 лет, подают документы в приемную комиссию в присутствии законного представителя (родитель)</b>'
     },
     {
-        // Убрано одиночное слово 'прием', чтобы избежать ложного срабатывания на фразу "приемная комиссия"
         keywords: ['срок приема', 'сроки', 'когда подавать', 'календарь', 'до какого числа', 'период приема', 'прием документов', 'когда заканчивается', 'даты подачи'],
         answer: 'Прием документов в 2025 году осуществляется в следующие сроки:<br>' +
             '<br>' +
@@ -37,7 +36,7 @@ const assistantDatabase = [
             '• <strong>На платное (ССО):</strong> (9 кл.) с 18 июля по 10 августа, (11 кл., ПТО) с 18 июля по 15 августа.<br>' +
             'Зачисление на уровень ССО:<br>' +
             '• <strong>На бюджет (ССО):</strong> (9 кл.) по 6 августа, (11 кл., ПТО) по 13 августа.<br>' +
-            '• <strong>На платное (ССО):</strong> (9 кл.) по 12 августа, (11 кл., ПТО) по 17 августа.<br>' +
+            '• <strong>На платное (SСО):</strong> (9 кл.) по 12 августа, (11 кл., ПТО) по 17 августа.<br>' +
             '<br>' +
             '• <strong>На бюджет (ВО):</strong> (11 кл.) с 12 июля по 17 июля, (ССО) с 12 июля по 17 июля.<br>' +
             '• <strong>На платное (ВО):</strong> (11 кл.) с 12 июля по 1 августа, (ССО) с 12 июля по 17 июля.<br>' +
@@ -55,7 +54,7 @@ const assistantDatabase = [
         answer: 'Наш интерактивный калькулятор анализирует загруженные данные.<br>' +
             '1. Перейди во вкладку нужного уровня образования (например, ССО после 9 класса).<br>' +
             '2. Введи свой средний балл в строку поиска.<br>' +
-            '3. Программа определит твою позицию среди других абитуриентов, уже подавших документы, и подсветит шансы цветом (зеленый — проходишь, желтый — на грани, красный — не проходишь).'
+            '3. Программа определит твою позицию среди других абитуриентов, уже поданных документы, и подсветит шансы цветом (зеленый — проходишь, желтый — на грани, красный — не проходишь).'
     },
     {
         keywords: ['привет', 'здравствуй', 'добрый день', 'ку', 'хай', 'hello', 'бот'],
@@ -75,7 +74,6 @@ const assistantDatabase = [
             '<strong>Уровень ВО (заочная форма): </strong> в год 1636 руб. (в семестр 818 руб.)<br>'
     },
     {
-        // Расширен список ключевых фраз, ассоциирующихся с графиком работы приемной комиссии
         keywords: ['работает', 'график', 'часы', 'режим', 'время работы', 'воскресен', 'информир', 'обновлен', 'время работы комиссии', 'часы работы', 'режим работы', 'когда работает', 'во сколько работает', 'работы приемной'],
         answer: '<b>Время работы приемной комиссии:</b><br>' +
             '• Понедельник – Суббота: <b>с 9:00 до 18:00</b>.<br>' +
@@ -88,7 +86,6 @@ const assistantDatabase = [
     }
 ];
 
-// Конфигурации всех специальностей (ССО 9, ССО 11, ВО, ВО после ССО)
 const sso9Specs = [
     { name: "Тестирование программного обеспечения", offset: 148, offsetPaid: 164 },
     { name: "Разработка и сопровождение веб-ресурсов", offset: 116, offsetPaid: 132 },
@@ -126,7 +123,6 @@ const ASSISTANT_SHEET_ID = '1uFwZs-jzJiUkZk6U266bo4QbmwjAjoUcc0pKAabWhos';
 const ASSISTANT_XLSX_URL = `https://docs.google.com/spreadsheets/d/${ASSISTANT_SHEET_ID}/export?format=xlsx`;
 let assistantWorkbook = null;
 
-// Динамическое подключение XLSX
 function ensureXlsxLoaded(callback) {
     if (typeof XLSX !== 'undefined') {
         callback();
@@ -138,7 +134,6 @@ function ensureXlsxLoaded(callback) {
     document.head.appendChild(script);
 }
 
-// Загрузка Excel в фоновом режиме
 function initAssistantDatabase() {
     ensureXlsxLoaded(() => {
         fetch(ASSISTANT_XLSX_URL)
@@ -156,14 +151,12 @@ function initAssistantDatabase() {
     });
 }
 
-// Чтение ячеек
 function getCell(sheet, r, c) {
     if (!sheet) return '';
     const addr = XLSX.utils.encode_cell({ r, c });
     return sheet[addr] ? sheet[addr].v : '';
 }
 
-// Сбор объединенных планов для уровня ВО
 function getGroupedPlans(sheet, currentOffset) {
     let totalPlan = 0;
     let startRow = currentOffset;
@@ -207,7 +200,6 @@ function getGroupedPlans(sheet, currentOffset) {
     };
 }
 
-// Парсинг блоков ССО и ВО
 function parseSsoBlock(sheet, offset) {
     const plan = parseInt(getCell(sheet, offset + 10, 2), 10) || 0;
     let applications = [];
@@ -245,7 +237,6 @@ function parseVoBlock(sheet, offset, isVoSso) {
     return { plan, applications };
 }
 
-// Подсчет позиций
 function getSsoPosition(applications, userScore) {
     const count = applications
         .filter(app => app.score >= userScore)
@@ -265,7 +256,6 @@ function getVoPosition(applications, userScore) {
     return countAhead + 1;
 }
 
-// Вычисление текущего проходного балла
 function getPassingScore(blockData, isVo) {
     let allScores = [];
 
@@ -297,7 +287,6 @@ function getPassingScore(blockData, isVo) {
     }
 }
 
-// Сопоставление введенной строки со специальностями по строго разделенным маскам
 function findMatchingSpecialties(text) {
     const allSpecs = [
         ...sso9Specs.map(s => ({ ...s, category: 'ССО (после 9 кл.)', parser: parseSsoBlock, isVo: false, isVoSso: false })),
@@ -311,7 +300,7 @@ function findMatchingSpecialties(text) {
         { pattern: /тестир|тест|тпо|qa|софт/i, key: "test" },
         { pattern: /кабель|икс/i, key: "cable" },
         { pattern: /мультимеди/i, key: "multi" },
-        { pattern: /почт/i, key: "post" }, // Почтовая связь и деятельность сопоставляется только по корню "почт"
+        { pattern: /почт/i, key: "post" },
         { pattern: /радио|вещ|телевиден/i, key: "radio" },
         { pattern: /телеком|сеть|коммун|инфоком/i, key: "telecom" },
         { pattern: /автоматиз/i, key: "auto" },
@@ -329,7 +318,6 @@ function findMatchingSpecialties(text) {
                 if (k.key === "cable" && /кабель/i.test(spec.name)) isMatch = true;
                 if (k.key === "multi" && /мультимеди/i.test(spec.name)) isMatch = true;
                 if (k.key === "post" && /почт|связь/i.test(spec.name)) {
-                    // Исключаем совпадение с "радиосвязью" в почтовом фильтре
                     if (!/радио/i.test(spec.name)) isMatch = true;
                 }
                 if (k.key === "auto" && /автоматиз/i.test(spec.name)) isMatch = true;
@@ -348,7 +336,6 @@ function findMatchingSpecialties(text) {
     return matchedSpecs;
 }
 
-// Безопасное сопоставление коротких ключевых слов
 function matchesKeyword(text, keyword) {
     const textLower = text.toLowerCase();
     const kwLower = keyword.toLowerCase();
@@ -360,7 +347,6 @@ function matchesKeyword(text, keyword) {
     return textLower.includes(kwLower);
 }
 
-// Переключение видимости чата
 function toggleAssistant() {
     const windowEl = document.getElementById('ai-window');
     const isHidden = windowEl.style.display === 'none';
@@ -374,19 +360,16 @@ function toggleAssistant() {
     }
 }
 
-// Отправка быстрого вопроса по кнопке
 function sendQuickQuestion(questionText) {
     appendMessage(questionText, 'user');
     generateBotResponse(questionText);
 
-    // Принудительно скрываем плашку с быстрыми вопросами на мобильных после выбора вопроса
     const quickQuestions = document.getElementById('ai-quick-questions');
     if (quickQuestions) {
         quickQuestions.classList.remove('visible');
     }
 }
 
-// Отправка сообщения из поля ввода
 function sendMessageFromInput() {
     const inputEl = document.getElementById('ai-user-input');
     const text = inputEl.value.trim();
@@ -397,14 +380,12 @@ function sendMessageFromInput() {
     generateBotResponse(text);
 }
 
-// Отслеживание нажатия Enter
 function handleAssistantKey(e) {
     if (e.key === 'Enter') {
         sendMessageFromInput();
     }
 }
 
-// Добавление сообщения в чат
 function appendMessage(text, sender) {
     const messagesContainer = document.getElementById('ai-messages');
     const msgDiv = document.createElement('div');
@@ -415,7 +396,6 @@ function appendMessage(text, sender) {
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
-// Обработка ввода конкретного балла (Вариант 2)
 function handleScoreCalculation(userScore, isVoScore, originalText) {
     if (!assistantWorkbook) {
         initAssistantDatabase();
@@ -543,7 +523,6 @@ function handleScoreCalculation(userScore, isVoScore, originalText) {
     }
 }
 
-// Обработка запросов о проходных баллах в реальном времени
 function handlePassingScoreQuery(normalizedText, originalText) {
     if (!assistantWorkbook) {
         initAssistantDatabase();
@@ -601,12 +580,10 @@ function handlePassingScoreQuery(normalizedText, originalText) {
     }
 }
 
-// Логика генерации ответа
 function generateBotResponse(userText) {
     const textLower = userText.toLowerCase();
     const normalizedText = textLower.replace(',', '.');
 
-    // 1. ПРИОРИТЕТ: Ввод балла абитуриентом (например, 8.5 или 320)
     let isScoreQuery = false;
     let userScore = null;
     let isVoScore = false;
@@ -636,14 +613,12 @@ function generateBotResponse(userText) {
         return;
     }
 
-    // 2. ПРИОРИТЕТ: Запрос проходных баллов на специальность (например, "Какой балл на веб-ресурсы")
     const isAskingForCutoff = /проходн|какой балл|какие балл|балл.*выходит|балл.*сейчас/i.test(normalizedText);
     if (isAskingForCutoff) {
         handlePassingScoreQuery(normalizedText, userText);
         return;
     }
 
-    // 3. ПРИОРИТЕТ: Поиск по статической базе ответов
     let bestMatch = null;
     let maxScore = 0;
 
@@ -667,14 +642,12 @@ function generateBotResponse(userText) {
         return;
     }
 
-    // Дефолтный ответ
     const defaultReply = 'Я не до конца понял твой вопрос. Попробуй спросить подробнее, используя ключевые слова, например: <strong>документы</strong>, <strong>сроки подачи</strong>, <strong>общежитие</strong> или напиши свой средний балл (например, <b>8.5</b>), чтобы я оценил шансы.';
     setTimeout(() => {
         appendMessage(defaultReply, 'bot');
     }, 400);
 }
 
-// Показать быстрые вопросы при фокусе на поле ввода
 function showQuickQuestions() {
     const quickQuestions = document.getElementById('ai-quick-questions');
     if (quickQuestions) {
@@ -682,154 +655,39 @@ function showQuickQuestions() {
     }
 }
 
-// Скрыть быстрые вопросы при потере фокуса (с задержкой)
 function hideQuickQuestions() {
     setTimeout(() => {
         const quickQuestions = document.getElementById('ai-quick-questions');
         const activeEl = document.activeElement;
 
-        // Скрываем плашку только если фокус ушел действительно на область переписки, 
-        // а не на сами кнопки быстрых вопросов
         if (quickQuestions) {
             if (activeEl && quickQuestions.contains(activeEl)) {
-                // Если фокус перешел на кнопку внутри плашки, не закрываем её раньше времени
                 return;
             }
             quickQuestions.classList.remove('visible');
         }
-    }, 250); // Увеличили задержку до 250мс для надежной обработки нажатия на смартфонах
+    }, 250);
 }
 
-// --- ИНТЕРАКТИВНОЕ УПРАВЛЕНИЕ ОКНОМ: МУЛЬТИ-РЕСАЙЗ И DRAG-AND-DROP ---
-document.addEventListener('DOMContentLoaded', () => {
-    const win = document.getElementById('ai-window');
-    const header = document.querySelector('.ai-header');
-    if (!win || !header) return;
+// --- ИНТЕРАКТИВНОЕ УПРАВЛЕНИЕ ОКНОМ С ПОМОЩЬЮ JQUERY UI ---
+$(document).ready(function () {
+    const $win = $("#ai-window");
 
-    // --- 1. ЛОГИКА ИЗМЕНЕНИЯ РАЗМЕРА (МУЛЬТИ-РЕСАЙЗ) ---
-    const directions = ['r', 'l', 't', 'b', 'tr', 'tl', 'br', 'bl'];
-    directions.forEach(dir => {
-        const resizer = document.createElement('div');
-        resizer.className = `ai-resizer ${dir}`;
-        win.appendChild(resizer);
+    if ($win.length) {
+        // Инициализация перемещения (Drag-and-Drop) за шапку чата
+        $win.draggable({
+            handle: ".ai-header",
+            containment: "window",
+            scroll: false
+        });
 
-        resizer.addEventListener('mousedown', initDrag);
-    });
-
-    let startX, startY, startWidth, startHeight, startLeft, startTop;
-    let activeResizer = null;
-
-    function initDrag(e) {
-        e.preventDefault();
-        e.stopPropagation(); // Защита от срабатывания перетаскивания при изменении размера
-        activeResizer = e.target;
-
-        startX = e.clientX;
-        startY = e.clientY;
-
-        const rect = win.getBoundingClientRect();
-        startWidth = rect.width;
-        startHeight = rect.height;
-        startLeft = rect.left;
-        startTop = rect.top;
-
-        document.addEventListener('mousemove', doDrag);
-        document.addEventListener('mouseup', stopDrag);
-    }
-
-    function doDrag(e) {
-        if (!activeResizer) return;
-
-        const dx = e.clientX - startX;
-        const dy = e.clientY - startY;
-        const classes = activeResizer.className;
-
-        let newWidth = startWidth;
-        let newHeight = startHeight;
-        let newLeft = startLeft;
-        let newTop = startTop;
-
-        if (classes.includes('r') || classes.includes('tr') || classes.includes('br')) {
-            newWidth = startWidth + dx;
-        }
-        if (classes.includes('l') || classes.includes('tl') || classes.includes('bl')) {
-            newWidth = startWidth - dx;
-            newLeft = startLeft + dx;
-        }
-        if (classes.includes('b') || classes.includes('br') || classes.includes('bl')) {
-            newHeight = startHeight + dy;
-        }
-        if (classes.includes('t') || classes.includes('tr') || classes.includes('tl')) {
-            newHeight = startHeight - dy;
-            newTop = startTop + dy;
-        }
-
-        const minW = 280, maxW = 600;
-        const minH = 350, maxH = 800;
-
-        if (newWidth >= minW && newWidth <= maxW) {
-            win.style.width = `${newWidth}px`;
-            if (classes.includes('l') || classes.includes('tl') || classes.includes('bl')) {
-                win.style.left = `${newLeft}px`;
-            }
-        }
-        if (newHeight >= minH && newHeight <= maxH) {
-            win.style.height = `${newHeight}px`;
-            if (classes.includes('t') || classes.includes('tr') || classes.includes('tl')) {
-                win.style.top = `${newTop}px`;
-            }
-        }
-    }
-
-    function stopDrag() {
-        activeResizer = null;
-        document.removeEventListener('mousemove', doDrag);
-        document.removeEventListener('mouseup', stopDrag);
-    }
-
-    // --- 2. ЛОГИКА ПЕРЕТАСКИВАНИЯ (DRAG-AND-DROP ЗА ШАПКУ) ---
-    let isDragging = false;
-    let dragOffsetX = 0;
-    let dragOffsetY = 0;
-
-    header.addEventListener('mousedown', (e) => {
-        // Перетаскивание доступно только по левой кнопке мыши и не на кнопке закрытия
-        if (e.button !== 0 || e.target.classList.contains('ai-close-btn')) return;
-
-        isDragging = true;
-
-        const rect = win.getBoundingClientRect();
-        dragOffsetX = e.clientX - rect.left;
-        dragOffsetY = e.clientY - rect.top;
-
-        document.addEventListener('mousemove', moveWindow);
-        document.addEventListener('mouseup', releaseWindow);
-    });
-
-    function moveWindow(e) {
-        if (!isDragging) return;
-
-        let left = e.clientX - dragOffsetX;
-        let top = e.clientY - dragOffsetY;
-
-        // Ограничиваем перемещение границами видимого экрана
-        const screenWidth = window.innerWidth;
-        const screenHeight = window.innerHeight;
-        const rect = win.getBoundingClientRect();
-
-        if (left < 0) left = 0;
-        if (left + rect.width > screenWidth) left = screenWidth - rect.width;
-        if (top < 0) top = 0;
-        if (top + rect.height > screenHeight) top = screenHeight - rect.height;
-
-        win.style.left = `${left}px`;
-        win.style.top = `${top}px`;
-        win.style.bottom = 'auto'; // Отключаем привязку снизу
-    }
-
-    function releaseWindow() {
-        isDragging = false;
-        document.removeEventListener('mousemove', moveWindow);
-        document.removeEventListener('mouseup', releaseWindow);
+        // Инициализация изменения размеров (Resizable) со всех сторон
+        $win.resizable({
+            minWidth: 280,
+            minHeight: 350,
+            maxWidth: 600,
+            maxHeight: 800,
+            handles: "n, e, s, w, ne, se, sw, nw" // Направление ресайза по всем сторонам и углам
+        });
     }
 });
