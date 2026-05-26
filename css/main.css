@@ -1686,3 +1686,244 @@ nav ul {
         margin-right: auto;
     }
 }
+/* ==========================================================================
+   СТИЛИ ДЛЯ ЛИЧНОГО КАБИНЕТА (ВЕРХНИЙ ЛЕВЫЙ УГОЛ)
+   ========================================================================== */
+.cabinet-toggle-btn {
+    position: fixed;
+    top: 25px;
+    left: 25px;
+    width: 42px;
+    height: 42px;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    transition: transform 0.2s, background-color 0.2s;
+    z-index: 9999;
+}
+
+    .cabinet-toggle-btn:hover {
+        transform: scale(1.08);
+        background-color: #0056b3;
+    }
+
+    .cabinet-toggle-btn svg {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+    }
+
+/* Окно личного кабинета (позиционировано слева) */
+.cabinet-window {
+    position: fixed;
+    top: 85px;
+    left: 25px;
+    width: 380px;
+    height: 520px;
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid #E2E8F0;
+    z-index: 9999;
+    animation: pageFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.dark-mode .cabinet-window {
+    background-color: #222222;
+    border-color: #3A3B3D;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+}
+
+.cabinet-header {
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+}
+
+.dark-mode .cabinet-header {
+    background-color: #3B4B5E;
+}
+
+.cabinet-header-title {
+    font-weight: bold;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Вкладки */
+.cabinet-tabs {
+    display: flex;
+    border-bottom: 1px solid #E2E8F0;
+    background-color: #F8FAFC;
+}
+
+.dark-mode .cabinet-tabs {
+    background-color: #1A1A1A;
+    border-bottom: 1px solid #3A3B3D;
+}
+
+.cabinet-tab-btn {
+    flex: 1;
+    padding: 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+    color: #718096;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+    .cabinet-tab-btn.active {
+        color: #007bff;
+        border-bottom: 2px solid #007bff;
+        background-color: #ffffff;
+    }
+
+.dark-mode .cabinet-tab-btn.active {
+    color: #8CBEFF;
+    border-bottom: 2px solid #3B4B5E;
+    background-color: #222222;
+}
+
+/* Тело */
+.cabinet-body {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background-color: #ffffff;
+    font-size: 14px;
+}
+
+.dark-mode .cabinet-body {
+    background-color: #222222;
+    color: #E2E8F0;
+}
+
+/* Фильтры и элементы */
+.cab-checklist-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed #E2E8F0;
+}
+
+.dark-mode .cab-checklist-filters {
+    border-bottom: 1px dashed #3A3B3D;
+}
+
+.cab-filter-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .cab-filter-row label {
+        font-size: 12px;
+        font-weight: bold;
+        color: #718096;
+    }
+
+.cab-select {
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid #CBD5E1;
+    font-size: 12px;
+    background-color: #fff;
+    outline: none;
+}
+
+.dark-mode .cab-select {
+    background-color: #2D2D2D;
+    color: #FFF;
+    border-color: #4A5D75;
+}
+
+.cab-checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    line-height: 1.4;
+}
+
+    .cab-checklist-item input {
+        margin-top: 3px;
+    }
+
+    .cab-checklist-item.completed {
+        text-decoration: line-through;
+        opacity: 0.5;
+    }
+
+/* Конструктор вопросов */
+.cab-quiz-question {
+    font-weight: bold;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.cab-quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cab-quiz-btn {
+    padding: 10px 14px;
+    background-color: #F1F5F9;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    color: #1A202C;
+}
+
+.dark-mode .cab-quiz-btn {
+    background-color: #2D2D2D;
+    border-color: #3A3B3D;
+    color: #E2E8F0;
+}
+
+.cab-quiz-btn:hover {
+    background-color: #8CBEFF;
+    color: #000000;
+}
+
+.dark-mode .cab-quiz-btn:hover {
+    background-color: #3B4B5E;
+    color: #FFFFFF;
+}
+
+@media (max-width: 480px) {
+    .cabinet-window {
+        width: 100%;
+        height: 400px;
+        bottom: 55px;
+        left: 15px;
+        right: 15px;
+        top: auto;
+    }
+}
