@@ -115,7 +115,11 @@
             const [activeTab, setActiveTab] = useState('checklist');
 
             // Состояние фильтров документов
-            const [level, setLevel] = useState(() => localStorage.getItem('chk_level') || 'sso');
+            const [level, setLevel] = useState(() => {
+                const saved = localStorage.getItem('chk_level');
+                if (saved === 'vo') return 'vo_full';
+                return saved || 'sso';
+            });
             const [isMinor, setIsMinor] = useState(() => localStorage.getItem('chk_is_minor') || 'no');
             const [form, setForm] = useState(() => localStorage.getItem('chk_form') || 'dnev');
 
@@ -128,9 +132,10 @@
             // Шаги теста-навигатора
             const [quizStep, setQuizStep] = useState(1);
             const [targetLevel, setTargetLevel] = useState('');     // sso, vo
-            const [targetBase, setTargetBase] = useState('');       // 9, 11, sso_short
+            const [targetBase, setTargetBase] = useState('');       // 9, 11, pto, sso_short
             const [targetInterests, setTargetInterests] = useState(''); // code, hardware, manage
-            const [specificChoice, setSpecificChoice] = useState('');   // Конечный уточняющий выбор
+            const [targetSubInterests, setTargetSubInterests] = useState(''); // web, qa, radio, cable, multi, telecom, auto, networks, market, post_logistics
+            const [targetForm, setTargetForm] = useState('dnev');   // dnev, zaoch
 
             useEffect(() => {
                 localStorage.setItem('chk_level', level);
@@ -153,132 +158,168 @@
                 setTargetLevel('');
                 setTargetBase('');
                 setTargetInterests('');
-                setSpecificChoice('');
+                setTargetSubInterests('');
+                setTargetForm('dnev');
             };
 
             const getRequiredDocuments = () => {
                 const docs = [
                     { id: 'photos', text: '6 цветных фотографий размером 3х4 см' },
-                    { id: 'passport', text: 'Паспорт или ID-карта абитуриента (оригинал + копии страниц 31-33)' },
-                    { id: 'edu_docs', text: 'Оригиналы документов об образовании с приложениями (аттестат / свидетельство)' },
-                    { id: 'medical', text: 'Медицинская справка (форма 1 здр/у-10) с точным указанием специальностей' }
+                    { id: 'edu_docs', text: 'ОРИГИНАЛЫ и копии всех документов об образовании и приложения к ним (свидетельство о базовом образовании, аттестат, диплом с приложением)' },
+                    { id: 'medical', text: 'Медицинская справка о состоянии здоровья по форме, установленной Министерством здравоохранения, с указанием годности к выбранным специальностям (указывается полное наименование специальностей)' },
+                    { id: 'benefits', text: 'Документы, подтверждающие право абитуриента на льготы (при их наличии) (оригинал и копия)' },
+                    { id: 'vkk_mrek', text: 'Заключение ВКК или МРЭК об отсутствии противопоказаний для обучения по выбранной специальности (для детей-инвалидов до 18 лет, инвалидов I, II и III группы)' },
+                    { id: 'marriage', text: 'Копия свидетельства о браке (если документ об образовании и паспорт на разные фамилии)' },
+                    { id: 'passport', text: 'Паспорт или заменяющий его документ (предъявляется абитуриентом лично приемной комиссии)' }
                 ];
-                if (level === 'vo') {
-                    docs.push({ id: 'ce_ct', text: 'Оригиналы и копии сертификатов ЦЭ и ЦТ' });
-                    docs.push({ id: 'school_char', text: 'Характеристика с места учебы (для выпускников этого года)' });
+
+                if (level === 'sso') {
+                    if (form === 'zaoch') {
+                        docs.push({ id: 'work_book_sso', text: 'Выписка (копия) из трудовой книжки, заверенная администрацией (для поступающих на заочную форму обучения)' });
+                    }
+                } else if (level === 'vo_full') {
+                    docs.push({ id: 'ce_ct_vo', text: 'Оригиналы и копии сертификатов централизованного экзамена (ЦЭ) / централизованного тестирования (ЦТ)' });
+                    docs.push({ id: 'med_group_vo', text: 'В медицинской справке при поступлении на группу специальностей указываются все специальности группы' });
+                    docs.push({ id: 'char_vo', text: 'Характеристика (необходима тем, кто окончил учреждение образования в год поступления)' });
+                } else if (level === 'vo_short') {
+                    docs.push({ id: 'char_vo_short', text: 'Характеристика (необходима тем, кто окончил учреждение образования в год поступления)' });
+                    if (form === 'zaoch') {
+                        docs.push({ id: 'work_book_vo_short', text: 'Выписка (копия) из трудовой книжки, заверенная администрацией (для поступающих на заочную форму обучения)' });
+                    }
                 }
-                if (form === 'zaoch') {
-                    docs.push({ id: 'work_book', text: 'Выписка (копия) из трудовой книжки, заверенная печатью' });
-                }
+
                 if (isMinor === 'yes') {
-                    docs.push({ id: 'parent_presence', text: 'Присутствие законного представителя (родителя) с его паспортом' });
+                    docs.push({ id: 'parent_presence', text: 'Подача документов в присутствии законного представителя (родителя) с его паспортом (для несовершеннолетних абитуриентов)' });
                 }
+
                 return docs;
             };
 
-            // Алгоритм жесткого подбора ровно 1 специальности
+            // Алгоритм точечного подбора специальности по структурированным вопросам
             const calculateRecommendation = () => {
+                // --- БАЗА ПТО (Единственная специальность) ---
+                if (targetBase === 'pto') {
+                    return {
+                        name: "Почтовая деятельность (на базе ПТО)",
+                        desc: "Специализированная траектория ССО для выпускников учреждений профессионально-технического образования.",
+                        url: "pages/monitoring/mon_sso_pto_spec1.html"
+                    };
+                }
+
+                // --- СРЕДНЕЕ СПЕЦИАЛЬНОЕ ОБРАЗОВАНИЕ (ССО) ---
                 if (targetLevel === 'sso') {
-                    // --- СРЕДНЕЕ СПЕЦИАЛЬНОЕ ОБРАЗОВАНИЕ ---
                     if (targetBase === '9') {
                         if (targetInterests === 'code') {
-                            return specificChoice === 'web' ? {
+                            return targetSubInterests === 'web' ? {
                                 name: "Разработка и сопровождение веб-ресурсов",
-                                desc: "Ты будешь проектировать, программировать веб-сайты и верстать современные интерфейсы на JS/HTML.",
+                                desc: "Проектирование веб-интерфейсов, верстка шаблонов сайтов и написание клиентского кода на JavaScript.",
                                 url: "pages/monitoring/mon_sso_9_spec1.html"
                             } : {
                                 name: "Тестирование программного обеспечения",
-                                desc: "Ты освоишь контроль качества ПО, автоматизацию тестов и работу в QA-команде.",
+                                desc: "Контроль качества программных продуктов, автоматизация тестов, составление баг-репортов и аудит QA.",
                                 url: "pages/monitoring/mon_sso_9_spec7.html"
                             };
                         } else if (targetInterests === 'hardware') {
-                            if (specificChoice === 'cable') {
+                            if (targetSubInterests === 'cable') {
                                 return {
                                     name: "Информационные кабельные сети",
-                                    desc: "Монтаж, обслуживание высокоскоростных оптических линий и локальных вычислительных сетей связи.",
+                                    desc: "Монтаж и обслуживание волоконно-оптических (ВОЛС) и локальных проводных инфокоммуникационных линий связи.",
                                     url: "pages/monitoring/mon_sso_9_spec3.html"
                                 };
-                            } else if (specificChoice === 'tv') {
+                            } else if (targetSubInterests === 'radio') {
                                 return {
                                     name: "Техническая эксплуатация систем радиосвязи, вещания и телевидения",
-                                    desc: "Обслуживание передающих станций связи, цифрового ТВ-оборудования и радиовещательных сетей.",
+                                    desc: "Обеспечение стабильной работы радиовещательных станций, спутниковых систем и цифрового ТВ.",
                                     url: "pages/monitoring/mon_sso_9_spec4.html"
                                 };
-                            } else if (specificChoice === 'multi') {
+                            } else if (targetSubInterests === 'multi') {
                                 return {
                                     name: "Техническая эксплуатация мультимедийных систем",
-                                    desc: "Настройка сложных звуковых и видео-систем, акустического концертного и студийного оборудования.",
+                                    desc: "Профессиональная настройка студийного, концертного звука, акустических платформ и мультимедиа-экранов.",
                                     url: "pages/monitoring/mon_sso_9_spec5.html"
                                 };
                             } else {
                                 return {
                                     name: "Техническая эксплуатация систем и сетей телекоммуникаций",
-                                    desc: "Комплексное инфокоммуникационное администрирование, телефония, системное и сетевое администрирование.",
+                                    desc: "Администрирование серверов связи, маршрутизация потоков данных и конфигурирование АТС.",
                                     url: "pages/monitoring/mon_sso_9_spec2.html"
                                 };
                             }
                         } else {
                             return {
                                 name: "Почтовая деятельность (9 кл.)",
-                                desc: "Логистическое управление, учет почтового трафика и стабильная работа с быстрой траекторией карьеры.",
+                                desc: "Логистическое управление распределением отправлений, координация доставок и автоматизированный клиентский сервис.",
                                 url: "pages/monitoring/mon_sso_9_spec6.html"
                             };
                         }
-                    } else { // 11 класс ССО
+                    } else if (targetBase === '11') { // 11 класс ССО
                         if (targetInterests === 'code') {
                             return {
                                 name: "Тестирование программного обеспечения (11 кл., Дневное)",
-                                desc: "ИТ-курс (2 года) для быстрого старта в QA-инженерии.",
+                                desc: "Быстрый вход в ИТ-индустрию через практическое освоение ручного и автоматического тестирования ПО за 2 года.",
                                 url: "pages/monitoring/mon_sso_11_dnev_spec4.html"
                             };
                         } else if (targetInterests === 'hardware') {
-                            return specificChoice === 'dnev' ? {
-                                name: "Телекоммуникации (Дневное)",
-                                desc: "Очное обучение администрированию современных сотовых, спутниковых и проводных сетей связи.",
-                                url: "pages/monitoring/mon_sso_11_dnev_spec1.html"
-                            } : {
-                                name: "Телекоммуникации (Заочное)",
-                                desc: "Заочное обучение современным телекоммуникационным системам с возможностью совмещать с работой.",
-                                url: "pages/monitoring/mon_sso_11_zaoch_spec5.html"
-                            };
+                            const isRadio = targetSubInterests === 'radio';
+                            if (targetForm === 'zaoch') {
+                                return isRadio ? {
+                                    name: "Радиосвязь и ТВ (Заочное)",
+                                    desc: "Заочное обучение эксплуатации радиоэлектронного оборудования связи и систем вещания.",
+                                    url: "pages/monitoring/mon_sso_11_zaoch_spec6.html"
+                                } : {
+                                    name: "Телекоммуникации (Заочное)",
+                                    desc: "Заочное освоение сетевого администрирования и эксплуатации современных систем связи.",
+                                    url: "pages/monitoring/mon_sso_11_zaoch_spec5.html"
+                                };
+                            } else {
+                                return isRadio ? {
+                                    name: "Радиосвязь и ТВ (Дневное)",
+                                    desc: "Очное обучение построению радиолиний, спутниковых сетей вещания и мобильной телефонии.",
+                                    url: "pages/monitoring/mon_sso_11_dnev_spec2.html"
+                                } : {
+                                    name: "Телекоммуникации (Дневное)",
+                                    desc: "Очное освоение монтажа оптических трасс, настройки маршрутизаторов и серверов связи.",
+                                    url: "pages/monitoring/mon_sso_11_dnev_spec1.html"
+                                };
+                            }
                         } else {
-                            return specificChoice === 'dnev' ? {
-                                name: "Почтовая деятельность (Дневное)",
-                                desc: "Очное обучение логистике, автоматизации отправлений и управлению клиентским сервисом.",
-                                url: "pages/monitoring/mon_sso_11_dnev_spec3.html"
-                            } : {
+                            return targetForm === 'zaoch' ? {
                                 name: "Почтовая деятельность (Заочное)",
-                                desc: "Заочный курс логистики для работающих в логистических центрах или почтовой службе.",
+                                desc: "Заочный курс менеджмента почтово-транспортных сетей и систем складского распределения.",
                                 url: "pages/monitoring/mon_sso_11_zaoch_spec7.html"
+                            } : {
+                                name: "Почтовая деятельность (Дневное)",
+                                desc: "Очное обучение цифровой транспортной логистике, управлению потоками отправлений и сервисам обслуживания.",
+                                url: "pages/monitoring/mon_sso_11_dnev_spec3.html"
                             };
                         }
                     }
-                } else { // --- ВЫСШЕЕ ОБРАЗОВАНИЕ ---
+                } else { // --- ВЫСШЕЕ ОБРАЗОВАНИЕ (ВО) ---
                     if (targetBase === '11') {
                         if (targetInterests === 'code') {
                             return {
                                 name: "Прикладная информатика (ВО)",
-                                desc: "Глубокая математическая и программная подготовка для разработчиков и инженеров ИТ-сферы.",
+                                desc: "Комплексная инженерно-математическая подготовка full-stack разработчиков и архитекторов ИС.",
                                 url: "pages/monitoring/mon_vo_11_spec3.html"
                             };
                         } else if (targetInterests === 'hardware') {
-                            return specificChoice === 'auto' ? {
+                            return targetSubInterests === 'auto' ? {
                                 name: "Автоматизация технологических процессов и производств",
-                                desc: "Программирование микроконтроллеров, робототехника, системы умных заводов и ПЛК.",
+                                desc: "Программирование микроконтроллеров и промышленных ПЛК, робототехнические комплексы и индустрия 4.0.",
                                 url: "pages/monitoring/mon_vo_11_spec1.html"
                             } : {
                                 name: "Системы и сети инфокоммуникаций (11 кл.)",
-                                desc: "Проектирование и эксплуатация магистралей связи, беспроводных систем передачи информации.",
+                                desc: "Магистральное проектирование оптоволоконных, космических и сотовых инфраструктур передачи информации.",
                                 url: "pages/monitoring/mon_vo_11_spec2.html"
                             };
                         } else {
-                            return specificChoice === 'market' ? {
+                            return targetSubInterests === 'market' ? {
                                 name: "Маркетинг (ВО)",
-                                desc: "Анализ рынка услуг связи, управление лояльностью клиентов, продвижение брендов и продуктовая аналитика.",
+                                desc: "Анализ отраслевых рынков услуг связи, разработка веб-рекламы, продуктовый менеджмент и PR.",
                                 url: "pages/monitoring/mon_vo_11_spec5.html"
                             } : {
                                 name: "Цифровые клиентские сервисы и почтово-логистические системы",
-                                desc: "ИТ-логистика, интеграция баз данных, управление почтовыми хабами и сервисами доставок.",
+                                desc: "Почтово-логистические хабы, программирование логистических цепочек и интеграция баз данных доставок.",
                                 url: "pages/monitoring/mon_vo_11_spec4.html"
                             };
                         }
@@ -286,28 +327,28 @@
                         if (targetInterests === 'code') {
                             return {
                                 name: "Прикладная информатика (Дневное сокращенное)",
-                                desc: "Продолжение твоей ИТ-траектории в уплотненном формате (2,5 года) для выпускников колледжей.",
+                                desc: "Ускоренный университетский ИТ-курс (2,5 года) для выпускников ИТ-специальностей колледжей.",
                                 url: "pages/monitoring/mon_vo_sso_dnev_spec2.html"
                             };
                         } else if (targetInterests === 'hardware') {
-                            return specificChoice === 'dnev' ? {
-                                name: "Системы и сети инфокоммуникаций (Дневное сокращенное)",
-                                desc: "Ускоренное инженерное высшее образование в области построения инфокоммуникаций (2.5 года).",
-                                url: "pages/monitoring/mon_vo_sso_dnev_spec1.html"
-                            } : {
+                            return targetForm === 'zaoch' ? {
                                 name: "Системы и сети инфокоммуникаций (Заочное сокращенное)",
-                                desc: "Заочный инженерный курс (3 года) для выпускников колледжей.",
+                                desc: "Заочное инженерное высшее образование в ускоренной форме (3 года) для специалистов со средним специальным образованием.",
                                 url: "pages/monitoring/mon_vo_sso_zaoch_spec4.html"
+                            } : {
+                                name: "Системы и сети инфокоммуникаций (Дневное сокращенное)",
+                                desc: "Очное углубление знаний в области магистральной связи и инфокоммуникаций по сжатой программе (2,5 года).",
+                                url: "pages/monitoring/mon_vo_sso_dnev_spec1.html"
                             };
                         } else {
-                            return specificChoice === 'dnev' ? {
-                                name: "Почтовая связь (Дневное сокращенное)",
-                                desc: "Почтово-логистические системы, управление транспортными хабами и узлами связи (3 года).",
-                                url: "pages/monitoring/mon_vo_sso_dnev_spec3.html"
-                            } : {
+                            return targetForm === 'zaoch' ? {
                                 name: "Почтовая связь (Заочное сокращенное)",
-                                desc: "Высшее образование для логистов и связистов в заочной сокращенной форме (3,5 года).",
+                                desc: "Высшее образование для логистов и связистов в ускоренной заочной форме (3,5 года) на базе ССО.",
                                 url: "pages/monitoring/mon_vo_sso_zaoch_spec6.html"
+                            } : {
+                                name: "Почтовая связь (Дневное сокращенное)",
+                                desc: "Интегрированный курс ИТ-управления почтово-логистическими хабами в очной сокращенной форме (3 года).",
+                                url: "pages/monitoring/mon_vo_sso_dnev_spec3.html"
                             };
                         }
                     }
@@ -346,7 +387,8 @@
                                         <label>Куда поступаю:</label>
                                         <select className="cab-select" value={level} onChange={(e) => setLevel(e.target.value)}>
                                             <option value="sso">В колледж (ССО)</option>
-                                            <option value="vo">В университет (ВО)</option>
+                                            <option value="vo_full">В университет (ВО, полный срок)</option>
+                                            <option value="vo_short">В университет (ВО, сокращенный срок)</option>
                                         </select>
                                     </div>
                                     <div className="cab-filter-row">
@@ -365,17 +407,22 @@
                                     </div>
                                 </div>
 
-                                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
                                     {getRequiredDocuments().map((doc) => {
                                         const isChecked = !!checkedItems[doc.id];
                                         return (
-                                            <label key={doc.id} className={`cab-checklist-item ${isChecked ? 'completed' : ''}`}>
+                                            <label
+                                                key={doc.id}
+                                                className={`cab-checklist-item ${isChecked ? 'completed' : ''}`}
+                                                style={{ textAlign: 'left', display: 'flex', alignItems: 'flex-start' }}
+                                            >
                                                 <input
                                                     type="checkbox"
                                                     checked={isChecked}
                                                     onChange={() => handleCheckboxChange(doc.id)}
+                                                    style={{ flexShrink: 0, marginTop: '4px' }}
                                                 />
-                                                <span>{doc.text}</span>
+                                                <span style={{ marginLeft: '8px' }}>{doc.text}</span>
                                             </label>
                                         );
                                     })}
@@ -401,13 +448,14 @@
                                         <div className="cab-quiz-options">
                                             {targetLevel === 'sso' ? (
                                                 <React.Fragment>
-                                                    <button className="cab-quiz-btn" onClick={() => { setTargetBase('9'); setQuizStep(3); }}>• На базе 9 классов</button>
-                                                    <button className="cab-quiz-btn" onClick={() => { setTargetBase('11'); setQuizStep(3); }}>• На базе 11 классов / ПТО</button>
+                                                    <button className="cab-quiz-btn" onClick={() => { setTargetBase('9'); setQuizStep(3); }}>📄 На базе 9 классов</button>
+                                                    <button className="cab-quiz-btn" onClick={() => { setTargetBase('11'); setQuizStep(3); }}>📄 На базе 11 классов</button>
+                                                    <button className="cab-quiz-btn" onClick={() => { setTargetBase('pto'); setQuizStep(6); }}>⚙️ На базе ПТО (Профессионально-техническое)</button>
                                                 </React.Fragment>
                                             ) : (
                                                 <React.Fragment>
-                                                    <button className="cab-quiz-btn" onClick={() => { setTargetBase('11'); setQuizStep(3); }}>• На базе 11 классов</button>
-                                                    <button className="cab-quiz-btn" onClick={() => { setTargetBase('sso_short'); setQuizStep(3); }}>• После колледжа (сокращенно)</button>
+                                                    <button className="cab-quiz-btn" onClick={() => { setTargetBase('11'); setQuizStep(3); }}>📄 На базе 11 классов</button>
+                                                    <button className="cab-quiz-btn" onClick={() => { setTargetBase('sso_short'); setQuizStep(3); }}>🎓 После колледжа (сокращенно ССО)</button>
                                                 </React.Fragment>
                                             )}
                                         </div>
@@ -416,93 +464,92 @@
 
                                 {quizStep === 3 && (
                                     <div>
-                                        <p className="cab-quiz-question">3. Выбери наиболее близкую тебе сферу деятельности:</p>
+                                        <p className="cab-quiz-question">3. Какое направление деятельности тебе ближе?</p>
                                         <div className="cab-quiz-options">
-                                            <button className="cab-quiz-btn" onClick={() => { setTargetInterests('code');
-                                                // Проверяем условное ветвление, чтобы не задавать лишних вопросов
-                                                if (targetLevel === 'sso' && targetBase === '11') { setQuizStep(5); } // Сразу результат (только 1 ИТ спец)
-                                                else if (targetLevel === 'vo' && targetBase === '11') { setQuizStep(5); } // Сразу результат
-                                                else if (targetLevel === 'vo' && targetBase === 'sso_short') { setQuizStep(5); } // Сразу результат
-                                                else { setQuizStep(4); }
-                                            }}>💻 Программирование и ИТ (написание кода, тестирование)</button>
+                                            <button className="cab-quiz-btn" onClick={() => {
+                                                setTargetInterests('code');
+                                                if (targetLevel === 'sso' && targetBase === '9') {
+                                                    setQuizStep(4);
+                                                } else if (targetLevel === 'sso' && targetBase === '11') {
+                                                    setQuizStep(6);
+                                                } else if (targetLevel === 'vo' && targetBase === '11') {
+                                                    setQuizStep(6);
+                                                } else if (targetLevel === 'vo' && targetBase === 'sso_short') {
+                                                    setQuizStep(6);
+                                                }
+                                            }}>💻 Программирование и ИТ (написание кода, веб-сайты, тестирование)</button>
 
-                                            <button className="cab-quiz-btn" onClick={() => { setTargetInterests('hardware'); setQuizStep(4); }}>🔌 Системы, радиоэлектроника и сетевое оборудование</button>
+                                            <button className="cab-quiz-btn" onClick={() => {
+                                                setTargetInterests('hardware');
+                                                setQuizStep(4);
+                                            }}>🔌 Сетевое оборудование, радиоэлектроника и автоматизация</button>
 
-                                            <button className="cab-quiz-btn" onClick={() => { setTargetInterests('manage');
-                                                if (targetLevel === 'sso' && targetBase === '9') { setQuizStep(5); } // Сразу результат
-                                                else { setQuizStep(4); }
-                                            }}>📦 Почтово-логистические системы, маркетинг и управление</button>
+                                            <button className="cab-quiz-btn" onClick={() => {
+                                                setTargetInterests('manage');
+                                                if (targetLevel === 'vo' && targetBase === '11') {
+                                                    setQuizStep(4);
+                                                } else if (targetLevel === 'sso' && targetBase === '9') {
+                                                    setQuizStep(6);
+                                                } else if (targetLevel === 'sso' && targetBase === '11') {
+                                                    setQuizStep(5);
+                                                } else if (targetLevel === 'vo' && targetBase === 'sso_short') {
+                                                    setQuizStep(5);
+                                                }
+                                            }}>📦 Бизнес-анализ, маркетинг, логистика и клиентский сервис</button>
                                         </div>
                                     </div>
                                 )}
 
                                 {quizStep === 4 && (
                                     <div>
-                                        <p className="cab-quiz-question">4. Последний уточняющий вопрос:</p>
+                                        <p className="cab-quiz-question">4. Выберите более узкую специализацию:</p>
                                         <div className="cab-quiz-options">
                                             {/* ССО + 9 кл + ИТ */}
                                             {targetLevel === 'sso' && targetBase === '9' && targetInterests === 'code' && (
                                                 <React.Fragment>
-                                                    <button className="cab-quiz-btn" onClick={() => { setSpecificChoice('web'); setQuizStep(5); }}>🌐 Мне ближе веб-программирование, верстка сайтов и JS</button>
-                                                    <button className="cab-quiz-btn" onClick={() => { setSpecificChoice('qa'); setQuizStep(5); }}>🐛 Мне ближе тестирование ПО и контроль качества продуктов</button>
+                                                    <button className="cab-quiz-btn" onClick={() => { setTargetSubInterests('web'); setQuizStep(6); }}>🌐 Веб-программирование, верстка интерфейсов и веб-дизайн</button>
+                                                    <button className="cab-quiz-btn" onClick={() => { setTargetSubInterests('qa'); setQuizStep(6); }}>🐛 Тестирование ПО, автотесты и контроль качества</button>
                                                 </React.Fragment>
                                             )}
 
                                             {/* ССО + 9 кл + Железо */}
                                             {targetLevel === 'sso' && targetBase === '9' && targetInterests === 'hardware' && (
                                                 <React.Fragment>
-                                                    <button className="cab-quiz-btn" onClick={() => { setSpecificChoice('cable'); setQuizStep(5); }}>🛠️ Монтаж оптического волокна и кабельные сети</button>
-                                                    <button className="cab-quiz-btn" onClick={() => { setSpecificChoice('tv'); setQuizStep(5); }}>📡 Радиовещание, передающие центры и телевидение</button>
-                                                    <button className="cab-quiz-btn" onClick={() => { setSpecificChoice('multi'); setQuizStep(5); }}>🎚️ Звуковое оборудование и мультимедийные системы</button>
-                                                    <button className="cab-quiz-btn" onClick={() => { setSpecificChoice('telecom'); setQuizStep(5); }}>🖥️ Настройка АТС и глобальное сетевое администрирование</button>
+                                                    <button className="cab-quiz-btn" onClick={() => { setTargetSubInterests('cable'); setQuizStep(6); }}>🛠️ Монтаж и проектирование оптического волокна (ВОЛС)</button>
+                                                    <button className="cab-quiz-btn" onClick={() => { setTargetSubInterests('radio'); setQuizStep(6); }}>📡 Радиосвязь, спутниковые системы и телевидение</button>
+                                                    <button className="cab-quiz-btn" onClick={() => { setTargetSubInterests('multi'); setQuizStep(6); }}>🎚️ Звуковое оборудование и мультимедийные системы</button>
+                                                    <button className="cab-quiz-btn" onClick={() => { setTargetSubInterests('telecom'); setQuizStep(6); }}>🖥️ Настройка серверов, АТС и глобальное сетевое администрирование</button>
                                                 </React.Fragment>
                                             )}
 
                                             {/* ССО + 11 кл + Железо */}
                                             {targetLevel === 'sso' && targetBase === '11' && targetInterests === 'hardware' && (
                                                 <React.Fragment>
-                                                    <button className="cab-quiz-btn" onClick={() => { setSpecificChoice('dnev'); setQuizStep(5); }}>☀️ Дневная форма обучения (2 года 10 месяцев)</button>
-                                                    <button className="cab-quiz-btn" onClick={() => { setSpecificChoice('zaoch'); setQuizStep(5); }}>🌙 Заочная форма обучения (3 года 10 месяцев)</button>
-                                                </React.Fragment>
-                                            )}
-
-                                            {/* ССО + 11 кл + Почта */}
-                                            {targetLevel === 'sso' && targetBase === '11' && targetInterests === 'manage' && (
-                                                <React.Fragment>
-                                                    <button className="cab-quiz-btn" onClick={() => { setSpecificChoice('dnev'); setQuizStep(5); }}>☀️ Дневная форма обучения (2 года)</button>
-                                                    <button className="cab-quiz-btn" onClick={() => { setSpecificChoice('zaoch'); setQuizStep(5); }}>🌙 Заочная форма обучения (2 года)</button>
+                                                    <button className="cab-quiz-btn" onClick={() => { setTargetSubInterests('radio'); setQuizStep(5); }}>📡 Спутниковая связь, радиовещание и телевидение</button>
+                                                    <button className="cab-quiz-btn" onClick={() => { setTargetSubInterests('telecom'); setQuizStep(5); }}>🖥️ Системное администрирование и проводные цифровые сети</button>
                                                 </React.Fragment>
                                             )}
 
                                             {/* ВО + 11 кл + Железо */}
                                             {targetLevel === 'vo' && targetBase === '11' && targetInterests === 'hardware' && (
                                                 <React.Fragment>
-                                                    <button className="cab-quiz-btn" onClick={() => { setSpecificChoice('auto'); setQuizStep(5); }}>🤖 Автоматика, программирование ПЛК и промышленных роботов</button>
-                                                    <button className="cab-quiz-btn" onClick={() => { setSpecificChoice('network'); setQuizStep(5); }}>🌐 Проектирование сетей связи и инфокоммуникаций</button>
+                                                    <button className="cab-quiz-btn" onClick={() => { setTargetSubInterests('auto'); setQuizStep(6); }}>🤖 Автоматика, программирование ПЛК и промышленных роботов</button>
+                                                    <button className="cab-quiz-btn" onClick={() => { setTargetSubInterests('networks'); setQuizStep(6); }}>🖥️ Магистральные сети связи, оптические и мобильные системы</button>
                                                 </React.Fragment>
                                             )}
 
                                             {/* ВО + 11 кл + Маркетинг/Почта */}
                                             {targetLevel === 'vo' && targetBase === '11' && targetInterests === 'manage' && (
                                                 <React.Fragment>
-                                                    <button className="cab-quiz-btn" onClick={() => { setSpecificChoice('market'); setQuizStep(5); }}>📈 Маркетинговый анализ рынка, реклама и PR</button>
-                                                    <button className="cab-quiz-btn" onClick={() => { setSpecificChoice('post'); setQuizStep(5); }}>📦 Цифровая почтовая логистика и клиентские сервисы</button>
+                                                    <button className="cab-quiz-btn" onClick={() => { setTargetSubInterests('market'); setQuizStep(6); }}>📈 Маркетинговые исследования, бренд-менеджмент и реклама</button>
+                                                    <button className="cab-quiz-btn" onClick={() => { setTargetSubInterests('post_logistics'); setQuizStep(6); }}>📦 Цифровая почтовая логистика и управление цепочками поставок</button>
                                                 </React.Fragment>
                                             )}
 
                                             {/* ВО + ССО + Железо */}
                                             {targetLevel === 'vo' && targetBase === 'sso_short' && targetInterests === 'hardware' && (
                                                 <React.Fragment>
-                                                    <button className="cab-quiz-btn" onClick={() => { setSpecificChoice('dnev'); setQuizStep(5); }}>☀️ Дневное сокращенное отделение (2,5 года)</button>
-                                                    <button className="cab-quiz-btn" onClick={() => { setSpecificChoice('zaoch'); setQuizStep(5); }}>🌙 Заочное сокращенное отделение (3 года)</button>
-                                                </React.Fragment>
-                                            )}
-
-                                            {/* ВО + ССО + Почта */}
-                                            {targetLevel === 'vo' && targetBase === 'sso_short' && targetInterests === 'manage' && (
-                                                <React.Fragment>
-                                                    <button className="cab-quiz-btn" onClick={() => { setSpecificChoice('dnev'); setQuizStep(5); }}>☀️ Дневное сокращенное отделение (3 года)</button>
-                                                    <button className="cab-quiz-btn" onClick={() => { setSpecificChoice('zaoch'); setQuizStep(5); }}>🌙 Заочное сокращенное отделение (3,5 года)</button>
+                                                    <button className="cab-quiz-btn" onClick={() => { setTargetSubInterests('networks'); setQuizStep(5); }}>⏩ Начать выбор формы обучения (дневная/заочная)</button>
                                                 </React.Fragment>
                                             )}
                                         </div>
@@ -510,6 +557,16 @@
                                 )}
 
                                 {quizStep === 5 && (
+                                    <div>
+                                        <p className="cab-quiz-question">5. Какая форма обучения предпочтительнее?</p>
+                                        <div className="cab-quiz-options">
+                                            <button className="cab-quiz-btn" onClick={() => { setTargetForm('dnev'); setQuizStep(6); }}>☀️ Дневная (очная, классическое студенчество)</button>
+                                            <button className="cab-quiz-btn" onClick={() => { setTargetForm('zaoch'); setQuizStep(6); }}>🌙 Заочная (дистанционная с сессиями, без отрыва от работы)</button>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {quizStep === 6 && (
                                     <div className="quiz-result-box">
                                         <p style={{ fontWeight: 'bold', color: '#007bff', fontSize: '15px', marginBottom: '8px' }}>Подобрана специальность:</p>
                                         <div style={{ padding: '12px', backgroundColor: '#F0F7FF', borderRadius: '10px', marginBottom: '15px', borderLeft: '3px solid #007bff' }}>
