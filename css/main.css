@@ -1990,3 +1990,47 @@ nav ul {
         padding: 0 10px;
     }
 }
+
+/* Кнопка "Назад" в тесте Личного кабинета */
+.cab-quiz-back-btn {
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    padding: 6px 12px !important;
+    color: #007bff !important; /* Насыщенный синий цвет */
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    /* Принудительное выравнивание строго по левому краю */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    text-align: left !important;
+    margin-right: auto !important;
+    margin-left: 0 !important;
+    gap: 6px !important;
+    margin-bottom: 14px !important;
+    border-radius: 6px !important;
+    font-family: inherit !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+    /* Эффект наведения в светлой теме */
+    .cab-quiz-back-btn:hover {
+        color: #0056b3 !important;
+        background-color: rgba(0, 123, 255, 0.08) !important;
+    }
+
+/* Стили для темной темы */
+.dark-mode .cab-quiz-back-btn {
+    color: #63b3ed !important; /* Светлый голубой для читаемости на темном фоне */
+}
+
+    /* Эффект наведения в темной теме */
+    .dark-mode .cab-quiz-back-btn:hover {
+        color: #90cdf4 !important;
+        background-color: rgba(99, 179, 237, 0.12) !important;
+    }
