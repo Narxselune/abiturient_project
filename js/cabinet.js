@@ -171,10 +171,17 @@ function PersonalCabinet({ isOpen, onClose }) {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [quizScores, setQuizScores] = useState({});
 
+    // Эффект для синхронизации фильтров в localStorage и корректировки формы обучения
     useEffect(() => {
+        let currentForm = form;
+        // Если выбрана вышка (полный срок), заочной формы нет — принудительно ставим "дневная"
+        if (level === 'vo_full') {
+            currentForm = 'dnev';
+            setForm('dnev');
+        }
         localStorage.setItem('chk_level', level);
         localStorage.setItem('chk_is_minor', isMinor);
-        localStorage.setItem('chk_form', form);
+        localStorage.setItem('chk_form', currentForm);
     }, [level, isMinor, form]);
 
     useEffect(() => {
@@ -420,10 +427,16 @@ function PersonalCabinet({ isOpen, onClose }) {
                             </div>
                             <div className="cab-filter-row">
                                 <label>Форма обучения:</label>
-                                <select className="cab-select" value={form} onChange={(e) => setForm(e.target.value)}>
-                                    <option value="dnev">Дневная</option>
-                                    <option value="zaoch">Заочная</option>
-                                </select>
+                                {level === 'vo_full' ? (
+                                    <select className="cab-select" value="dnev" disabled style={{ cursor: 'not-allowed', opacity: 0.8 }}>
+                                        <option value="dnev">Дневная</option>
+                                    </select>
+                                ) : (
+                                    <select className="cab-select" value={form} onChange={(e) => setForm(e.target.value)}>
+                                        <option value="dnev">Дневная</option>
+                                        <option value="zaoch">Заочная</option>
+                                    </select>
+                                )}
                             </div>
                             <div className="cab-filter-row">
                                 <label>Мне меньше 18 лет:</label>
