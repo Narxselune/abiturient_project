@@ -1609,21 +1609,17 @@ nav ul {
 /* Адаптивность под мобилки (экраны 768px и меньше) */
 @media (max-width: 768px) {
     .ai-widget {
-        /* Прижимаем контейнер к низу на мобильных */
         bottom: 15px !important;
-        left: 10px !important;
-        right: 10px !important;
-        width: calc(100% - 20px) !important;
+        left: 2.5vw !important; /* Отступ слева 2.5% от экрана */
+        width: 95vw !important; /* Ширина виджета 95% от экрана */
     }
 
     .ai-window {
-        /* Окно чата адаптируется под ширину мобильного экрана */
         position: fixed !important;
         bottom: 75px !important;
-        left: 10px !important;
-        right: 10px !important;
-        width: calc(100% - 40px) !important;
-        height: 60vh !important; /* Чат занимает 60% высоты экрана (удобно при открытии клавиатуры) */
+        left: 2.5vw !important; /* Ровное центрирование окна чата по левому краю */
+        width: 95vw !important; /* Ширина чата ровно 95% ширины экрана */
+        height: 60vh !important; /* Высота чата ровно 60% высоты экрана */
         min-width: auto !important;
         max-width: none !important;
         min-height: auto !important;
