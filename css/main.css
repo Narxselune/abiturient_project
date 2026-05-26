@@ -1622,7 +1622,7 @@ nav ul {
         bottom: 75px !important;
         left: 10px !important;
         right: 10px !important;
-        width: calc(100% - 20px) !important;
+        width: calc(100% - 40px) !important;
         height: 60vh !important; /* Чат занимает 60% высоты экрана (удобно при открытии клавиатуры) */
         min-width: auto !important;
         max-width: none !important;
