@@ -51,6 +51,30 @@
             }
         }
 
+        /* Устранение прыжков фона на смартфонах и планшетах при прокрутке */
+        @media (max-width: 1024px) {
+            .body-main {
+                background-attachment: scroll !important;
+            }
+        }
+
+        /* Адаптивное позиционирование окна Личного кабинета на мобильных устройствах */
+        @media (max-width: 768px) {
+            .cabinet-window {
+                position: fixed !important;
+                top: 15px !important;
+                left: 10px !important;
+                right: 10px !important;
+                width: calc(100% - 20px) !important;
+                max-width: calc(100% - 20px) !important;
+                max-height: calc(100vh - 30px) !important;
+                overflow-y: auto !important;
+                box-sizing: border-box !important;
+                z-index: 2000 !important;
+                transform: none !important;
+            }
+        }
+
         /* Принудительное форматирование быстрых кнопок в горизонтальный ряд с переносом (как на фото 3) */
         #ai-quick-questions.ai-quick-questions {
             display: flex !important;
@@ -245,3 +269,20 @@
             const icon = document.getElementById('theme-icon');
             if (icon) {
                 icon.innerHTML = isDark ? sunSvg : moonSvg;
+            }
+        }
+
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.toggle('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateThemeIcon(isDark);
+        }
+
+        // Инициализация правильной иконки темы при загрузке страницы
+        document.addEventListener('DOMContentLoaded', () => {
+            const isDark = document.documentElement.classList.contains('dark-mode');
+            updateThemeIcon(isDark);
+        });
+    </script>
+</body>
+</html>
