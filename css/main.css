@@ -1985,7 +1985,7 @@ nav ul {
     .academy-bg-title {
         text-align: center;
         font-size: 33px; /* Компактный размер */
-        margin-top: 0px; /* Отступ сверху под кнопки в углах на фоне */
+        margin-top: 20px; /* Отступ сверху под кнопки в углах на фоне */
         margin-bottom: 15px;
         padding: 0 10px;
     }
