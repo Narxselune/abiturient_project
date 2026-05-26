@@ -892,7 +892,7 @@ nav ul {
     }
 
     .title-main {
-        font-size: 28px !important; /* Сжатие шрифта названия */
+        font-size: 25px !important; /* Сжатие шрифта названия */
     }
 
     .btn-grid-main .btn-item {
@@ -1963,29 +1963,29 @@ nav ul {
    СТИЛИ ДЛЯ ЗАГОЛОВКА АКАДЕМИИ НА ФОНЕ (index.html)
    ========================================================================== */
 .academy-bg-title {
-    font-size: 45px;
-    font-weight: 1500;
-    color: #1e293b; /* Контрастный темно-серый цвет в светлой теме */
+    font-size: 50px;
+    font-weight: 1800;
+    color: #000000; /* Контрастный темно-серый цвет в светлой теме */
     text-align: center;
     margin-bottom: 25px;
     text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8), 0 4px 12px rgba(255, 255, 255, 0.5); /* Белое свечение вокруг букв для читаемости на фото */
-    max-width: 1500px;
+    max-width: 1800px;
     width: 100%;
     transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 
 /* Стилизация заголовка в темной теме */
 .dark-mode .academy-bg-title {
-    color: #f1f5f9; /* Светлый платиновый */
+    color: #E2E8F0; 
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 4px 12px rgba(0, 0, 0, 0.6); /* Темная подложка */
 }
 
 /* Адаптивность для экранов мобильных телефонов */
-@media (max-width: 768px) {
+@media (max-width: 1290px) {
     .academy-bg-title {
         text-align: center;
-        font-size: 22px; /* Компактный размер */
-        margin-top: 30px; /* Отступ сверху под кнопки в углах на фоне */
+        font-size: 33px; /* Компактный размер */
+        margin-top: 20px; /* Отступ сверху под кнопки в углах на фоне */
         margin-bottom: 15px;
         padding: 0 10px;
     }
