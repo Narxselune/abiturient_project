@@ -1606,20 +1606,43 @@ nav ul {
     fill: #ffffff !important;
 }
 
-/* Адаптивность под мобилки */
-@media (max-width: 480px) {
+/* Адаптивность под мобилки (экраны 768px и меньше) */
+@media (max-width: 768px) {
     .ai-widget {
-        bottom: 15px;
-        left: 15px;
-        right: 15px;
+        /* Прижимаем контейнер к низу на мобильных */
+        bottom: 15px !important;
+        left: 10px !important;
+        right: 10px !important;
+        width: calc(100% - 20px) !important;
     }
 
     .ai-window {
-        width: 100%;
-        height: 400px;
-        bottom: 55px;
+        /* Окно чата адаптируется под ширину мобильного экрана */
+        position: fixed !important;
+        bottom: 75px !important;
+        left: 10px !important;
+        right: 10px !important;
+        width: calc(100% - 20px) !important;
+        height: 60vh !important; /* Чат занимает 60% высоты экрана (удобно при открытии клавиатуры) */
+        min-width: auto !important;
+        max-width: none !important;
+        min-height: auto !important;
+        max-height: none !important;
+        border-radius: 20px !important;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2) !important;
+    }
+
+    /* Отключаем зоны изменения размера (ресайзеры) на телефонах */
+    .ai-resizer {
+        display: none !important;
+    }
+
+    /* На мобильных перетаскивание шапки отключаем, так как окно зафиксировано */
+    .ai-header {
+        cursor: default !important;
     }
 }
+
 /* ==========================================================================
    СТИЛИ ТАЙМЕРА ОБРАТНОГО ОТСЧЕТА (ВКЛЮЧАЯ СОСТОЯНИЕ "НЕ НАЧАЛСЯ")
    ========================================================================== */
