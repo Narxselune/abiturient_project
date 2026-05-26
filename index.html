@@ -22,6 +22,12 @@
             background-repeat: no-repeat;
             background-attachment: fixed;
             transition: background-image 0.3s ease;
+            /* Режим flex-column для размещения заголовка академии НАД рамкой */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Начинаем контент сверху */
+            padding: 40px 20px;
         }
 
         /* При включенной темной теме картинка плавно сменяется на темную */
@@ -44,9 +50,12 @@
         </svg>
     </a>
 
-    <div class="container container-main">
+    <!-- Внешний заголовок на фоне (НАД рамкой) -->
+    <h1 class="academy-bg-title">Белорусская государственная академия связи</h1>
+
+    <div class="container container-main" style="margin-top: 0;">
         <header class="header-main">
-            <h1 class="title-main">ИНФОРМАЦИЯ<br>для абитуриентов</h1>
+            <h2 class="title-main">ИНФОРМАЦИЯ<br>для абитуриентов</h2>
         </header>
 
         <!-- Контейнер монтирования React-компонента Главного меню, Истории и Кабинета -->
@@ -197,9 +206,7 @@
                 return docs;
             };
 
-            // Алгоритм точечного подбора специальности по структурированным вопросам
             const calculateRecommendation = () => {
-                // --- БАЗА ПТО (Единственная специальность) ---
                 if (targetBase === 'pto') {
                     return {
                         name: "Почтовая деятельность (на базе ПТО)",
@@ -208,7 +215,6 @@
                     };
                 }
 
-                // --- СРЕДНЕЕ СПЕЦИАЛЬНОЕ ОБРАЗОВАНИЕ (ССО) ---
                 if (targetLevel === 'sso') {
                     if (targetBase === '9') {
                         if (targetInterests === 'code') {
@@ -254,7 +260,7 @@
                                 url: "pages/monitoring/mon_sso_9_spec6.html"
                             };
                         }
-                    } else if (targetBase === '11') { // 11 класс ССО
+                    } else if (targetBase === '11') {
                         if (targetInterests === 'code') {
                             return {
                                 name: "Тестирование программного обеспечения (11 кл., Дневное)",
@@ -296,7 +302,7 @@
                             };
                         }
                     }
-                } else { // --- ВЫСШЕЕ ОБРАЗОВАНИЕ (ВО) ---
+                } else {
                     if (targetBase === '11') {
                         if (targetInterests === 'code') {
                             return {
@@ -325,7 +331,7 @@
                                 url: "pages/monitoring/mon_vo_11_spec4.html"
                             };
                         }
-                    } else { // ВО после ССО (Сокращенная форма)
+                    } else {
                         if (targetInterests === 'code') {
                             return {
                                 name: "Прикладная информатика (Дневное сокращенное)",
@@ -506,7 +512,6 @@
                                     <div>
                                         <p className="cab-quiz-question">4. Выберите более узкую специализацию:</p>
                                         <div className="cab-quiz-options">
-                                            {/* ССО + 9 кл + ИТ */}
                                             {targetLevel === 'sso' && targetBase === '9' && targetInterests === 'code' && (
                                                 <React.Fragment>
                                                     <button className="cab-quiz-btn" onClick={() => { setTargetSubInterests('web'); setQuizStep(6); }}>🌐 Веб-программирование, верстка интерфейсов и веб-дизайн</button>
@@ -514,17 +519,15 @@
                                                 </React.Fragment>
                                             )}
 
-                                            {/* ССО + 9 кл + Железо */}
                                             {targetLevel === 'sso' && targetBase === '9' && targetInterests === 'hardware' && (
                                                 <React.Fragment>
-                                                    <button className="cab-quiz-btn" onClick={() => { setTargetSubInterests('cable'); setQuizStep(6); }}>🛠️ Монтаж и проектирование оптического волокна (ВОЛС)</button>
+                                                    <button className="cab-quiz-btn" onClick={() => { setTargetSubInterests('cable'); setQuizStep(6); }}>🛠️  Монтаж и проектирование оптического волокна (ВОЛС)</button>
                                                     <button className="cab-quiz-btn" onClick={() => { setTargetSubInterests('radio'); setQuizStep(6); }}>📡 Радиосвязь, спутниковые системы и телевидение</button>
                                                     <button className="cab-quiz-btn" onClick={() => { setTargetSubInterests('multi'); setQuizStep(6); }}>🎚️ Звуковое оборудование и мультимедийные системы</button>
                                                     <button className="cab-quiz-btn" onClick={() => { setTargetSubInterests('telecom'); setQuizStep(6); }}>🖥️ Настройка серверов, АТС и глобальное сетевое администрирование</button>
                                                 </React.Fragment>
                                             )}
 
-                                            {/* ССО + 11 кл + Железо */}
                                             {targetLevel === 'sso' && targetBase === '11' && targetInterests === 'hardware' && (
                                                 <React.Fragment>
                                                     <button className="cab-quiz-btn" onClick={() => { setTargetSubInterests('radio'); setQuizStep(5); }}>📡 Спутниковая связь, радиовещание и телевидение</button>
@@ -532,7 +535,6 @@
                                                 </React.Fragment>
                                             )}
 
-                                            {/* ВО + 11 кл + Железо */}
                                             {targetLevel === 'vo' && targetBase === '11' && targetInterests === 'hardware' && (
                                                 <React.Fragment>
                                                     <button className="cab-quiz-btn" onClick={() => { setTargetSubInterests('auto'); setQuizStep(6); }}>🤖 Автоматика, программирование ПЛК и промышленных роботов</button>
@@ -540,7 +542,6 @@
                                                 </React.Fragment>
                                             )}
 
-                                            {/* ВО + 11 кл + Маркетинг/Почта */}
                                             {targetLevel === 'vo' && targetBase === '11' && targetInterests === 'manage' && (
                                                 <React.Fragment>
                                                     <button className="cab-quiz-btn" onClick={() => { setTargetSubInterests('market'); setQuizStep(6); }}>📈 Маркетинговые исследования, бренд-менеджмент и реклама</button>
@@ -548,7 +549,6 @@
                                                 </React.Fragment>
                                             )}
 
-                                            {/* ВО + ССО + Железо */}
                                             {targetLevel === 'vo' && targetBase === 'sso_short' && targetInterests === 'hardware' && (
                                                 <React.Fragment>
                                                     <button className="cab-quiz-btn" onClick={() => { setTargetSubInterests('networks'); setQuizStep(5); }}>⏩ Начать выбор формы обучения (дневная/заочная)</button>
