@@ -1503,7 +1503,7 @@ nav ul {
 }
 
 /* На компьютерах (ширина экрана более 768px) быстрые вопросы показаны всегда */
-@media (min-width: 769px) {
+@media (min-width: 1290px) {
     .ai-quick-questions {
         max-height: 150px !important;
         opacity: 1 !important;
@@ -1606,8 +1606,8 @@ nav ul {
     fill: #ffffff !important;
 }
 
-/* Адаптивность под мобилки (экраны 768px и меньше) */
-@media (max-width: 768px) {
+/* Адаптивность под мобилки (экраны 750px и меньше) */
+@media (max-width: 1290px) {
     .ai-widget {
         bottom: 15px !important;
         left: 2.5vw !important; /* Отступ слева 2.5% от экрана */
