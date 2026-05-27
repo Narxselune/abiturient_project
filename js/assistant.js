@@ -448,7 +448,7 @@ function handleScoreCalculation(userScore, isVoScore, originalText) {
                     let paidHtml = '';
                     if (spec.offsetPaid) {
                         const paidData = parseVoBlock(sheet, spec.offsetPaid, true);
-                        const paidPos = getVoPosition(paidData.applications, userScore);
+                        const paidPos = getVoPosition(budgetData.applications, userScore);
                         const paidStatus = paidPos <= paidData.plan
                             ? '<span style="color: #2e7d32; font-weight: bold;">Проходите</span>'
                             : '<span style="color: #c62828; font-weight: bold;">Не проходите</span>';
@@ -656,17 +656,8 @@ function showQuickQuestions() {
 }
 
 function hideQuickQuestions() {
-    setTimeout(() => {
-        const quickQuestions = document.getElementById('ai-quick-questions');
-        const activeEl = document.activeElement;
-
-        if (quickQuestions) {
-            if (activeEl && quickQuestions.contains(activeEl)) {
-                return;
-            }
-            quickQuestions.classList.remove('visible');
-        }
-    }, 250);
+    // Метод полностью контролируется глобальным touch/click перехватчиком
+    // для исключения случайных несрабатываний на тач-экранах.
 }
 
 // --- ИНТЕРАКТИВНОЕ УПРАВЛЕНИЕ ОКНОМ С ПОМОЩЬЮ JQUERY UI И КЛИКАМИ ---
@@ -699,20 +690,38 @@ $(document).ready(function () {
         });
     }
 
-    // Закрытие плашек быстрых вопросов при клике/тапе вне строки ввода и самих плашек
-    // Используем capture-фазу для перехвата тач-событий на мобильных устройствах
-    document.addEventListener('click', handleOutsideClick, true);
-    document.addEventListener('touchstart', handleOutsideClick, { capture: true, passive: true });
-
-    function handleOutsideClick(e) {
-        const userInput = document.getElementById('ai-user-input');
-        const quickQuestions = document.getElementById('ai-quick-questions');
-
-        if (userInput && quickQuestions) {
-            // Если клик/тач был вне поля ввода и вне самих быстрых вопросов
-            if (!userInput.contains(e.target) && !quickQuestions.contains(e.target)) {
-                quickQuestions.classList.remove('visible');
+    // Слушатели тапов/кликов прямо на самом окне ассистента
+    const winEl = document.getElementById('ai-window');
+    if (winEl) {
+        const hideQuestions = (e) => {
+            const userInput = document.getElementById('ai-user-input');
+            const quickQuestions = document.getElementById('ai-quick-questions');
+            if (userInput && quickQuestions) {
+                // Если кликнули/тапнули не по вводу и не по плашкам вопросов
+                if (!userInput.contains(e.target) && !quickQuestions.contains(e.target)) {
+                    quickQuestions.classList.remove('visible');
+                }
             }
-        }
+        };
+        // Используем стадию захвата (capture: true) для обхода перехвата событий jQuery UI
+        winEl.addEventListener('click', hideQuestions, true);
+        winEl.addEventListener('touchstart', hideQuestions, { capture: true, passive: true });
     }
+
+    // Дополнительный слушатель для кликов по фону всей страницы (вне чата)
+    document.addEventListener('click', function (e) {
+        const assistantEl = document.getElementById('ai-assistant');
+        const quickQuestions = document.getElementById('ai-quick-questions');
+        if (assistantEl && quickQuestions && !assistantEl.contains(e.target)) {
+            quickQuestions.classList.remove('visible');
+        }
+    }, true);
+
+    document.addEventListener('touchstart', function (e) {
+        const assistantEl = document.getElementById('ai-assistant');
+        const quickQuestions = document.getElementById('ai-quick-questions');
+        if (assistantEl && quickQuestions && !assistantEl.contains(e.target)) {
+            quickQuestions.classList.remove('visible');
+        }
+    }, { capture: true, passive: true });
 });
