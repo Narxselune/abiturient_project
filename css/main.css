@@ -2014,47 +2014,82 @@ nav ul {
         transform: none !important;
     }
 }
-/* Сброс стилей списков для меню с полным сокрытием маркеров */
+/* ==========================================================================
+   УЛУЧШЕННОЕ НЕЗАВИСИМОЕ ПОЗИЦИОНИРОВАНИЕ КНОПКИ И ОКНА ЧАТА
+   ========================================================================== */
 
-ul.btn-grid, ul.btn-grid-main {
-    list-style: none !important;
-    padding: 0 !important;
+/* Общий контейнер больше не ограничивает размеры дочерних элементов */
+.ai-widget {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 99999;
+}
+
+/* Кнопка "Задать вопрос" жестко зафиксирована в нижнем углу */
+.ai-toggle-btn {
+    position: fixed !important;
+    bottom: 20px !important;
+    left: 20px !important;
+    z-index: 100000 !important;
     margin: 0 !important;
-    width: 100% !important;
 }
 
-ul.btn-grid-main {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 18px !important;
-    align-items: center !important;
-    margin-bottom: 0 !important; /* Убираем нижний отступ списка */
-}
-
-ul.btn-grid li {
-    list-style: none !important;
-    padding: 0 !important;
+/* Окно чата изначально фиксируется над кнопкой, но готово к перемещению */
+.ai-window {
+    position: fixed !important;
+    bottom: 90px; /* Изначальное положение над кнопкой */
+    left: 20px;
+    z-index: 99999 !important;
     margin: 0 !important;
-    width: 100% !important;
+    display: flex;
+    flex-direction: column;
+}
+/* ==========================================================================
+   АДАПТИВНОСТЬ ЛИЧНОГО КАБИНЕТА И СЕНСОРНОЕ УПРАВЛЕНИЕ АССИСТЕНТОМ
+   ========================================================================== */
+
+/* 1. Предотвращение перекрытия иконкой заголовка Личного кабинета */
+.cabinet-window {
+    z-index: 100050 !important; /* Гарантированно выше, чем синяя кнопка-иконка вызова */
 }
 
-ul.btn-grid-main li {
-    list-style: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    width: 100% !important;
-    display: flex !important;
-    justify-content: center !important;
+@media (max-width: 576px) {
+    /* На телефонах раскрываем кабинет на весь экран (Fullscreen UX) */
+    .cabinet-window {
+        width: 100% !important;
+        height: 100% !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        border-radius: 0 !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+    }
+
+    /* Адаптируем заголовок и предотвращаем наплыв текста на крестик */
+    .cabinet-header-title {
+        font-size: 15px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        max-width: 80% !important;
+        padding-left: 2px !important;
+    }
 }
 
-/* Корректировка положения блока истории просмотров */
-.recently-viewed {
-    display: inline-flex;
-    justify-content: center;
-    align-items: flex-start;
-    margin-top: 24px !important; /* Уменьшаем отступ до 24px, чтобы поднять блок выше */
-    font-size: 15px;
-    color: #000000;
-    text-align: left;
-    gap: 8px;
+/* 2. Логика отображения плашек быстрых вопросов ассистента */
+.ai-quick-questions {
+    display: none !important; /* По умолчанию скрываем */
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+    padding: 2px 5px;
+    transition: opacity 0.2s ease;
 }
+
+    /* Плашки отображаются только тогда, когда у родительского контейнера активен класс visible */
+    .ai-quick-questions.visible {
+        display: flex !important;
+    }
