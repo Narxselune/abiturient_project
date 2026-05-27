@@ -2046,33 +2046,31 @@ nav ul {
     flex-direction: column;
 }
 /* ==========================================================================
-   ФИКСАЦИЯ ВЫСОТЫ И УСТРАНЕНИЕ СКАЧКОВ ЛИЧНОГО КАБИНЕТА НА ТЕЛЕФОНЕ
+   КОМПАКТНЫЙ СТАБИЛЬНЫЙ РАЗМЕР КАБИНЕТА И СЕНСОРНОЕ СКРЫТИЕ ПЛАШЕК
    ========================================================================== */
 
-/* Гарантированное перекрытие кнопки вызова открытым кабинетом */
+/* Перекрытие кнопки вызова открытым кабинетом */
 .cabinet-window {
     z-index: 100050 !important;
 }
 
 @media (max-width: 576px) {
-    /* Парящее компактное окно личного кабинета скругленной формы */
+    /* Парящее компактное окно ЛК с фиксированной высотой (убирает любые скачки) */
     .cabinet-window {
         width: 90% !important;
         max-width: 340px !important;
-        height: auto !important;
-        border-radius: 16px !important; /* Сохраняем аккуратные скругленные углы */
-        /* Привязка к верхнему краю исключает вертикальные скачки при смене вкладок */
+        height: 480px !important; /* Фиксированная высота окна для обеих вкладок */
+        border-radius: 16px !important;
         top: 40px !important;
         left: 50% !important;
         right: auto !important;
         bottom: auto !important;
-        transform: translateX(-50%) !important; /* Центрируем строго по горизонтали */
-
+        transform: translateX(-50%) !important;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
         overflow: hidden !important;
     }
 
-    /* Заголовок кабинета на мобильном дисплее */
+    /* Настройки заголовка */
     .cabinet-header-title {
         font-size: 14px !important;
         white-space: nowrap !important;
@@ -2081,24 +2079,42 @@ nav ul {
         max-width: none !important;
     }
 
-    /* Делаем окно короче в длину за счет ограничения высоты контентной области */
+    /* Стабильная высота тела контента для обеих вкладок со скроллом */
     .cabinet-body {
-        max-height: 350px !important; /* Жестко ограничивает вертикальную длину окна */
-        overflow-y: auto !important; /* Включает аккуратную внутреннюю прокрутку */
+        height: 385px !important; /* Строго одинаковая высота контентной области */
+        max-height: 385px !important;
+        overflow-y: auto !important;
         padding: 12px 14px !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Вертикальное выравнивание фильтров: убирает сдвиг и выползание за рамки */
+    .cab-filter-row {
+        display: flex !important;
+        flex-direction: column !important; /* Выстраиваем метку и селект вертикально */
+        align-items: flex-start !important;
+        gap: 6px !important; /* Увеличиваем отступ между текстом и селектом */
+        margin-bottom: 12px !important;
+        width: 100% !important;
+    }
+
+    /* Выпадающий список занимает всю ширину карточки без вылетов */
+    .cab-select {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
     }
 }
 
-/* Логика отображения плашек быстрых вопросов */
+/* Стили плашек быстрых вопросов */
 .ai-quick-questions {
-    display: none !important; /* По умолчанию скрыты */
+    display: none !important;
     flex-wrap: wrap;
     gap: 6px;
     margin-bottom: 8px;
     padding: 2px 5px;
 }
 
-    /* Отображение только при наличии класса visible */
     .ai-quick-questions.visible {
         display: flex !important;
     }

@@ -78,7 +78,7 @@ const assistantDatabase = [
         answer: '<b>Время работы приемной комиссии:</b><br>' +
             '• Понедельник – Суббота: <b>с 9:00 до 18:00</b>.<br>' +
             '• Воскресенье: выходной день.<br>' +
-            '<i>Примечание: If на воскресенье выпадает первый или последний день приема документов, приемная комиссия будет работать и в воскресенье.</i><br><br>' +
+            '<i>Примечание: Если на воскресенье выпадает первый или последний день приема документов, приемная комиссия будет работать и в воскресенье.</i><br><br>' +
             '<b>График информирования абитуриентов:</b><br>' +
             '• Сведения обновляются ежедневно в <b>12:00, 15:00 и 18:00</b> на официальном сайте и на стендах в холле приемной комиссии.<br>' +
             '• В последний день приема документов обновление информации происходит в <b>10:00, 12:00, 15:00 и 17:00</b> (последнее обновление хода приема).<br>' +
@@ -422,7 +422,7 @@ function handleScoreCalculation(userScore, isVoScore, originalText) {
                 let paidHtml = '';
                 if (spec.offsetPaid) {
                     const paidData = parseVoBlock(sheet, spec.offsetPaid, false);
-                    const paidPos = getVoPosition(paidData.applications, userScore);
+                    const paidPos = getVoPosition(budgetData.applications, userScore);
                     const paidStatus = paidPos <= paidData.plan
                         ? '<span style="color: #2e7d32; font-weight: bold;">Проходите</span>'
                         : '<span style="color: #c62828; font-weight: bold;">Не проходите</span>';
@@ -700,16 +700,19 @@ $(document).ready(function () {
     }
 
     // Закрытие плашек быстрых вопросов при клике/тапе вне строки ввода и самих плашек
-    $(document).on('click pointerdown', function (e) {
-        const $userInput = $('#ai-user-input');
-        const $quickQuestions = $('#ai-quick-questions');
+    // Используем capture-фазу для перехвата тач-событий на мобильных устройствах
+    document.addEventListener('click', handleOutsideClick, true);
+    document.addEventListener('touchstart', handleOutsideClick, { capture: true, passive: true });
 
-        if ($userInput.length && $quickQuestions.length) {
-            // Если кликнули не по вводу и не по плашкам вопросов
-            if (!$userInput.is(e.target) && $userInput.has(e.target).length === 0 &&
-                !$quickQuestions.is(e.target) && $quickQuestions.has(e.target).length === 0) {
-                $quickQuestions.removeClass('visible');
+    function handleOutsideClick(e) {
+        const userInput = document.getElementById('ai-user-input');
+        const quickQuestions = document.getElementById('ai-quick-questions');
+
+        if (userInput && quickQuestions) {
+            // Если клик/тач был вне поля ввода и вне самих быстрых вопросов
+            if (!userInput.contains(e.target) && !quickQuestions.contains(e.target)) {
+                quickQuestions.classList.remove('visible');
             }
         }
-    });
+    }
 });
