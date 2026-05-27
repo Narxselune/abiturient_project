@@ -2102,3 +2102,89 @@ nav ul {
     .ai-quick-questions.visible {
         display: flex !important;
     }
+
+/* ==========================================================================
+   ИНТЕРАКТИВНАЯ АКАДЕМИЧЕСКАЯ АНИМАЦИЯ ЗАГРУЗКИ (Мортаборд / Шапка выпускника)
+   ========================================================================== */
+
+.academy-loader-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 10px;
+    text-align: center;
+}
+
+.cap-wrapper {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    margin-bottom: 15px;
+}
+
+.mortarboard-svg {
+    width: 100%;
+    height: 100%;
+    /* Шапка левитирует вверх-вниз */
+    animation: floatCap 2s infinite ease-in-out;
+}
+
+/* Эффект покачивания кисточки из центра шапки */
+.cap-tassel {
+    transform-origin: 32px 22px;
+    animation: swingTassel 2s infinite ease-in-out;
+}
+
+/* Пульсация текста загрузки */
+.loader-text {
+    font-size: 14px;
+    color: #718096;
+    font-style: italic;
+    font-weight: 500;
+    animation: pulseText 1.8s infinite ease-in-out;
+}
+
+.dark-mode .loader-text {
+    color: #a0aec0;
+}
+
+/* --- КЛЮЧЕВЫЕ КАДРЫ АНИМАЦИЙ --- */
+
+@keyframes floatCap {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-8px) rotate(3deg);
+    }
+}
+
+@keyframes swingTassel {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(-8deg);
+    }
+
+    50% {
+        transform: rotate(4deg);
+    }
+
+    75% {
+        transform: rotate(-3deg);
+    }
+}
+
+@keyframes pulseText {
+    0%, 100% {
+        opacity: 0.6;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}

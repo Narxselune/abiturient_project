@@ -67,8 +67,20 @@
 
         <!-- Контейнер монтирования React-компонента Главного меню, Истории и Кабинета -->
         <main id="react-homepage-root">
-            <div style="text-align: center; padding: 20px; color: #666; font-style: italic;">
-                Загрузка данных...
+            <div class="academy-loader-container">
+                <div class="cap-wrapper">
+                    <svg class="mortarboard-svg" viewBox="0 0 64 64">
+                        <!-- Нижний обруч (основание) -->
+                        <path d="M16 32 V38 C16 43 23 46 32 46 C41 46 48 43 48 38 V32" fill="none" stroke="#007bff" stroke-width="3" stroke-linecap="round" />
+                        <!-- Верхний ромб конфедератки -->
+                        <polygon points="32,10 58,22 32,34 6,22" fill="#007bff" stroke="#007bff" stroke-width="1" />
+                        <!-- Золотистая кисточка выпускника -->
+                        <path class="cap-tassel" d="M32,22 L46,27 V37" fill="none" stroke="#ff9800" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                        <!-- Белая центральная пуговица -->
+                        <circle cx="32" cy="22" r="2" fill="#ffffff" />
+                    </svg>
+                </div>
+                <div class="loader-text">Загрузка данных...</div>
             </div>
         </main>
     </div>
@@ -110,11 +122,9 @@
             </div>
 
             <div class="ai-input-container">
-                <!-- Скрытием управляет глобальный клик по документу для исключения конфликтов на смартфонах -->
                 <input type="text" id="ai-user-input" placeholder="Введите ваш вопрос..."
                        onfocus="showQuickQuestions()"
-                       onkeydown="handleAssistantKey(event)"
-                       onblur="hideQuickQuestions()">
+                       onkeydown="handleAssistantKey(event)">
                 <button id="ai-send-btn" onclick="sendMessageFromInput()">
                     <svg viewBox="0 0 24 24" width="18" height="18">
                         <path d="M2 21l21-9L2 3v7l15 2-15 2z" />
