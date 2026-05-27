@@ -1429,68 +1429,6 @@ nav ul {
     background-color: #3B4B5E;
 }
 
-/* ==========================================================================
-   ИСПРАВЛЕННЫЕ АДАПТИВНЫЕ СТИЛИ БЫСТРЫХ ВОПРОСОВ
-   ========================================================================== */
-#ai-quick-questions.ai-quick-questions {
-    display: none; /* Скрыты по умолчанию на мобильных */
-    flex-direction: row !important;
-    flex-wrap: wrap !important;
-    padding: 10px 14px !important;
-    background: transparent !important;
-    border: none !important;
-    margin: 0 !important;
-    height: auto !important;
-    max-height: none !important;
-    overflow: visible !important;
-}
-
-/* На компьютерах (экраны шире 1290px) быстрые вопросы показаны всегда */
-@media (min-width: 1291px) {
-    #ai-quick-questions.ai-quick-questions {
-        display: flex !important; /* Всегда открыты на мониторах */
-    }
-}
-
-/* На смартфонах и планшетах плашка открывается только при наличии класса .visible */
-@media (max-width: 1290px) {
-    #ai-quick-questions.ai-quick-questions.visible {
-        display: flex !important; /* Раскрывается по клику/фокусу */
-    }
-}
-
-/* Оформление кнопок быстрых вопросов */
-#ai-quick-questions.ai-quick-questions button {
-    background: #f1f5f9 !important;
-    border: 1px solid #cbd5e1 !important;
-    color: #1a202c !important;
-    padding: 6px 14px !important;
-    border-radius: 20px !important;
-    font-size: 13px !important;
-    cursor: pointer !important;
-    transition: all 0.2s ease !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    white-space: nowrap !important;
-    font-family: inherit !important;
-}
-
-    #ai-quick-questions.ai-quick-questions button:hover {
-        background: #e2e8f0 !important;
-        border-color: #94a3b8 !important;
-    }
-
-.dark-mode #ai-quick-questions.ai-quick-questions button {
-    background: rgba(255, 255, 255, 0.08) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    color: #f7fafc !important;
-}
-
-    .dark-mode #ai-quick-questions.ai-quick-questions button:hover {
-        background: rgba(255, 255, 255, 0.15) !important;
-        border-color: rgba(255, 255, 255, 0.3) !important;
-    }
-
 .ai-input-container {
     padding: 10px;
     background-color: #ffffff;
@@ -1932,54 +1870,6 @@ nav ul {
         background-color: rgba(99, 179, 237, 0.12) !important;
     }
 
-/* Стили быстрых вопросов (перенесены из index.html) */
-#ai-quick-questions.ai-quick-questions {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: wrap !important;
-    gap: 6px !important;
-    padding: 10px 14px !important;
-    background: transparent !important;
-    border: none !important;
-    margin: 0 !important;
-    height: auto !important;
-    max-height: none !important;
-    overflow: visible !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-}
-
-    #ai-quick-questions.ai-quick-questions button {
-        background: #f1f5f9 !important;
-        border: 1px solid #cbd5e1 !important;
-        color: #1a202c !important;
-        padding: 6px 14px !important;
-        border-radius: 20px !important;
-        font-size: 13px !important;
-        cursor: pointer !important;
-        transition: all 0.2s ease !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        white-space: nowrap !important;
-        font-family: inherit !important;
-    }
-
-        #ai-quick-questions.ai-quick-questions button:hover {
-            background: #e2e8f0 !important;
-            border-color: #94a3b8 !important;
-        }
-
-.dark-mode #ai-quick-questions.ai-quick-questions button {
-    background: rgba(255, 255, 255, 0.08) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    color: #f7fafc !important;
-}
-
-    .dark-mode #ai-quick-questions.ai-quick-questions button:hover {
-        background: rgba(255, 255, 255, 0.15) !important;
-        border-color: rgba(255, 255, 255, 0.3) !important;
-    }
-
 /* Медиа-запросы адаптации главной (перенесены из index.html) */
 @media (max-width: 1024px) {
     .body-main {
@@ -2099,18 +1989,84 @@ nav ul {
     }
 }
 
-/* Стили плашек быстрых вопросов */
+/* ==========================================================================
+   УЛУЧШЕННЫЕ СТИЛИ ПАНЕЛИ БЫСТРЫХ ВОПРОСОВ
+   ========================================================================== */
 .ai-quick-questions {
-    display: none !important;
+    padding: 0;
+    max-height: 0;
+    opacity: 0;
+    background-color: #ffffff;
+    border-top: none;
+    display: flex !important; /* Используем flex для позиционирования кнопок внутри контейнера */
     flex-wrap: wrap;
     gap: 6px;
-    margin-bottom: 8px;
-    padding: 2px 5px;
+    transition: max-height 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease, padding 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+    visibility: hidden;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-    .ai-quick-questions.visible {
-        display: flex !important;
+.dark-mode .ai-quick-questions {
+    background-color: #222222;
+}
+
+/* Класс активации видимости быстрых вопросов (управляется через JS) */
+.ai-quick-questions.visible {
+    max-height: 160px !important;
+    opacity: 1 !important;
+    padding: 10px 14px !important;
+    border-top: 1px solid #E2E8F0 !important;
+    visibility: visible !important;
+    overflow-y: auto; /* Допускается скролл при большом количестве кнопок на маленьких экранах */
+}
+
+.dark-mode .ai-quick-questions.visible {
+    border-top: 1px solid #3A3B3D !important;
+}
+
+/* Кнопки быстрых вопросов */
+.ai-quick-questions button {
+    background-color: #F1F5F9 !important;
+    border: 1px solid #CBD5E1 !important;
+    color: #1A202C !important;
+    padding: 6px 12px !important;
+    border-radius: 20px !important;
+    font-size: 13px !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    white-space: nowrap !important;
+    font-family: inherit !important;
+    margin: 0 !important;
+    height: auto !important;
+    box-shadow: none !important;
+}
+
+    .ai-quick-questions button:hover {
+        background-color: #E2E8F0 !important;
+        border-color: #94a3b8 !important;
     }
+
+.dark-mode .ai-quick-questions button {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #F7FAFC !important;
+}
+
+    .dark-mode .ai-quick-questions button:hover {
+        background-color: rgba(255, 255, 255, 0.15) !important;
+        border-color: rgba(255, 255, 255, 0.3) !important;
+    }
+
+/* Исключение дублирования стилей и перекрытий */
+#ai-quick-questions.ai-quick-questions {
+    border: none;
+    margin: 0;
+    height: auto;
+}
 
 /* ==========================================================================
    ИНТЕРАКТИВНАЯ АКАДЕМИЧЕСКАЯ АНИМАЦИЯ ЗАГРУЗКИ (Мортаборд / Шапка выпускника)

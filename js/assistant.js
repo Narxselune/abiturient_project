@@ -353,23 +353,22 @@ function toggleAssistant() {
     windowEl.style.display = isHidden ? 'flex' : 'none';
 
     if (isHidden) {
-        document.getElementById('ai-user-input').focus();
+        const userInput = document.getElementById('ai-user-input');
+        if (userInput) {
+            userInput.focus(); // Мгновенный фокус на поле ввода при открытии
+        }
         if (!assistantWorkbook) {
             initAssistantDatabase();
         }
     }
 }
 
-// Отправка быстрого вопроса по кнопке
 function sendQuickQuestion(questionText) {
     appendMessage(questionText, 'user');
     generateBotResponse(questionText);
 
-    // Принудительно закрываем плашку с быстрыми вопросами на мобильных после выбора вопроса
-    const quickQuestions = document.getElementById('ai-quick-questions');
-    if (quickQuestions) {
-        quickQuestions.classList.remove('visible');
-    }
+    // Скрываем плашки быстрых вопросов после отправки
+    hideQuickQuestions();
 }
 
 function sendMessageFromInput() {
@@ -650,16 +649,28 @@ function generateBotResponse(userText) {
     }, 400);
 }
 
+// Показать быстрые вопросы и прокрутить чат вниз
 function showQuickQuestions() {
     const quickQuestions = document.getElementById('ai-quick-questions');
     if (quickQuestions) {
         quickQuestions.classList.add('visible');
+
+        // Мягкая прокрутка чата после анимации появления панели
+        setTimeout(() => {
+            const messagesContainer = document.getElementById('ai-messages');
+            if (messagesContainer) {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        }, 260);
     }
 }
 
+// Скрыть быстрые вопросы
 function hideQuickQuestions() {
-    // Метод полностью контролируется глобальным touch/click перехватчиком
-    // для исключения случайных несрабатываний на тач-экранах.
+    const quickQuestions = document.getElementById('ai-quick-questions');
+    if (quickQuestions) {
+        quickQuestions.classList.remove('visible');
+    }
 }
 
 // --- ИНТЕРАКТИВНОЕ УПРАВЛЕНИЕ ОКНОМ С ПОМОЩЬЮ JQUERY UI И КЛИКАМИ ---
@@ -692,38 +703,31 @@ $(document).ready(function () {
         });
     }
 
-    // Слушатели тапов/кликов прямо на самом окне ассистента
-    const winEl = document.getElementById('ai-window');
-    if (winEl) {
-        const hideQuestions = (e) => {
-            const userInput = document.getElementById('ai-user-input');
-            const quickQuestions = document.getElementById('ai-quick-questions');
-            if (userInput && quickQuestions) {
-                // Если кликнули/тапнули не по вводу и не по плашкам вопросов
-                if (!userInput.contains(e.target) && !quickQuestions.contains(e.target)) {
-                    quickQuestions.classList.remove('visible');
-                }
-            }
-        };
-        // Используем стадию захвата (capture: true) для обхода перехвата событий jQuery UI
-        winEl.addEventListener('click', hideQuestions, true);
-        winEl.addEventListener('touchstart', hideQuestions, { capture: true, passive: true });
-    }
-
-    // Дополнительный слушатель для кликов по фону всей страницы (вне чата)
-    document.addEventListener('click', function (e) {
-        const assistantEl = document.getElementById('ai-assistant');
+    // Универсальная функция обработки взаимодействий на странице
+    const handleGlobalInteraction = (e) => {
+        const userInput = document.getElementById('ai-user-input');
         const quickQuestions = document.getElementById('ai-quick-questions');
-        if (assistantEl && quickQuestions && !assistantEl.contains(e.target)) {
-            quickQuestions.classList.remove('visible');
-        }
-    }, true);
+        const aiWindow = document.getElementById('ai-window');
 
-    document.addEventListener('touchstart', function (e) {
-        const assistantEl = document.getElementById('ai-assistant');
-        const quickQuestions = document.getElementById('ai-quick-questions');
-        if (assistantEl && quickQuestions && !assistantEl.contains(e.target)) {
-            quickQuestions.classList.remove('visible');
+        // Если окно ассистента закрыто, ничего не делаем
+        if (!aiWindow || aiWindow.style.display === 'none') return;
+
+        // Если нажали на текстовое поле ввода — отображаем быстрые вопросы
+        if (userInput && userInput.contains(e.target)) {
+            showQuickQuestions();
+            return;
         }
-    }, { capture: true, passive: true });
+
+        // Если нажали непосредственно на область быстрых вопросов — не скрываем её (даем кнопкам сработать)
+        if (quickQuestions && quickQuestions.contains(e.target)) {
+            return;
+        }
+
+        // Во всех остальных случаях (клик по сообщениям, шапке чата или вне чата) — скрываем плашки вопросов
+        hideQuickQuestions();
+    };
+
+    // Регистрируем слушатели событий на этапе захвата для корректного перехвата на мобильных экранах
+    document.addEventListener('click', handleGlobalInteraction, true);
+    document.addEventListener('touchstart', handleGlobalInteraction, { capture: true, passive: true });
 });
