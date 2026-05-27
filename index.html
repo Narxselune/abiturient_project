@@ -113,7 +113,8 @@
                 <!-- Скрытием управляет глобальный клик по документу для исключения конфликтов на смартфонах -->
                 <input type="text" id="ai-user-input" placeholder="Введите ваш вопрос..."
                        onfocus="showQuickQuestions()"
-                       onkeydown="handleAssistantKey(event)">
+                       onkeydown="handleAssistantKey(event)"
+                       onblur="hideQuickQuestions()">
                 <button id="ai-send-btn" onclick="sendMessageFromInput()">
                     <svg viewBox="0 0 24 24" width="18" height="18">
                         <path d="M2 21l21-9L2 3v7l15 2-15 2z" />
