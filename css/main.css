@@ -2046,7 +2046,7 @@ nav ul {
     flex-direction: column;
 }
 /* ==========================================================================
-   ОПТИМИЗАЦИЯ ЛИЧНОГО КАБИНЕТА И СЕНСОРНОГО УПРАВЛЕНИЯ АССИСТЕНТОМ
+   ФИКСАЦИЯ ВЫСОТЫ И УСТРАНЕНИЕ СКАЧКОВ ЛИЧНОГО КАБИНЕТА НА ТЕЛЕФОНЕ
    ========================================================================== */
 
 /* Гарантированное перекрытие кнопки вызова открытым кабинетом */
@@ -2055,29 +2055,37 @@ nav ul {
 }
 
 @media (max-width: 576px) {
-    /* Парящее окно личного кабинета: центрированное, чуть меньше экрана и с закруглениями */
+    /* Парящее компактное окно личного кабинета скругленной формы */
     .cabinet-window {
-        width: 92% !important;
-        max-width: 350px !important;
+        width: 90% !important;
+        max-width: 340px !important;
         height: auto !important;
-        max-height: 85vh !important;
-        border-radius: 16px !important; /* Восстанавливаем скругление углов */
-        top: 50% !important;
+        border-radius: 16px !important; /* Сохраняем аккуратные скругленные углы */
+        /* Привязка к верхнему краю исключает вертикальные скачки при смене вкладок */
+        top: 40px !important;
         left: 50% !important;
         right: auto !important;
         bottom: auto !important;
-        transform: translate(-50%, -50%) !important; /* Идеальное центрирование */
+        transform: translateX(-50%) !important; /* Центрируем строго по горизонтали */
+
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
-        overflow-y: auto !important; /* Внутренний скролл для содержимого при нехватке высоты */
+        overflow: hidden !important;
     }
 
-    /* Настройки заголовка: шрифт уменьшен, все буквы теперь вмещаются без обрезания */
+    /* Заголовок кабинета на мобильном дисплее */
     .cabinet-header-title {
         font-size: 14px !important;
         white-space: nowrap !important;
         overflow: visible !important;
         text-overflow: clip !important;
         max-width: none !important;
+    }
+
+    /* Делаем окно короче в длину за счет ограничения высоты контентной области */
+    .cabinet-body {
+        max-height: 350px !important; /* Жестко ограничивает вертикальную длину окна */
+        overflow-y: auto !important; /* Включает аккуратную внутреннюю прокрутку */
+        padding: 12px 14px !important;
     }
 }
 
