@@ -360,10 +360,12 @@ function toggleAssistant() {
     }
 }
 
+// Отправка быстрого вопроса по кнопке
 function sendQuickQuestion(questionText) {
     appendMessage(questionText, 'user');
     generateBotResponse(questionText);
 
+    // Принудительно закрываем плашку с быстрыми вопросами на мобильных после выбора вопроса
     const quickQuestions = document.getElementById('ai-quick-questions');
     if (quickQuestions) {
         quickQuestions.classList.remove('visible');

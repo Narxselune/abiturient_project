@@ -1429,74 +1429,67 @@ nav ul {
     background-color: #3B4B5E;
 }
 
-.ai-quick-questions {
-    padding: 0;
-    max-height: 0;
-    opacity: 0;
-    background-color: #ffffff;
-    border-top: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    transition: max-height 0.2s ease, opacity 0.15s ease, padding 0.2s ease;
-    overflow: hidden;
+/* ==========================================================================
+   ИСПРАВЛЕННЫЕ АДАПТИВНЫЕ СТИЛИ БЫСТРЫХ ВОПРОСОВ
+   ========================================================================== */
+#ai-quick-questions.ai-quick-questions {
+    display: none; /* Скрыты по умолчанию на мобильных */
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    padding: 10px 14px !important;
+    background: transparent !important;
+    border: none !important;
+    margin: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
 }
 
-.dark-mode .ai-quick-questions {
-    background-color: #222222;
-}
-
-@media (min-width: 1290px) {
-    .ai-quick-questions {
-        max-height: 150px !important;
-        opacity: 1 !important;
-        padding: 10px !important;
-        border-top: 1px solid #E2E8F0 !important;
-    }
-
-    .dark-mode .ai-quick-questions {
-        border-top: 1px solid #3A3B3D !important;
+/* На компьютерах (экраны шире 1290px) быстрые вопросы показаны всегда */
+@media (min-width: 1291px) {
+    #ai-quick-questions.ai-quick-questions {
+        display: flex !important; /* Всегда открыты на мониторах */
     }
 }
 
-@media (max-width: 768px) {
-    .ai-quick-questions.visible {
-        max-height: 150px;
-        opacity: 1;
-        padding: 10px;
-        border-top: 1px solid #E2E8F0;
-    }
-
-    .dark-mode .ai-quick-questions.visible {
-        border-top: 1px solid #3A3B3D;
+/* На смартфонах и планшетах плашка открывается только при наличии класса .visible */
+@media (max-width: 1290px) {
+    #ai-quick-questions.ai-quick-questions.visible {
+        display: flex !important; /* Раскрывается по клику/фокусу */
     }
 }
 
-.ai-quick-questions button {
-    background-color: #F1F5F9;
-    border: 1px solid #E2E8F0;
-    border-radius: 12px;
-    padding: 6px 12px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: background-color 0.2s, border-color 0.2s;
-    font-family: inherit;
-    color: #1A202C;
+/* Оформление кнопок быстрых вопросов */
+#ai-quick-questions.ai-quick-questions button {
+    background: #f1f5f9 !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #1a202c !important;
+    padding: 6px 14px !important;
+    border-radius: 20px !important;
+    font-size: 13px !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    white-space: nowrap !important;
+    font-family: inherit !important;
 }
 
-.dark-mode .ai-quick-questions button {
-    background-color: #2D2D2D;
-    border: 1px solid #3A3B3D;
-    color: #E2E8F0;
+    #ai-quick-questions.ai-quick-questions button:hover {
+        background: #e2e8f0 !important;
+        border-color: #94a3b8 !important;
+    }
+
+.dark-mode #ai-quick-questions.ai-quick-questions button {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #f7fafc !important;
 }
 
-.ai-quick-questions button:hover {
-    background-color: #E2E8F0;
-}
-
-.dark-mode .ai-quick-questions button:hover {
-    background-color: #3B4B5E;
-}
+    .dark-mode #ai-quick-questions.ai-quick-questions button:hover {
+        background: rgba(255, 255, 255, 0.15) !important;
+        border-color: rgba(255, 255, 255, 0.3) !important;
+    }
 
 .ai-input-container {
     padding: 10px;
