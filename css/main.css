@@ -2153,3 +2153,17 @@ nav ul {
         opacity: 1;
     }
 }
+/* Фоновое изображение для всех страниц, кроме главной (Светлая тема) */
+body:not(.body-main) {
+    background-image: url('../Fon_2/1.png'); /* Если расширение файлов .jpg или .png, замените .jpeg на нужное */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    transition: background-image 0.3s ease;
+}
+
+/* Фоновое изображение для всех страниц, кроме главной (Темная тема) */
+.dark-mode body:not(.body-main) {
+    background-image: url('../Fon_2/2.png'); /* Если расширение файлов .jpg или .png, замените .jpeg на нужное */
+}
