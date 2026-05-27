@@ -78,7 +78,7 @@ const assistantDatabase = [
         answer: '<b>Время работы приемной комиссии:</b><br>' +
             '• Понедельник – Суббота: <b>с 9:00 до 18:00</b>.<br>' +
             '• Воскресенье: выходной день.<br>' +
-            '<i>Примечание: Если на воскресенье выпадает первый или последний день приема документов, приемная комиссия будет работать и в воскресенье.</i><br><br>' +
+            '<i>Примечание: If на воскресенье выпадает первый или последний день приема документов, приемная комиссия будет работать и в воскресенье.</i><br><br>' +
             '<b>График информирования абитуриентов:</b><br>' +
             '• Сведения обновляются ежедневно в <b>12:00, 15:00 и 18:00</b> на официальном сайте и на стендах в холле приемной комиссии.<br>' +
             '• В последний день приема документов обновление информации происходит в <b>10:00, 12:00, 15:00 и 17:00</b> (последнее обновление хода приема).<br>' +
@@ -669,7 +669,7 @@ function hideQuickQuestions() {
     }, 250);
 }
 
-// --- ИНТЕРАКТИВНОЕ УПРАВЛЕНИЕ ОКНОМ С ПОМОЩЬЮ JQUERY UI ---
+// --- ИНТЕРАКТИВНОЕ УПРАВЛЕНИЕ ОКНОМ С ПОМОЩЬЮ JQUERY UI И КЛИКАМИ ---
 $(document).ready(function () {
     const $win = $("#ai-window");
 
@@ -678,7 +678,15 @@ $(document).ready(function () {
         $win.draggable({
             handle: ".ai-header",
             containment: "window",
-            scroll: false
+            scroll: false,
+            start: function (event, ui) {
+                // Сбрасываем CSS-свойства bottom и right при начале перетаскивания,
+                // чтобы избежать конфликтов при расчете координат top и left
+                $(this).css({
+                    bottom: 'auto',
+                    right: 'auto'
+                });
+            }
         });
 
         // Инициализация изменения размеров (Resizable) со всех сторон
@@ -690,4 +698,18 @@ $(document).ready(function () {
             handles: "n, e, s, w, ne, se, sw, nw" // Направление ресайза по всем сторонам и углам
         });
     }
+
+    // Закрытие плашек быстрых вопросов при клике/тапе вне строки ввода и самих плашек
+    $(document).on('click pointerdown', function (e) {
+        const $userInput = $('#ai-user-input');
+        const $quickQuestions = $('#ai-quick-questions');
+
+        if ($userInput.length && $quickQuestions.length) {
+            // Если кликнули не по вводу и не по плашкам вопросов
+            if (!$userInput.is(e.target) && $userInput.has(e.target).length === 0 &&
+                !$quickQuestions.is(e.target) && $quickQuestions.has(e.target).length === 0) {
+                $quickQuestions.removeClass('visible');
+            }
+        }
+    });
 });

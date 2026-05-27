@@ -110,9 +110,9 @@
             </div>
 
             <div class="ai-input-container">
-                <!-- onfocus активирует плашки, onblur плавно скрывает их с задержкой (чтобы клик успел сработать) -->
+                <!-- Скрытием управляет глобальный клик по документу для исключения конфликтов на смартфонах -->
                 <input type="text" id="ai-user-input" placeholder="Введите ваш вопрос..."
-                       onfocus="showQuickQuestions()" onblur="hideQuickQuestions()"
+                       onfocus="showQuickQuestions()"
                        onkeydown="handleAssistantKey(event)">
                 <button id="ai-send-btn" onclick="sendMessageFromInput()">
                     <svg viewBox="0 0 24 24" width="18" height="18">
@@ -147,7 +147,7 @@
             const CabinetComponent = typeof PersonalCabinet !== 'undefined' ? PersonalCabinet : null;
 
             if (!CabinetComponent && window.location.protocol === 'file:') {
-                console.warn("Внимание: Вы запустили сайт через протокол file://. Браузеры могут блокировать загрузку внешнего файла js/cabinet.js. Используйте локальный веб-сервер.");
+                console.warn("Внимание: Вы запустили сайт через протокол file://. Мобильные и некоторые десктопные браузеры блокируют загрузку внешнего файла js/cabinet.js из-за CORS. Для полноценной работы Личного Кабинета используйте локальный веб-сервер (например, Live Server в VS Code) или загрузите проект на хостинг.");
             }
 
             return (

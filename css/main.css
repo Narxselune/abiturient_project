@@ -2046,50 +2046,51 @@ nav ul {
     flex-direction: column;
 }
 /* ==========================================================================
-   АДАПТИВНОСТЬ ЛИЧНОГО КАБИНЕТА И СЕНСОРНОЕ УПРАВЛЕНИЕ АССИСТЕНТОМ
+   ОПТИМИЗАЦИЯ ЛИЧНОГО КАБИНЕТА И СЕНСОРНОГО УПРАВЛЕНИЯ АССИСТЕНТОМ
    ========================================================================== */
 
-/* 1. Предотвращение перекрытия иконкой заголовка Личного кабинета */
+/* Гарантированное перекрытие кнопки вызова открытым кабинетом */
 .cabinet-window {
-    z-index: 100050 !important; /* Гарантированно выше, чем синяя кнопка-иконка вызова */
+    z-index: 100050 !important;
 }
 
 @media (max-width: 576px) {
-    /* На телефонах раскрываем кабинет на весь экран (Fullscreen UX) */
+    /* Парящее окно личного кабинета: центрированное, чуть меньше экрана и с закруглениями */
     .cabinet-window {
-        width: 100% !important;
-        height: 100% !important;
-        top: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        bottom: 0 !important;
-        border-radius: 0 !important;
-        max-width: 100% !important;
-        max-height: 100% !important;
+        width: 92% !important;
+        max-width: 350px !important;
+        height: auto !important;
+        max-height: 85vh !important;
+        border-radius: 16px !important; /* Восстанавливаем скругление углов */
+        top: 50% !important;
+        left: 50% !important;
+        right: auto !important;
+        bottom: auto !important;
+        transform: translate(-50%, -50%) !important; /* Идеальное центрирование */
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+        overflow-y: auto !important; /* Внутренний скролл для содержимого при нехватке высоты */
     }
 
-    /* Адаптируем заголовок и предотвращаем наплыв текста на крестик */
+    /* Настройки заголовка: шрифт уменьшен, все буквы теперь вмещаются без обрезания */
     .cabinet-header-title {
-        font-size: 15px !important;
+        font-size: 14px !important;
         white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-        max-width: 80% !important;
-        padding-left: 2px !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        max-width: none !important;
     }
 }
 
-/* 2. Логика отображения плашек быстрых вопросов ассистента */
+/* Логика отображения плашек быстрых вопросов */
 .ai-quick-questions {
-    display: none !important; /* По умолчанию скрываем */
+    display: none !important; /* По умолчанию скрыты */
     flex-wrap: wrap;
     gap: 6px;
     margin-bottom: 8px;
     padding: 2px 5px;
-    transition: opacity 0.2s ease;
 }
 
-    /* Плашки отображаются только тогда, когда у родительского контейнера активен класс visible */
+    /* Отображение только при наличии класса visible */
     .ai-quick-questions.visible {
         display: flex !important;
     }

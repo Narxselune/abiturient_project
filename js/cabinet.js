@@ -474,7 +474,7 @@ function PersonalCabinet({ isOpen, onClose }) {
         <div className="cabinet-window">
             <div className="cabinet-header">
                 <div className="cabinet-header-title">
-                    👤 Личный кабинет абитуриента
+                     Личный кабинет абитуриента
                 </div>
                 <button className="ai-close-btn" onClick={onClose}>&times;</button>
             </div>
