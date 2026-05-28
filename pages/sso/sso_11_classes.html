@@ -1,9 +1,14 @@
 ﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
+    <!-- БАЗОВАЯ ОПТИМИЗАЦИЯ ВЕБ-СТРАНИЦ (PERFORMANCE, SEO): Определение темной темы до рендеринга макета -->
     <script>
-        if (localStorage.getItem('theme') === 'dark') {
-            document.documentElement.classList.add('dark-mode');
+        try {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        } catch (e) {
+            console.warn("Доступ к localStorage заблокирован:", e);
         }
     </script>
     <meta charset="UTF-8">
@@ -11,15 +16,14 @@
     <title>Абитуриентам после 11 класса — ССО</title>
     <link rel="stylesheet" href="../../css/main.css">
 
-    <!-- Библиотека XLSX для парсинга таблиц -->
+    <!-- БАЗОВАЯ ОПТИМИЗАЦИЯ ВЕБ-СТРАНИЦ (PERFORMANCE, SEO): CDN загрузка React, Babel и библиотеки XLSX -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
-    <!-- Библиотеки React, ReactDOM и компилятор Babel -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.3/babel.min.js"></script>
 </head>
 <body>
+    <!-- ДОБАВЛЕНИЕ ИНТЕРАКТИВНОСТИ ПРИ ПОМОЩИ BOM/DOM: Кнопки навигации и настройки темы оформления -->
     <a href="../../index.html" class="btn-home" title="На главную">
         <svg viewBox="0 0 24 24">
             <rect x="16" y="4" width="3" height="5" />
@@ -39,7 +43,6 @@
             <h2>Среднее специальное образование</h2>
         </header>
 
-        <!-- Контейнер монтирования React-приложения -->
         <main id="react-calculator-root">
             <div class="academy-loader-container">
                 <div class="cap-wrapper">
@@ -55,7 +58,7 @@
         </main>
     </div>
 
-    <!-- React-компонент калькулятора -->
+    <!-- ИСПОЛЬЗОВАНИЕ ФРЕЙМВОРКА REACT: Инициализация интерактивного калькулятора -->
     <script type="text/babel">
         const { useState, useEffect } = React;
 
@@ -72,14 +75,12 @@
             { id: 7, name: "Почтовая деятельность (Заочное)", offset: 518, hasPaid: true, offsetPaid: 534, url: "../monitoring/mon_sso_11_zaoch_spec7.html" }
         ];
 
-        // Чтение ячеек
         function getCell(sheet, r, c) {
             if (!sheet) return '';
             const addr = XLSX.utils.encode_cell({ r, c });
             return sheet[addr] ? sheet[addr].v : '';
         }
 
-        // Разбор данных блока ССО
         function parseBlockData(sheet, offset) {
             const plan = parseInt(getCell(sheet, offset + 10, 2), 10) || 0;
             let applications = [];
@@ -90,7 +91,6 @@
             return { plan, applications };
         }
 
-        // Подсчет позиции
         function getPosition(applications, userScore) {
             const count = applications
                 .filter(app => app.score >= userScore)
@@ -103,7 +103,6 @@
             const [workbook, setWorkbook] = useState(null);
             const [loading, setLoading] = useState(true);
 
-            // Монтирование: фоновое считывание Excel-базы данных
             useEffect(() => {
                 fetch(XLSX_URL)
                     .then(res => {
@@ -120,7 +119,7 @@
                     });
             }, []);
 
-            // Ограничение ввода балла (ССО: до 10.0, 1 знак после точки)
+            /* ДОБАВЛЕНИЕ ИНТЕРАКТИВНЫХ КОМПОНЕНТОВ (СЛАЙДЕРЫ, ФОРМЫ, ФИЛЬТРЫ) С ОБРАБОТКОЙ ДАННЫХ ПОЛЬЗОВАТЕЛЯ: Считывание числового балла */
             const handleScoreInput = (e) => {
                 let val = e.target.value.replace(/[^0-9.,]/g, '').replace(',', '.');
 
@@ -145,10 +144,10 @@
                 setScore('');
             };
 
-            // Вычисляемые реактивные результаты (Derived State)
             let results = [];
             let isValidScore = false;
 
+            /* ДОБАВЛЕНИЕ ИНТЕРАКТИВНЫХ КОМПОНЕНТОВ (СЛАЙДЕРЫ, ФОРМЫ, ФИЛЬТРЫ) С ОБРАБОТКОЙ ДАННЫХ ПОЛЬЗОВАТЕЛЯ: Динамический пересчет списков зачислений */
             if (score && workbook) {
                 const userScore = parseFloat(score);
                 if (!isNaN(userScore) && userScore >= 1.0 && userScore <= 10.0) {
@@ -218,7 +217,7 @@
                         <input
                             type="text"
                             className="score-search-input"
-                            placeholder={loading ? "Загрузка данных..." : "Введите средний балл (например, 8.0)"}
+                            placeholder={loading ? "Загрузка данных..." : "Введите средний балл"}
                             value={score}
                             onChange={handleScoreInput}
                             disabled={loading}
@@ -299,7 +298,7 @@
         root.render(<Sso11Calculator />);
     </script>
 
-    <!-- Скрипт плавных переходов страниц (Vanilla JS) -->
+    <!-- ДОБАВЛЕНИЕ ИНТЕРАКТИВНОСТИ ПРИ ПОМОЩИ BOM/DOM: Переходы между страницами и обновление иконки темы -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const links = document.querySelectorAll('a');

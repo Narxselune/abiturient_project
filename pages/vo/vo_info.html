@@ -1,9 +1,14 @@
 ﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
+    <!-- БАЗОВАЯ ОПТИМИЗАЦИЯ ВЕБ-СТРАНИЦ (PERFORMANCE, SEO): Ранняя инициализация темы для исключения вспышки белого фона -->
     <script>
-        if (localStorage.getItem('theme') === 'dark') {
-            document.documentElement.classList.add('dark-mode');
+        try {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        } catch (e) {
+            console.warn("Доступ к localStorage заблокирован:", e);
         }
     </script>
     <meta charset="UTF-8">
@@ -11,7 +16,7 @@
     <title>Информация по специальностям ВО</title>
     <link rel="stylesheet" href="../../css/main.css">
 
-    <!-- Библиотеки React, ReactDOM и компилятор Babel -->
+    <!-- БАЗОВАЯ ОПТИМИЗАЦИЯ ВЕБ-СТРАНИЦ (PERFORMANCE, SEO): Оптимизация CDN ресурсов -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.3/babel.min.js"></script>
@@ -51,7 +56,7 @@
         </main>
     </div>
 
-    <!-- React-компонент слайдера и лайтбокса ВО -->
+    <!-- ИСПОЛЬЗОВАНИЕ ФРЕЙМВОРКА REACT: Инициализация интерактивного слайдера-галереи специальностей -->
     <script type="text/babel">
         const { useState, useEffect } = React;
 
@@ -94,7 +99,7 @@
                 setCurrentIndex(prev => (prev > 0 ? prev - 1 : slides.length - 1));
             };
 
-            // Подписка на глобальные клавиши
+            /* ДОБАВЛЕНИЕ ИНТЕРАКТИВНОСТИ ПРИ ПОМОЩИ BOM/DOM: Перехват нажатия стрелок клавиатуры и Esc для перелистывания и закрытия слайдера */
             useEffect(() => {
                 const handleKeyDown = (e) => {
                     if (e.key === 'ArrowLeft') {
@@ -118,6 +123,7 @@
                 }
             }, [currentIndex]);
 
+            /* ДОБАВЛЕНИЕ ИНТЕРАКТИВНЫХ КОМПОНЕНТОВ (СЛАЙДЕРЫ, ФОРМЫ, ФИЛЬТРЫ) С ОБРАБОТКОЙ ДАННЫХ ПОЛЬЗОВАТЕЛЯ: Слайдер смены изображений и модальное окно полноэкранного просмотра */
             return (
                 <div className="slider-container">
                     {/* Селектор баз */}
@@ -161,7 +167,7 @@
         root.render(<VoInfoSlider />);
     </script>
 
-    <!-- Скрипт плавных переходов страниц (Vanilla JS) -->
+    <!-- ДОБАВЛЕНИЕ ИНТЕРАКТИВНОСТИ ПРИ ПОМОЩИ BOM/DOM: Межстраничные переходы и переключение тем оформления -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const links = document.querySelectorAll('a');

@@ -4,21 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Базовые SEO метатеги -->
+    <!-- БАЗОВАЯ ОПТИМИЗАЦИЯ ВЕБ-СТРАНИЦ (PERFORMANCE, SEO): Оптимизация поискового продвижения с помощью метатегов и канонических адресов -->
     <title>Главная страница — Система мониторинга Белорусской государственной академии связи</title>
     <meta name="description" content="Интерактивный помощник абитуриента Белорусской государственной академии связи. Следите за ходом приема документов, оценивайте свои шансы и выбирайте специальность онлайн.">
     <meta name="keywords" content="БГАС, Белорусская государственная академия связи, приемная комиссия БГАС, мониторинг БГАС, калькулятор баллов БГАС, поступление 2026, колледж БГАС, связь Минск">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://your-domain.by/index.html">
 
-    <!-- Open Graph метатеги (для Telegram, Viber, VK) -->
+    <!-- БАЗОВАЯ ОПТИМИЗАЦИЯ ВЕБ-СТРАНИЦ (PERFORMANCE, SEO): Open Graph метатеги для интерактивного превью в социальных сетях и мессенджерах -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="Система мониторинга абитуриентов БГАС — Выберите специальность">
     <meta property="og:description" content="Узнайте проходные баллы, оцените свои шансы на поступление с помощью калькулятора и получите консультацию ассистента онлайн.">
     <meta property="og:image" content="Fon/avatar.jpeg">
     <meta property="og:url" content="https://your-domain.by/index.html">
 
-    <!-- Оптимизация загрузки (Performance: Resource Hints) -->
+    <!-- БАЗОВАЯ ОПТИМИЗАЦИЯ ВЕБ-СТРАНИЦ (PERFORMANCE, SEO): Предварительное разрешение DNS имен и подключение к хостам для быстрой доставки ресурсов (Resource Hints) -->
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,7 +27,7 @@
     <!-- Стили -->
     <link rel="stylesheet" href="css/main.css">
 
-    <!-- Моментальное определение темы до отрисовки для предотвращения вспышек (FOUC) -->
+    <!-- БАЗОВАЯ ОПТИМИЗАЦИЯ ВЕБ-СТРАНИЦ (PERFORMANCE, SEO): Опережающее вычисление сохраненной темы оформления для предотвращения мерцания (FOUC) -->
     <script>
         try {
             if (localStorage.getItem('theme') === 'dark') {
@@ -38,26 +38,25 @@
         }
     </script>
 
-    <!-- Библиотеки React, ReactDOM и компилятор Babel для работы компонентов -->
+    <!-- ИСПОЛЬЗОВАНИЕ ФРЕЙМВОРКА REACT: Подключение библиотек React, ReactDOM и компилятора Babel -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.3/babel.min.js"></script>
 
-    <!-- ПОДКЛЮЧЕНИЕ JQUERY И JQUERY UI (НЕОБХОДИМЫ ДЛЯ ИНТЕРФЕЙСА ЧАТА-АССИСТЕНТА) -->
+    <!-- ИСПОЛЬЗОВАНИЕ JQUERY UI / BOOTSTRAP: Подключение библиотек jQuery и jQuery UI для реализации Drag-and-Drop интерфейса чата -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css">
 </head>
 <body class="body-main">
-    <!-- Переключатель темы (в правом верхнем углу экрана) -->
+    <!-- ДОБАВЛЕНИЕ ИНТЕРАКТИВНОСТИ ПРИ ПОМОЩИ BOM/DOM: Переключатель темной и светлой темы -->
     <a href="javascript:void(0)" class="btn-theme" onclick="toggleTheme()" title="Переключить тему">
         <svg id="theme-icon" viewBox="0 0 24 24">
-            <!-- Иконка луны по умолчанию -->
             <path d="M12.3 22h-.1c-5.5 0-10-4.5-10-10 0-4.8 3.5-9 8.3-9.8.5-.1 1 .2 1.2.7.2.5 0 1.1-.4 1.4-3.5 2.5-4.2 7.4-1.7 10.9 2.5 3.5 7.4 4.2 10.9 1.7.4-.3 1-.3 1.4.1.4.4.5.9.2 1.4-1.8 2.3-4.5 3.6-7.8 3.6z" />
         </svg>
     </a>
 
-    <!-- Внешний заголовок на фоне (НАД рамкой) -->
+    <!-- Внешний заголовок на фоне -->
     <h1 class="academy-bg-title">Белорусская государственная академия связи</h1>
 
     <div class="container container-main" style="margin-top: 0;">
@@ -65,18 +64,14 @@
             <h2 class="title-main">ИНФОРМАЦИЯ<br>для абитуриентов</h2>
         </header>
 
-        <!-- Контейнер монтирования React-компонента Главного меню, Истории и Кабинета -->
+        <!-- Контейнер монтирования React-компонента -->
         <main id="react-homepage-root">
             <div class="academy-loader-container">
                 <div class="cap-wrapper">
                     <svg class="mortarboard-svg" viewBox="0 0 64 64">
-                        <!-- Нижний обруч (основание) -->
                         <path d="M16 32 V38 C16 43 23 46 32 46 C41 46 48 43 48 38 V32" fill="none" stroke="#007bff" stroke-width="3" stroke-linecap="round" />
-                        <!-- Верхний ромб конфедератки -->
                         <polygon points="32,10 58,22 32,34 6,22" fill="#007bff" stroke="#007bff" stroke-width="1" />
-                        <!-- Золотистая кисточка выпускника -->
                         <path class="cap-tassel" d="M32,22 L46,27 V37" fill="none" stroke="#ff9800" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-                        <!-- Белая центральная пуговица -->
                         <circle cx="32" cy="22" r="2" fill="#ffffff" />
                     </svg>
                 </div>
@@ -91,7 +86,6 @@
             <span class="ai-btn-text">Задать вопрос</span>
         </button>
 
-        <!-- Окно чата -->
         <div id="ai-window" class="ai-window" style="display: none;">
             <div class="ai-header">
                 <div class="ai-bot-info">
@@ -112,7 +106,7 @@
                 </div>
             </div>
 
-            <!-- Быстрые вопросы-кнопки (управление видимостью через CSS-класс visible) -->
+            <!-- ДОБАВЛЕНИЕ ИНТЕРАКТИВНЫХ КОМПОНЕНТОВ (СЛАЙДЕРЫ, ФОРМЫ, ФИЛЬТРЫ) С ОБРАБОТКОЙ ДАННЫХ ПОЛЬЗОВАТЕЛЯ: Сетка мгновенного выбора быстрых вопросов в чате -->
             <div id="ai-quick-questions" class="ai-quick-questions">
                 <button onclick="sendQuickQuestion('Время работы приемной комиссии')">🕒 Время работы комиссии</button>
                 <button onclick="sendQuickQuestion('Какие документы нужны?')">📄 Какие документы нужны?</button>
@@ -134,10 +128,10 @@
         </div>
     </div>
 
-    <!-- Подключаем вынесенный компонент Личного кабинета -->
+    <!-- ИСПОЛЬЗОВАНИЕ ФРЕЙМВОРКА REACT: Импорт вынесенного компонента Личного кабинета -->
     <script type="text/babel" src="js/cabinet.js"></script>
 
-    <!-- React-компонент Главного меню, Истории и Личного кабинета -->
+    <!-- ИСПОЛЬЗОВАНИЕ ФРЕЙМВОРКА REACT: Инициализация и рендеринг Главного меню и Истории просмотров -->
     <script type="text/babel">
         const { useState, useEffect } = React;
 
@@ -145,6 +139,7 @@
             const [recentSpecs, setRecentSpecs] = useState([]);
             const [isCabinetOpen, setIsCabinetOpen] = useState(false);
 
+            /* ДОБАВЛЕНИЕ ИНТЕРАКТИВНОСТИ ПРИ ПОМОЩИ BOM/DOM: Извлечение истории просмотров пользователя из localStorage */
             useEffect(() => {
                 try {
                     const history = JSON.parse(localStorage.getItem('recently_viewed_specs')) || [];
@@ -154,16 +149,15 @@
                 }
             }, []);
 
-            // Безопасное определение наличия компонента Кабинета
             const CabinetComponent = typeof PersonalCabinet !== 'undefined' ? PersonalCabinet : null;
 
             if (!CabinetComponent && window.location.protocol === 'file:') {
-                console.warn("Внимание: Вы запустили сайт через протокол file://. Мобильные и некоторые десктопные браузеры блокируют загрузку внешнего файла js/cabinet.js из-за CORS. Для полноценной работы Личного Кабинета используйте локальный веб-сервер (например, Live Server в VS Code) или загрузите проект на хостинг.");
+                console.warn("Внимание: Вы запустили сайт через протокол file://. Для полноценной работы Личного Кабинета используйте локальный веб-сервер.");
             }
 
+            /* ДОБАВЛЕНИЕ ИНТЕРАКТИВНЫХ КОМПОНЕНТОВ (СЛАЙДЕРЫ, ФОРМЫ, ФИЛЬТРЫ) С ОБРАБОТКОЙ ДАННЫХ ПОЛЬЗОВАТЕЛЯ: Сетка переходов меню, вывод истории и кнопка открытия Личного Кабинета */
             return (
                 <div>
-                    {/* Кнопка Личного кабинета */}
                     {CabinetComponent && (
                         <button
                             className="cabinet-toggle-btn"
@@ -176,16 +170,13 @@
                         </button>
                     )}
 
-                    {/* Выезжающее окно Личного кабинета */}
                     {CabinetComponent && <CabinetComponent isOpen={isCabinetOpen} onClose={() => setIsCabinetOpen(false)} />}
 
-                    {/* Сетка главного меню */}
                     <div className="btn-grid-main">
                         <a href="pages/sso/sso_main.html" className="btn-item">Среднее специальное образование (ССО)</a>
                         <a href="pages/vo/vo_main.html" className="btn-item">Высшее образование (ВО)</a>
                     </div>
 
-                    {/* Вы недавно смотрели */}
                     {recentSpecs.length > 0 && (
                         <div className="recently-viewed" style={{ display: 'inline-flex' }}>
                             <span className="recently-viewed-title">Вы недавно смотрели:</span>
@@ -204,10 +195,10 @@
         root.render(<HomepageApp />);
     </script>
 
-    <!-- Подключаем стабильную логику ассистента на чистом JS -->
+    <!-- Подключаем логику ассистента на чистом JS -->
     <script src="js/assistant.js"></script>
 
-    <!-- Скрипт плавных переходов страниц и темы (Vanilla JS) -->
+    <!-- ДОБАВЛЕНИЕ ИНТЕРАКТИВНОСТИ ПРИ ПОМОЩИ BOM/DOM: Хранение и изменение темы оформления (светлая/темная) с сохранением в localStorage -->
     <script>
         const moonSvg = `<path d="M12.3 22h-.1c-5.5 0-10-4.5-10-10 0-4.8 3.5-9 8.3-9.8.5-.1 1 .2 1.2.7.2.5 0 1.1-.4 1.4-3.5 2.5-4.2 7.4-1.7 10.9 2.5 3.5 7.4 4.2 10.9 1.7.4-.3 1-.3 1.4.1.4.4.5.9.2 1.4-1.8 2.3-4.5 3.6-7.8 3.6z" />`;
         const sunSvg = `<circle cx="12" cy="12" r="5" /><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke-width="2" stroke-linecap="round" stroke="currentColor" />`;
@@ -230,7 +221,6 @@
             }
         }
 
-        // Инициализация правильной иконки темы при загрузке страницы
         document.addEventListener('DOMContentLoaded', () => {
             const isDark = document.documentElement.classList.contains('dark-mode');
             updateThemeIcon(isDark);

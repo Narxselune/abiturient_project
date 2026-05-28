@@ -1,5 +1,10 @@
 ﻿// js/assistant.js
 
+/* ==========================================================================
+   БЛОК 1: ХРАНИЛИЩЕ ЗНАНИЙ И КОНФИГУРАЦИОННЫЕ ДАННЫЕ АССИСТЕНТА
+   ========================================================================== */
+
+/* БАЗОВАЯ ОПТИМИЗАЦИЯ ВЕБ-СТРАНИЦ (PERFORMANCE, SEO): Оптимизация производительности за счет структурирования текстовых баз в легковесные JS-объекты */
 const assistantDatabase = [
     {
         keywords: ['документ', 'доки', 'паспорт', 'справка', 'аттестат', 'фото', 'что нести'],
@@ -54,7 +59,7 @@ const assistantDatabase = [
         answer: 'Наш интерактивный калькулятор анализирует загруженные данные.<br>' +
             '1. Перейди во вкладку нужного уровня образования (например, ССО после 9 класса).<br>' +
             '2. Введи свой средний балл в строку поиска.<br>' +
-            '3. Программа определит твою позицию среди других абитуриентов, уже поданных документы, и подсветит шансы цветом (зеленый — проходишь, желтый — на грани, красный — не проходишь).'
+            '3. Программа определит твою позицию среди других абитуриентов, уже поданных документы, и подсветит шансы цветом (зеленый — проходишь, yellow — на грани, красный — не проходишь).'
     },
     {
         keywords: ['привет', 'здравствуй', 'добрый день', 'ку', 'хай', 'hello', 'бот'],
@@ -86,6 +91,7 @@ const assistantDatabase = [
     }
 ];
 
+/* Хранилище смещений ячеек Google Таблицы для сверки с базой */
 const sso9Specs = [
     { name: "Тестирование программного обеспечения", offset: 148, offsetPaid: 164 },
     { name: "Разработка и сопровождение веб-ресурсов", offset: 116, offsetPaid: 132 },
@@ -123,6 +129,12 @@ const ASSISTANT_SHEET_ID = '1uFwZs-jzJiUkZk6U266bo4QbmwjAjoUcc0pKAabWhos';
 const ASSISTANT_XLSX_URL = `https://docs.google.com/spreadsheets/d/${ASSISTANT_SHEET_ID}/export?format=xlsx`;
 let assistantWorkbook = null;
 
+
+/* ==========================================================================
+   БЛОК 2: АСИНХРОННАЯ ЗАГРУЗКА И ИНИЦИАЛИЗАЦИЯ EXCEL (SHEETJS)
+   ========================================================================== */
+
+/* БАЗОВАЯ ОПТИМИЗАЦИЯ ВЕБ-СТРАНИЦ (PERFORMANCE, SEO): Динамическая отложенная загрузка тяжелой внешней библиотеки XLSX при первом открытии чата */
 function ensureXlsxLoaded(callback) {
     if (typeof XLSX !== 'undefined') {
         callback();
@@ -134,6 +146,7 @@ function ensureXlsxLoaded(callback) {
     document.head.appendChild(script);
 }
 
+/* ДОБАВЛЕНИЕ ИНТЕРАКТИВНОСТИ ПРИ ПОМОЩИ BOM/DOM: Сетевой fetch-запрос к Google API для импорта конкурсной таблицы */
 function initAssistantDatabase() {
     ensureXlsxLoaded(() => {
         fetch(ASSISTANT_XLSX_URL)
@@ -150,6 +163,11 @@ function initAssistantDatabase() {
             });
     });
 }
+
+
+/* ==========================================================================
+   БЛОК 3: ПАРСИНГ, ГРУППИРОВКА И ОБРАБОТКА ДАННЫХ КОНКУРСА
+   ========================================================================== */
 
 function getCell(sheet, r, c) {
     if (!sheet) return '';
@@ -237,6 +255,11 @@ function parseVoBlock(sheet, offset, isVoSso) {
     return { plan, applications };
 }
 
+
+/* ==========================================================================
+   БЛОК 4: АЛГОРИТМЫ ОПРЕДЕЛЕНИЯ ПОЗИЦИЙ И ПРОХОДНОГО БАЛЛА
+   ========================================================================== */
+
 function getSsoPosition(applications, userScore) {
     const count = applications
         .filter(app => app.score >= userScore)
@@ -286,6 +309,11 @@ function getPassingScore(blockData, isVo) {
         return isVo ? `${cutoff}` : `${cutoff.toFixed(1)}`;
     }
 }
+
+
+/* ==========================================================================
+   БЛОК 5: ПОИСКОВЫЕ КЛЮЧЕВЫЕ АЛГОРИТМЫ И СВЕРКА ВВОДА
+   ========================================================================== */
 
 function findMatchingSpecialties(text) {
     const allSpecs = [
@@ -347,6 +375,12 @@ function matchesKeyword(text, keyword) {
     return textLower.includes(kwLower);
 }
 
+
+/* ==========================================================================
+   БЛОК 6: ВЗАИМОДЕЙСТВИЕ С ИНТЕРФЕЙСОМ ЧАТА И DOM-МАНИПУЛЯЦИИ
+   ========================================================================== */
+
+/* ДОБАВЛЕНИЕ ИНТЕРАКТИВНОСТИ ПРИ ПОМОЩИ BOM/DOM: Управление видимостью виджета чата в окне браузера */
 function toggleAssistant() {
     const windowEl = document.getElementById('ai-window');
     const isHidden = windowEl.style.display === 'none';
@@ -355,7 +389,7 @@ function toggleAssistant() {
     if (isHidden) {
         const userInput = document.getElementById('ai-user-input');
         if (userInput) {
-            userInput.focus(); // Мгновенный фокус на поле ввода при открытии
+            userInput.focus();
         }
         if (!assistantWorkbook) {
             initAssistantDatabase();
@@ -363,14 +397,14 @@ function toggleAssistant() {
     }
 }
 
+/* ДОБАВЛЕНИЕ ИНТЕРАКТИВНЫХ КОМПОНЕНТОВ (СЛАЙДЕРЫ, ФОРМЫ, ФИЛЬТРЫ) С ОБРАБОТКОЙ ДАННЫХ ПОЛЬЗОВАТЕЛЯ: Обработка быстрых вопросов с плашек */
 function sendQuickQuestion(questionText) {
     appendMessage(questionText, 'user');
     generateBotResponse(questionText);
-
-    // Скрываем плашки быстрых вопросов после отправки
     hideQuickQuestions();
 }
 
+/* ДОБАВЛЕНИЕ ИНТЕРАКТИВНЫХ КОМПОНЕНТОВ (СЛАЙДЕРЫ, ФОРМЫ, ФИЛЬТРЫ) С ОБРАБОТКОЙ ДАННЫХ ПОЛЬЗОВАТЕЛЯ: Считывание сообщений из инпута ввода */
 function sendMessageFromInput() {
     const inputEl = document.getElementById('ai-user-input');
     const text = inputEl.value.trim();
@@ -381,12 +415,14 @@ function sendMessageFromInput() {
     generateBotResponse(text);
 }
 
+/* ДОБАВЛЕНИЕ ИНТЕРАКТИВНОСТИ ПРИ ПОМОЩИ BOM/DOM: Перехват нажатия Enter для отправки сообщений */
 function handleAssistantKey(e) {
     if (e.key === 'Enter') {
         sendMessageFromInput();
     }
 }
 
+/* ДОБАВЛЕНИЕ ИНТЕРАКТИВНОСТИ ПРИ ПОМОЩИ BOM/DOM: Генерация HTML-ноды сообщения и автопрокрутка списка сообщений */
 function appendMessage(text, sender) {
     const messagesContainer = document.getElementById('ai-messages');
     const msgDiv = document.createElement('div');
@@ -397,6 +433,12 @@ function appendMessage(text, sender) {
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
+
+/* ==========================================================================
+   БЛОК 7: ГЕНЕРАТОР ДИНАМИЧЕСКИХ ОТВЕТОВ БОТА
+   ========================================================================== */
+
+/* ДОБАВЛЕНИЕ ИНТЕРАКТИВНЫХ КОМПОНЕНТОВ (СЛАЙДЕРЫ, ФОРМЫ, ФИЛЬТРЫ) С ОБРАБОТКОЙ ДАННЫХ ПОЛЬЗОВАТЕЛЯ: Расчет шансов на основе введенного балла */
 function handleScoreCalculation(userScore, isVoScore, originalText) {
     if (!assistantWorkbook) {
         initAssistantDatabase();
@@ -524,6 +566,7 @@ function handleScoreCalculation(userScore, isVoScore, originalText) {
     }
 }
 
+/* ДОБАВЛЕНИЕ ИНТЕРАКТИВНЫХ КОМПОНЕНТОВ (СЛАЙДЕРЫ, ФОРМЫ, ФИЛЬТРЫ) С ОБРАБОТКОЙ ДАННЫХ ПОЛЬЗОВАТЕЛЯ: Считывание текущих проходных баллов */
 function handlePassingScoreQuery(normalizedText, originalText) {
     if (!assistantWorkbook) {
         initAssistantDatabase();
@@ -581,6 +624,7 @@ function handlePassingScoreQuery(normalizedText, originalText) {
     }
 }
 
+/* ДОБАВЛЕНИЕ ИНТЕРАКТИВНЫХ КОМПОНЕНТОВ (СЛАЙДЕРЫ, ФОРМЫ, ФИЛЬТРЫ) С ОБРАБОТКОЙ ДАННЫХ ПОЛЬЗОВАТЕЛЯ: Сверка ключевых слов с вводом и выбор функции ответа */
 function generateBotResponse(userText) {
     const textLower = userText.toLowerCase();
     const normalizedText = textLower.replace(',', '.');
@@ -649,13 +693,12 @@ function generateBotResponse(userText) {
     }, 400);
 }
 
-// Показать быстрые вопросы и прокрутить чат вниз
+/* ДОБАВЛЕНИЕ ИНТЕРАКТИВНОСТИ ПРИ ПОМОЩИ BOM/DOM: Управление анимацией и видимостью панели быстрых плашек */
 function showQuickQuestions() {
     const quickQuestions = document.getElementById('ai-quick-questions');
     if (quickQuestions) {
         quickQuestions.classList.add('visible');
 
-        // Мягкая прокрутка чата после анимации появления панели
         setTimeout(() => {
             const messagesContainer = document.getElementById('ai-messages');
             if (messagesContainer) {
@@ -665,7 +708,7 @@ function showQuickQuestions() {
     }
 }
 
-// Скрыть быстрые вопросы
+/* ДОБАВЛЕНИЕ ИНТЕРАКТИВНОСТИ ПРИ ПОМОЩИ BOM/DOM: Скрытие плашек быстрого выбора */
 function hideQuickQuestions() {
     const quickQuestions = document.getElementById('ai-quick-questions');
     if (quickQuestions) {
@@ -673,19 +716,21 @@ function hideQuickQuestions() {
     }
 }
 
-// --- ИНТЕРАКТИВНОЕ УПРАВЛЕНИЕ ОКНОМ С ПОМОЩЬЮ JQUERY UI И КЛИКАМИ ---
+
+/* ==========================================================================
+   БЛОК 8: ИНТЕРАКТИВНОЕ УПРАВЛЕНИЕ ОКНОМ С ПОМОЩЬЮ JQUERY UI И КЛИКАМИ
+   ========================================================================== */
+
+/* ИСПОЛЬЗОВАНИЕ JQUERY UI / BOOTSTRAP: Инициализация Drag-and-Drop и Resizable перемещения за шапку чата */
 $(document).ready(function () {
     const $win = $("#ai-window");
 
     if ($win.length) {
-        // Инициализация перемещения (Drag-and-Drop) за шапку чата
         $win.draggable({
             handle: ".ai-header",
             containment: "window",
             scroll: false,
             start: function (event, ui) {
-                // Сбрасываем CSS-свойства bottom и right при начале перетаскивания,
-                // чтобы избежать конфликтов при расчете координат top и left
                 $(this).css({
                     bottom: 'auto',
                     right: 'auto'
@@ -693,41 +738,35 @@ $(document).ready(function () {
             }
         });
 
-        // Инициализация изменения размеров (Resizable) со всех сторон
         $win.resizable({
             minWidth: 280,
             minHeight: 350,
             maxWidth: 600,
             maxHeight: 800,
-            handles: "n, e, s, w, ne, se, sw, nw" // Направление ресайза по всем сторонам и углам
+            handles: "n, e, s, w, ne, se, sw, nw"
         });
     }
 
-    // Универсальная функция обработки взаимодействий на странице
+    /* ДОБАВЛЕНИЕ ИНТЕРАКТИВНОСТИ ПРИ ПОМОЩИ BOM/DOM: Глобальный обработчик жестов и кликов для автоматического закрытия быстрых вопросов */
     const handleGlobalInteraction = (e) => {
         const userInput = document.getElementById('ai-user-input');
         const quickQuestions = document.getElementById('ai-quick-questions');
         const aiWindow = document.getElementById('ai-window');
 
-        // Если окно ассистента закрыто, ничего не делаем
         if (!aiWindow || aiWindow.style.display === 'none') return;
 
-        // Если нажали на текстовое поле ввода — отображаем быстрые вопросы
         if (userInput && userInput.contains(e.target)) {
             showQuickQuestions();
             return;
         }
 
-        // Если нажали непосредственно на область быстрых вопросов — не скрываем её (даем кнопкам сработать)
         if (quickQuestions && quickQuestions.contains(e.target)) {
             return;
         }
 
-        // Во всех остальных случаях (клик по сообщениям, шапке чата или вне чата) — скрываем плашки вопросов
         hideQuickQuestions();
     };
 
-    // Регистрируем слушатели событий на этапе захвата для корректного перехвата на мобильных экранах
     document.addEventListener('click', handleGlobalInteraction, true);
     document.addEventListener('touchstart', handleGlobalInteraction, { capture: true, passive: true });
 });

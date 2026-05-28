@@ -1,7 +1,10 @@
-/* main.css */
+/* ==========================================================================
+   БЛОК 1: ГЛОБАЛЬНЫЕ СТИЛИ, ШРИФТЫ И АНИМАЦИИ ПОЯВЛЕНИЯ
+   ========================================================================== */
+
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300..900&display=swap');
 
-/* Анимация для ультра-плавного появления страниц */
+/* Анимация плавного появления страниц */
 @keyframes pageFadeIn {
     0% {
         opacity: 0;
@@ -31,6 +34,57 @@ html {
     font-family: 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+
+/* ==========================================================================
+   БЛОК 2: НАСТРОЙКА КРОССБРАУЗЕРНОГО СКРОЛЛА (ПОЛОСЫ ПРОКРУТКИ)
+   ========================================================================== */
+
+/* Общие размеры скроллбара */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* --- Светлая тема --- */
+::-webkit-scrollbar-thumb {
+    background: rgb(130, 160, 195);
+    border-radius: 10px;
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgb(100, 130, 165);
+    }
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(130, 160, 195) transparent;
+}
+
+/* --- Темная тема  --- */
+.dark-mode::-webkit-scrollbar-thumb,
+.dark-mode ::-webkit-scrollbar-thumb {
+    background: rgb(40, 48, 56) !important;
+}
+
+    .dark-mode::-webkit-scrollbar-thumb:hover,
+    .dark-mode ::-webkit-scrollbar-thumb:hover {
+        background: rgb(65, 75, 88) !important;
+    }
+
+html.dark-mode,
+.dark-mode * {
+    scrollbar-color: rgb(40, 48, 56) transparent !important;
+}
+
+
+/* ==========================================================================
+   БЛОК 3: БАЗОВЫЕ СТИЛИ СТРАНИЦЫ, ШАПКИ И ОСНОВНОГО КОНТЕЙНЕРА
+   ========================================================================== */
+
 body {
     background-color: #F1EEFF;
     color: #000000;
@@ -48,9 +102,9 @@ body {
     color: #FFFFFF;
 }
 
-/* Стили главной страницы и ее фоны (перенесены из index.html) */
+/* Стили фона главной страницы */
 .body-main {
-    background-image: url('../Fon/litht.jpeg') !important; /* Относительный путь от css/ к Fon/ */
+    background-image: url('../Fon/litht.jpeg') !important;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -67,6 +121,7 @@ body {
     background-image: url('../Fon/dark.jpeg') !important;
 }
 
+/* Белая подложка-контейнер контента */
 .container {
     width: 100%;
     max-width: 800px;
@@ -123,6 +178,7 @@ h2 {
     color: #CBD5E1;
 }
 
+/* Навигация (меню-список) */
 nav ul {
     list-style: none;
     display: block;
@@ -148,6 +204,38 @@ nav ul {
                 background-color: #F1EEFF;
             }
 
+/* Двухколоночный макет на страницах калькуляторов */
+.columns-container {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    margin-top: 30px;
+    width: 100%;
+}
+
+.column {
+    flex: 1;
+    width: 50%;
+}
+
+    .column h3 {
+        text-align: center;
+        margin-bottom: 25px;
+        padding-bottom: 5px;
+        border-bottom: 2px solid #8CBEFF;
+        font-size: 22px;
+    }
+
+.dark-mode .column h3 {
+    border-bottom: 2px solid #3B4B5E;
+}
+
+
+/* ==========================================================================
+   БЛОК 4: КНОПКИ, НАВИГАЦИЯ И УПРАВЛЯЮЩИЕ ИНТЕРФЕЙСЫ
+   ========================================================================== */
+
+/* Кнопка "На главную" */
 .btn-home {
     position: absolute;
     top: 25px;
@@ -169,6 +257,7 @@ nav ul {
         opacity: 1;
     }
 
+/* Кнопка переключения темы */
 .btn-theme {
     position: absolute;
     top: 25px;
@@ -207,6 +296,41 @@ nav ul {
     stroke: #CCCCCC !important;
 }
 
+/* Кнопка "Назад" */
+.btn-back {
+    position: absolute;
+    left: 0;
+    top: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    background-color: transparent;
+    color: #000000;
+    text-decoration: none;
+    border: 1px solid #D5D5D5;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 16px;
+    transition: all 0.2s ease;
+}
+
+.dark-mode .btn-back {
+    color: #FFFFFF;
+    border: 1px solid #555555;
+}
+
+.btn-back:hover {
+    background-color: #e6f1fe;
+    border-color: #B5B5B5;
+}
+
+.dark-mode .btn-back:hover {
+    background-color: #2D2D2D;
+    border-color: #777777;
+}
+
+/* Стили базовых меню-плиток */
 .btn-grid {
     display: block;
     margin-top: 20px;
@@ -246,37 +370,6 @@ nav ul {
         background-color: #4A5D75;
     }
 
-.columns-container {
-    display: flex;
-    gap: 40px;
-    align-items: flex-start;
-    margin-top: 30px;
-    width: 100%;
-}
-
-.column {
-    flex: 1;
-    width: 50%;
-}
-
-    .column h3 {
-        text-align: center;
-        margin-bottom: 25px;
-        padding-bottom: 5px;
-        border-bottom: 2px solid #8CBEFF;
-        font-size: 22px;
-    }
-
-.dark-mode .column h3 {
-    border-bottom: 2px solid #3B4B5E;
-}
-
-.column .btn-item {
-    max-width: 450px;
-    margin-left: auto !important;
-    margin-right: auto !important;
-}
-
 .spec-duration {
     display: block;
     font-size: 15px;
@@ -284,6 +377,308 @@ nav ul {
     margin-top: 8px;
     font-weight: normal;
 }
+
+/* Кнопки со стрелками */
+.btn-arrow {
+    padding: 10px 20px;
+    background-color: #8CBEFF;
+    color: #000000;
+    border: none;
+    border-radius: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 0;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.dark-mode .btn-arrow {
+    background-color: #3B4B5E;
+    color: #FFFFFF;
+}
+
+.btn-arrow:hover {
+    background-color: #72aeff;
+}
+
+.dark-mode .btn-arrow:hover {
+    background-color: #2A3543 !important; 
+}
+
+/* Универсальная серая кнопка (Пройти заново) */
+.btn-gray {
+    background-color: #A0AEC0 !important;
+    color: #1A202C !important;
+}
+
+    .btn-gray:hover {
+        background-color: #818E9F !important;
+    }
+
+.dark-mode .btn-gray {
+    background-color: #4A5568 !important;
+    color: #FFFFFF !important;
+}
+
+    .dark-mode .btn-gray:hover {
+        background-color: #2D3748 !important;
+    }
+
+
+/* ==========================================================================
+   БЛОК 5: КАРТОЧКИ МОНИТОРИНГА И ТАБЛИЦЫ КОНКУРСА БАЛЛОВ
+   ========================================================================== */
+
+.spec-card {
+    border-left: 6px solid #007bff;
+    border-top: 1px solid #E2E8F0;
+    border-right: 1px solid #E2E8F0;
+    border-bottom: 1px solid #E2E8F0;
+    border-radius: 24px;
+    padding: 18px 20px;
+    margin: 12px 0 25px 0;
+    background-color: #F8FAFC;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.dark-mode .spec-card {
+    background-color: #2D2D2D;
+    border-top: 1px solid #3A3B3D;
+    border-right: 1px solid #3A3B3D;
+    border-bottom: 1px solid #3A3B3D;
+}
+
+.spec-title {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #1A202C;
+}
+
+.dark-mode .spec-title {
+    color: #FFFFFF;
+}
+
+.info-line {
+    margin-bottom: 8px;
+    font-size: 16px;
+    color: #000000;
+}
+
+.dark-mode .info-line {
+    color: #E2E8F0;
+}
+
+.info-line strong {
+    color: #007bff;
+    font-weight: 700;
+}
+
+.dark-mode .info-line strong {
+    color: #8CBEFF;
+}
+
+/* Переключатели «Бюджет/Платно» */
+.badge-container {
+    display: inline-flex;
+    gap: 8px;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+.badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 24px;
+    font-size: 13px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    font-family: inherit;
+    outline: none;
+    background-color: #D6E6FF;
+    color: #8CBEFF;
+}
+
+    .badge:focus {
+        outline: none;
+    }
+
+    .badge.active {
+        background-color: #007bff;
+        color: #ffffff;
+        box-shadow: 0 2px 6px rgba(0, 123, 255, 0.15);
+    }
+
+.dark-mode .badge {
+    background-color: #2D3D52;
+    color: #5F7C9E;
+}
+
+    .dark-mode .badge.active {
+        background-color: #095e8f;
+        color: #ffffff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+
+/* Статистическая плашка конкурса */
+.stat-box {
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    padding: 10px 14px;
+    margin-top: 12px;
+    max-width: 360px;
+    background-color: #FFFFFF;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.01);
+}
+
+.dark-mode .stat-box {
+    background-color: #222222;
+    border: 1px solid #3A3B3D;
+}
+
+.stat-title {
+    color: #007bff;
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 6px;
+}
+
+.dark-mode .stat-title {
+    color: #8CBEFF;
+}
+
+.stat-row {
+    margin-bottom: 4px;
+    font-size: 15px;
+    color: #000000;
+}
+
+.dark-mode .stat-row {
+    color: #E2E8F0;
+}
+
+.section-title {
+    color: #007bff;
+    font-size: 18px;
+    font-weight: 700;
+    margin: 25px 0 10px 0;
+}
+
+.dark-mode .section-title {
+    color: #8CBEFF;
+}
+
+/* Таблица баллов конкурса */
+.bar-table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 20px;
+    border-radius: 16px;
+    border: 1px solid #E2E8F0;
+}
+
+.dark-mode .bar-table-wrapper {
+    border: 1px solid #3A3B3D;
+}
+
+/* Автоматическое сужение таблиц под контент */
+.section-title + .bar-table-wrapper {
+    width: fit-content;
+    max-width: 100%;
+    margin-left: 0;
+}
+
+.bar-table {
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 15px;
+    min-width: 100%;
+    background-color: #FFFFFF;
+}
+
+.dark-mode .bar-table {
+    background-color: #222222;
+}
+
+.bar-table th {
+    background-color: #F1F5F9;
+    color: #4A5568;
+    font-weight: 600;
+    border: 1px solid #E2E8F0;
+    padding: 8px 10px;
+}
+
+.dark-mode .bar-table th {
+    background-color: #2D2D2D;
+    color: #E2E8F0;
+    border: 1px solid #3A3B3D;
+}
+
+.bar-table td {
+    border: 1px solid #E2E8F0;
+    font-weight: bold;
+    padding: 10px 10px;
+}
+
+.dark-mode .bar-table td {
+    border: 1px solid #3A3B3D;
+}
+
+/* Цвета шансов зачисления */
+.cell-green {
+    background-color: #66BB6A;
+    color: #000000;
+}
+
+.cell-yellow {
+    background-color: #FFEE58;
+    color: #000000;
+}
+
+.cell-red {
+    background-color: #EF5350;
+    color: #000000;
+}
+
+.dark-mode .cell-green {
+    background-color: #2E7D32;
+    color: #FFFFFF;
+}
+
+.dark-mode .cell-yellow {
+    background-color: #F9A825;
+    color: #FFFFFF;
+}
+
+.dark-mode .cell-red {
+    background-color: #C62828;
+    color: #FFFFFF;
+}
+
+/* Сообщение об отсутствии набора */
+.no-paid-msg {
+    margin-top: 25px;
+    padding: 20px;
+    border-radius: 16px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+    color: #EF5350;
+    background-color: rgba(239, 83, 80, 0.1);
+    border: 1px dashed #EF5350;
+}
+
+.dark-mode .no-paid-msg {
+    color: #E57373;
+    background-color: rgba(229, 115, 115, 0.1);
+    border: 1px dashed #E57373;
+}
+
+
+/* ==========================================================================
+   БЛОК 6: СЛАЙДЕРЫ, КНИГИ-ИНФОРМАТОРЫ И ФОТО-ЛАЙТБОКСЫ
+   ========================================================================== */
 
 .slider-container {
     max-width: 500px;
@@ -366,31 +761,7 @@ nav ul {
     flex-wrap: nowrap;
 }
 
-.btn-arrow {
-    padding: 10px 20px;
-    background-color: #8CBEFF;
-    color: #000000;
-    border: none;
-    border-radius: 24px;
-    font-weight: bold;
-    cursor: pointer;
-    margin: 0;
-    transition: background-color 0.2s, color 0.2s;
-}
-
-.dark-mode .btn-arrow {
-    background-color: #3B4B5E;
-    color: #FFFFFF;
-}
-
-.btn-arrow:hover {
-    background-color: #72aeff;
-}
-
-.dark-mode .btn-arrow:hover {
-    background-color: #2A3543 !important;
-}
-
+/* Полноэкранный просмотр изображений (лайтбокс) */
 .lightbox {
     position: fixed;
     top: 0;
@@ -443,804 +814,26 @@ nav ul {
         transform: scale(1.15);
     }
 
-.monitoring-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-    .monitoring-table th, .monitoring-table td {
-        border: 1px solid #DDDDDD;
-        padding: 12px;
-        text-align: left;
-    }
-
-    .monitoring-table th {
-        background-color: #8CBEFF;
-        color: #000000;
-    }
-
-    .monitoring-table tr:nth-child(even) {
-        background-color: #F9F9F9;
-    }
-
-.spec-card {
-    border-left: 6px solid #007bff;
-    border-top: 1px solid #E2E8F0;
-    border-right: 1px solid #E2E8F0;
-    border-bottom: 1px solid #E2E8F0;
-    border-radius: 24px;
-    padding: 18px 20px;
-    margin: 12px 0 25px 0;
-    background-color: #F8FAFC;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
-    transition: background-color 0.3s, border-color 0.3s;
-}
-
-.dark-mode .spec-card {
-    background-color: #2D2D2D;
-    border-top: 1px solid #3A3B3D;
-    border-right: 1px solid #3A3B3D;
-    border-bottom: 1px solid #3A3B3D;
-}
-
-.spec-title {
-    font-size: 26px;
-    font-weight: bold;
-    margin-bottom: 12px;
-    color: #1A202C;
-}
-
-.dark-mode .spec-title {
-    color: #FFFFFF;
-}
-
-.info-line {
-    margin-bottom: 8px;
-    font-size: 16px;
-    color: #000000;
-}
-
-.dark-mode .info-line {
-    color: #E2E8F0;
-}
-
-.info-line strong {
-    color: #007bff;
-    font-weight: 700;
-}
-
-.dark-mode .info-line strong {
-    color: #8CBEFF;
-}
-
-.badge-container {
-    display: inline-flex;
-    gap: 8px;
-    margin-left: 8px;
-    vertical-align: middle;
-}
-
-.badge {
-    display: inline-block;
-    padding: 6px 14px;
-    border-radius: 24px;
-    font-size: 13px;
-    font-weight: bold;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
-    font-family: inherit;
-    outline: none;
-    background-color: #D6E6FF;
-    color: #8CBEFF;
-}
-
-    .badge:focus {
-        outline: none;
-    }
-
-    .badge.active {
-        background-color: #007bff;
-        color: #ffffff;
-        box-shadow: 0 2px 6px rgba(0, 123, 255, 0.15);
-    }
-
-.dark-mode .badge {
-    background-color: #2D3D52;
-    color: #5F7C9E;
-}
-
-    .dark-mode .badge.active {
-        background-color: #095e8f;
-        color: #ffffff;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-    }
-
-.stat-box {
-    border: 1px solid #E2E8F0;
-    border-radius: 16px;
-    padding: 10px 14px;
-    margin-top: 12px;
-    max-width: 360px;
-    background-color: #FFFFFF;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.01);
-}
-
-.dark-mode .stat-box {
-    background-color: #222222;
-    border: 1px solid #3A3B3D;
-}
-
-.stat-title {
-    color: #007bff;
-    font-weight: 700;
-    font-size: 16px;
-    margin-bottom: 6px;
-}
-
-.dark-mode .stat-title {
-    color: #8CBEFF;
-}
-
-.stat-row {
-    margin-bottom: 4px;
-    font-size: 15px;
-    color: #000000;
-}
-
-.dark-mode .stat-row {
-    color: #E2E8F0;
-}
-
-.section-title {
-    color: #007bff;
-    font-size: 18px;
-    font-weight: 700;
-    margin: 25px 0 10px 0;
-}
-
-.dark-mode .section-title {
-    color: #8CBEFF;
-}
-
-.bar-table-wrapper {
-    overflow-x: auto;
-    margin-bottom: 20px;
-    border-radius: 16px;
-    border: 1px solid #E2E8F0;
-}
-
-.dark-mode .bar-table-wrapper {
-    border: 1px solid #3A3B3D;
-}
-
-/* Автоматическое сужение таблиц льготников и целевых под их реальный контент */
-.section-title + .bar-table-wrapper {
-    width: fit-content;
-    max-width: 100%; /* Предотвращает выход за границы экрана на мобильных */
-    margin-left: 0; /* Выравнивание по левому краю (для симметрии) */
-}
-
-/* Дополнительная аккуратность: центрирование таблиц на мобильных устройствах */
-@media (max-width: 768px) {
-    .section-title + .bar-table-wrapper {
-        margin-left: auto;
-        margin-right: auto;
-    }
-}
-
-.bar-table {
-    border-collapse: collapse;
-    text-align: center;
-    font-size: 15px;
-    min-width: 100%;
-    background-color: #FFFFFF;
-}
-
-.dark-mode .bar-table {
-    background-color: #222222;
-}
-
-.bar-table th {
-    background-color: #F1F5F9;
-    color: #4A5568;
-    font-weight: 600;
-    border: 1px solid #E2E8F0;
-    padding: 8px 10px;
-}
-
-.dark-mode .bar-table th {
-    background-color: #2D2D2D;
-    color: #E2E8F0;
-    border: 1px solid #3A3B3D;
-}
-
-.bar-table td {
-    border: 1px solid #E2E8F0;
-    font-weight: bold;
-    padding: 10px 10px;
-}
-
-.dark-mode .bar-table td {
-    border: 1px solid #3A3B3D;
-}
-
-.cell-green {
-    background-color: #66BB6A;
-    color: #000000;
-}
-
-.cell-yellow {
-    background-color: #FFEE58;
-    color: #000000;
-}
-
-.cell-red {
-    background-color: #EF5350;
-    color: #000000;
-}
-
-.dark-mode .cell-green {
-    background-color: #2E7D32;
-    color: #FFFFFF;
-}
-
-.dark-mode .cell-yellow {
-    background-color: #F9A825;
-    color: #FFFFFF;
-}
-
-.dark-mode .cell-red {
-    background-color: #C62828;
-    color: #FFFFFF;
-}
-
-.btn-back {
-    position: absolute;
-    left: 0;
-    top: 5px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 20px;
-    background-color: transparent;
-    color: #000000;
-    text-decoration: none;
-    border: 1px solid #D5D5D5;
-    border-radius: 30px;
-    font-weight: 700;
-    font-size: 16px;
-    transition: all 0.2s ease;
-}
-
-.dark-mode .btn-back {
-    color: #FFFFFF;
-    border: 1px solid #555555;
-}
-
-.btn-back:hover {
-    background-color: #e6f1fe;
-    border-color: #B5B5B5;
-}
-
-.dark-mode .btn-back:hover {
-    background-color: #2D2D2D;
-    border-color: #777777;
-}
-
-.no-paid-msg {
-    margin-top: 25px;
-    padding: 20px;
-    border-radius: 16px;
-    text-align: center;
-    font-weight: bold;
-    font-size: 18px;
-    color: #EF5350;
-    background-color: rgba(239, 83, 80, 0.1);
-    border: 1px dashed #EF5350;
-}
-
-.dark-mode .no-paid-msg {
-    color: #E57373;
-    background-color: rgba(229, 115, 115, 0.1);
-    border: 1px dashed #E57373;
-}
-
-@media (max-width: 768px) {
-    body {
-        display: flex !important;
-        align-items: flex-start !important;
-        justify-content: center !important;
-        padding: 95px 15px 40px 15px !important;
-        position: relative !important;
-    }
-
-    .body-main {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        padding: 90px 15px 40px 15px !important;
-    }
-
-    .container {
-        padding: 24px 15px;
-        position: relative !important;
-    }
-
-    header {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding-top: 10px;
-        margin-bottom: 20px;
-        position: relative;
-    }
-
-        header h1, header h2 {
-            padding-left: 0;
-            padding-right: 0;
-            font-size: 32px;
-        }
-
-    .btn-back {
-        position: absolute !important;
-        left: 0 !important;
-        top: -93px !important;
-        padding: 8px 15px;
-        font-size: 14px;
-        border-radius: 30px;
-        z-index: 9999 !important;
-        background-color: transparent !important;
-        box-shadow: none !important;
-    }
-
-    .btn-home {
-        position: absolute;
-        top: 25px;
-        right: 60px;
-        width: 32px;
-        height: 32px;
-    }
-
-        .btn-home svg {
-            width: 32px;
-            height: 32px;
-        }
-
-    .btn-theme {
-        position: absolute;
-        top: 25px;
-        right: 15px;
-        width: 32px;
-        height: 32px;
-    }
-
-        .btn-theme svg {
-            width: 32px;
-            height: 32px;
-        }
-
-    .columns-container {
-        flex-direction: column;
-        gap: 30px;
-        margin-top: 15px;
-    }
-
-    .column {
-        width: 100%;
-    }
-
-        .column h3 {
-            font-size: 18px;
-            margin-bottom: 15px;
-        }
-
-    .spec-card {
-        padding: 15px;
-        border-radius: 16px;
-    }
-
-    .spec-title {
-        font-size: 20px;
-    }
-
-    .info-line {
-        font-size: 14px;
-    }
-
-    .stat-box {
-        max-width: 100%;
-        border-radius: 12px;
-    }
-
-    .bar-table {
-        font-size: 13px;
-    }
-
-        .bar-table th, .bar-table td {
-            padding: 6px 4px;
-        }
-
-    .slider-container {
-        border-radius: 16px;
-    }
-
-    .slider-book {
-        padding: 20px 15px;
-        border-radius: 16px;
-        min-height: 200px;
-    }
-
-        .slider-book h3 {
-            font-size: 20px;
-        }
-
-    .slider-book-img {
-        max-height: 220px;
-    }
-
-    .container-main {
-        padding: 40px 20px !important;
-    }
-
-    .title-main {
-        font-size: 25px !important;
-    }
-
-    .btn-grid-main .btn-item {
-        font-size: 18px;
-        padding: 12px 20px;
-        white-space: normal;
-    }
-
-    .recently-viewed {
-        flex-direction: column;
-        align-items: center;
-        gap: 12px;
-    }
-
-    .recently-viewed-links {
-        align-items: center;
-    }
-
-    .search-container, .search-results-box {
-        max-width: 100%;
-    }
-
-    .score-search-input {
-        font-size: 16px;
-        padding: 12px 40px 12px 15px;
-        border-radius: 16px;
-    }
-
-    .btn-arrow {
-        padding: 8px 14px;
-        font-size: 14px;
-        margin: 0;
-    }
-
-    #page-num, #vo-page-num {
-        font-size: 14px;
-    }
-
-    .select-level {
-        width: 100%;
-        max-width: 280px;
-        font-size: 14px;
-        padding: 6px 10px;
-    }
-}
-
-.container-main {
-    max-width: 750px;
-    width: 100%;
-    border-radius: 24px;
-    padding: 70px 50px;
-    background-color: rgba(255, 255, 255, 0.8) !important;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-    text-align: center;
-    transition: background-color 0.3s;
-}
-
-.dark-mode .container-main {
-    background-color: rgba(30, 30, 30, 0.8) !important;
-}
-
-.header-main {
-    margin-bottom: 45px;
-    border-bottom: none;
-    padding-bottom: 0;
-}
-
-.title-main {
-    font-size: 46px;
-    line-height: 1.3;
-    font-weight: 700;
-    color: #000000;
-    margin-bottom: 0;
-    padding-left: 0;
-    padding-right: 0;
-}
-
-.dark-mode .title-main {
-    color: #E2E8F0;
-}
-
-.btn-grid-main {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    align-items: center;
-    width: 100%;
-}
-
-    .btn-grid-main .btn-item {
-        width: 100%;
-        max-width: 550px;
-        margin: 0 !important;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 65px;
-        padding: 15px 30px;
-        font-size: 22px;
-        font-weight: 600;
-        line-height: 1.4;
-        border-radius: 12px !important;
-        background-color: #8CBEFF;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
-        white-space: nowrap;
-        transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-.dark-mode .btn-grid-main .btn-item {
-    background-color: #3B4B5E !important;
-    color: #FFFFFF !important;
-}
-
-    .dark-mode .btn-grid-main .btn-item:hover {
-        background-color: #4A5D75 !important;
-    }
-
-@media (max-width: 768px) {
-    .btn-grid-main .btn-item {
-        white-space: normal;
-        font-size: 18px;
-        padding: 12px 20px;
-    }
-}
-
-.recently-viewed {
-    display: inline-flex;
-    justify-content: center;
-    align-items: flex-start;
-    margin-top: 40px;
-    font-size: 15px;
-    color: #000000;
-    text-align: left;
-    gap: 8px;
-}
-
-.dark-mode .recently-viewed {
-    color: #E2E8F0;
-}
-
-.recently-viewed-title {
-    white-space: nowrap;
-    font-weight: 500;
-}
-
-.recently-viewed-links {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-}
-
-    .recently-viewed-links a {
-        color: #007bff;
-        text-decoration: none;
-        transition: color 0.2s;
-        font-weight: 500;
-    }
-
-.dark-mode .recently-viewed-links a {
-    color: #8CBEFF;
-}
-
-.recently-viewed-links a:hover {
-    text-decoration: underline;
-}
-
-.search-container {
-    position: relative;
-    width: 100%;
-    max-width: 550px;
-    margin: 0 auto 20px auto;
-}
-
-.score-search-input {
-    width: 100%;
-    padding: 14px 45px 14px 20px;
-    font-size: 18px;
-    border: 2px solid #8CBEFF;
-    border-radius: 24px;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    font-family: inherit;
-}
-
-.dark-mode .score-search-input {
-    background-color: #222222;
-    color: #FFFFFF;
-    border: 2px solid #3B4B5E;
-}
-
-.score-search-input:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
-}
-
-.search-clear {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 20px;
-    color: #A0AEC0;
-    cursor: pointer;
-    user-select: none;
-    display: none;
-}
-
-    .search-clear:hover {
-        color: #4A5568;
-    }
-
-.search-results-box {
-    border: 2px solid #8CBEFF;
-    border-radius: 24px;
-    background-color: #FFFFFF;
-    margin-top: 10px;
-    margin-bottom: 25px;
-    width: 100%;
-    max-width: 550px;
-    margin-left: auto;
-    margin-right: auto;
-    overflow: hidden;
-    text-align: left;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-}
-
-.dark-mode .search-results-box {
-    background-color: #222222;
-    border: 2px solid #3B4B5E;
-}
-
-.search-result-item {
-    padding: 14px 16px;
-    border-bottom: 1px solid #E2E8F0;
-    transition: background-color 0.2s;
-    display: block;
-    text-decoration: none;
-    color: inherit;
-}
-
-    .search-result-item:hover {
-        background-color: #F8FAFC;
-    }
-
-.dark-mode .search-result-item:hover {
-    background-color: #2D2D2D;
-}
-
-.search-result-item:last-child {
-    border-bottom: none;
-}
-
-.search-result-name {
-    font-size: 18px;
-    font-weight: bold;
-    color: #1A202C;
-    margin-bottom: 4px;
-}
-
-.dark-mode .search-result-name {
-    color: #FFFFFF;
-}
-
-.search-result-info {
-    font-size: 15px;
-    color: #718096;
-    line-height: 1.5;
-}
-
-.dark-mode .search-result-info {
-    color: #A0AEC0;
-}
-
-.text-green {
-    color: #2ecc71;
-    font-weight: bold;
-}
-
-.text-yellow {
-    color: #f39c12;
-    font-weight: bold;
-}
-
-.text-red {
-    color: #e74c3c;
-    font-weight: bold;
-}
 
 /* ==========================================================================
-   НАСТРОЙКА ЦВЕТА СКРОЛЛА (ПОЛОСЫ ПРОКРУТКИ) — ИСПРАВЛЕННАЯ СВЯЗКА
+   БЛОК 7: ИНТЕРАКТИВНЫЙ ПОМОЩНИК АБИТУРИЕНТА (ВИДЖЕТ ЧАТА)
    ========================================================================== */
 
-/* Общие размеры скроллбара */
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-/* --- СВЕТЛАЯ ТЕМА --- */
-
-/* Цвет ползунка в светлой теме (серо-синий) */
-::-webkit-scrollbar-thumb {
-    background: rgb(130, 160, 195);
-    border-radius: 10px;
-}
-
-    /* При наведении в светлой теме */
-    ::-webkit-scrollbar-thumb:hover {
-        background: rgb(100, 130, 165);
-    }
-
-/* Firefox (Светлая тема) */
-* {
-    scrollbar-width: thin;
-    scrollbar-color: rgb(130, 160, 195) transparent;
-}
-
-
-/* --- ТЕМНАЯ ТЕМА (исправлено: убран пробел для применения к корню html) --- */
-
-/* Очень темный приглушенный цвет для главного скролла и внутренних блоков */
-.dark-mode::-webkit-scrollbar-thumb,
-.dark-mode ::-webkit-scrollbar-thumb {
-    background: rgb(40, 48, 56) !important;
-}
-
-    /* При наведении в темной теме */
-    .dark-mode::-webkit-scrollbar-thumb:hover,
-    .dark-mode ::-webkit-scrollbar-thumb:hover {
-        background: rgb(65, 75, 88) !important;
-    }
-
-/* Firefox (Темная тема) */
-html.dark-mode,
-.dark-mode * {
-    scrollbar-color: rgb(40, 48, 56) transparent !important;
-}
-.btn-home svg, .btn-theme svg {
-    fill: currentColor !important;
-}
-
+/* Общий контейнер виджета */
 .ai-widget {
     position: fixed;
-    bottom: 25px;
-    left: 25px;
-    z-index: 10000;
-    font-family: inherit;
+    bottom: 20px;
+    left: 20px;
+    z-index: 99999;
 }
 
+/* Кнопка открытия чата */
 .ai-toggle-btn {
+    position: fixed !important;
+    bottom: 20px !important;
+    left: 20px !important;
+    z-index: 100000 !important;
+    margin: 0 !important;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1265,10 +858,11 @@ html.dark-mode,
         fill: #ffffff !important;
     }
 
+/* Окно диалога ассистента */
 .ai-window {
-    position: fixed;
+    position: fixed !important;
     bottom: 90px;
-    left: 25px;
+    left: 20px;
     width: 350px;
     height: 480px;
     min-width: 280px;
@@ -1282,6 +876,7 @@ html.dark-mode,
     flex-direction: column;
     overflow: hidden;
     border: 1px solid #E2E8F0;
+    z-index: 99999 !important;
     animation: pageFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     resize: none;
 }
@@ -1291,6 +886,12 @@ html.dark-mode,
     border: 1px solid #3A3B3D;
     box-shadow: 0 8px 30px rgba(0,0,0,0.4);
 }
+
+
+
+/* =======================================================
+   НАПРАВЛЯЮЩИЕ ИЗМЕНЕНИЯ РАЗМЕРОВ (JQUERY UI RESIZABLE)
+   ========================================================= */
 
 .ai-resizer {
     position: absolute;
@@ -1512,35 +1113,646 @@ html.dark-mode,
     fill: #ffffff !important;
 }
 
-@media (max-width: 1290px) {
-    .ai-widget {
-        bottom: 15px !important;
-        left: 2.5vw !important;
-        width: 95vw !important;
-    }
 
-    .ai-window {
-        position: fixed !important;
-        bottom: 75px !important;
-        left: 2.5vw !important;
-        width: 95vw !important;
-        height: 60vh !important;
-        min-width: auto !important;
-        max-width: none !important;
-        min-height: auto !important;
-        max-height: none !important;
-        border-radius: 20px !important;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.2) !important;
-    }
+/* ==========================================================================
+   БЛОК 8: ЛИЧНЫЙ КАБИНЕТ АБИТУРИЕНТА И ЧЕК-ЛИСТЫ ДОКУМЕНТОВ
+   ========================================================================== */
 
-    .ai-resizer {
-        display: none !important;
-    }
-
-    .ai-header {
-        cursor: default !important;
-    }
+/* Кнопка вызова Личного Кабинета */
+.cabinet-toggle-btn {
+    position: fixed;
+    top: 25px;
+    left: 25px;
+    width: 42px;
+    height: 42px;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    transition: transform 0.2s, background-color 0.2s;
+    z-index: 9999;
 }
+
+    .cabinet-toggle-btn:hover {
+        transform: scale(1.08);
+        background-color: #0056b3;
+    }
+
+    .cabinet-toggle-btn svg {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+    }
+
+/* Окно Личного Кабинета */
+.cabinet-window {
+    position: fixed;
+    top: 85px;
+    left: 25px;
+    width: 380px;
+    height: 520px;
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid #E2E8F0;
+    z-index: 100050 !important; /* Перекрывает кнопку чата */
+    animation: pageFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.dark-mode .cabinet-window {
+    background-color: #222222;
+    border-color: #3A3B3D;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+}
+
+.cabinet-header {
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+}
+
+.dark-mode .cabinet-header {
+    background-color: #3B4B5E;
+}
+
+.cabinet-header-title {
+    font-weight: bold;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Вкладки "Чек-лист" / "Выбор специальности" */
+.cabinet-tabs {
+    display: flex;
+    border-bottom: 1px solid #E2E8F0;
+    background-color: #F8FAFC;
+}
+
+.dark-mode .cabinet-tabs {
+    background-color: #1A1A1A;
+    border-bottom: 1px solid #3A3B3D;
+}
+
+.cabinet-tab-btn {
+    flex: 1;
+    padding: 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+    color: #718096;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+    .cabinet-tab-btn.active {
+        color: #007bff;
+        border-bottom: 2px solid #007bff;
+        background-color: #ffffff;
+    }
+
+.dark-mode .cabinet-tab-btn.active {
+    color: #8CBEFF;
+    border-bottom: 2px solid #3B4B5E;
+    background-color: #222222;
+}
+
+.cabinet-body {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background-color: #ffffff;
+    font-size: 14px;
+}
+
+.dark-mode .cabinet-body {
+    background-color: #222222;
+    color: #E2E8F0;
+}
+
+/* Селекторы фильтров Личного Кабинета */
+.cab-checklist-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed #E2E8F0;
+}
+
+.dark-mode .cab-checklist-filters {
+    border-bottom: 1px dashed #3A3B3D;
+}
+
+.cab-filter-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .cab-filter-row label {
+        font-size: 12px;
+        font-weight: bold;
+        color: #718096;
+    }
+
+.cab-select {
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid #CBD5E1;
+    font-size: 12px;
+    background-color: #fff;
+    outline: none;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, opacity 0.2s;
+}
+
+.dark-mode .cab-select {
+    background-color: #2D2D2D;
+    color: #FFF;
+    border-color: #4A5D75;
+}
+
+/* Неактивный выпадающий список (disabled) */
+.cab-select:disabled {
+    background-color: #F1F5F9 !important;
+    color: #94A3B8 !important;
+    border-color: #E2E8F0 !important;
+    cursor: not-allowed !important;
+    opacity: 0.6 !important;
+}
+
+.dark-mode .cab-select:disabled {
+    background-color: #161616 !important;
+    color: #5A6A85 !important;
+    border-color: #2D3748 !important;
+    cursor: not-allowed !important;
+    opacity: 0.5 !important;
+}
+
+/* Стили чек-листа */
+.cab-checklist-list {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.cab-checklist-item {
+    text-align: left !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 8px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    line-height: 1.4;
+}
+
+    .cab-checklist-item input[type="checkbox"] {
+        flex-shrink: 0;
+        margin-top: 4px;
+    }
+
+    .cab-checklist-item span {
+        margin-left: 8px;
+    }
+
+    .cab-checklist-item.completed {
+        text-decoration: line-through;
+        opacity: 0.5;
+    }
+
+/* Стили Профориентационного теста */
+.cab-quiz-question {
+    font-weight: bold;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.cab-quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cab-quiz-btn {
+    padding: 10px 14px;
+    background-color: #F1F5F9;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    color: #1A202C;
+}
+
+.dark-mode .cab-quiz-btn {
+    background-color: #2D2D2D;
+    border-color: #3A3B3D;
+    color: #E2E8F0;
+}
+
+.cab-quiz-btn:hover {
+    background-color: #8CBEFF;
+    color: #000000;
+}
+
+.dark-mode .cab-quiz-btn:hover {
+    background-color: #3B4B5E;
+    color: #FFFFFF;
+}
+
+.cab-quiz-progress {
+    color: #007bff;
+    font-size: 13px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.dark-mode .cab-quiz-progress {
+    color: #8CBEFF;
+}
+
+/* Кнопка "Назад" в тестах */
+.cab-quiz-back-btn {
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    padding: 6px 12px !important;
+    color: #007bff !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    text-align: left !important;
+    margin-right: auto !important;
+    margin-left: 0 !important;
+    gap: 6px !important;
+    margin-bottom: 14px !important;
+    border-radius: 6px !important;
+    font-family: inherit !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+    .cab-quiz-back-btn:hover {
+        color: #0056b3 !important;
+        background-color: rgba(0, 123, 255, 0.08) !important;
+    }
+
+.dark-mode .cab-quiz-back-btn {
+    color: #63b3ed !important;
+}
+
+    .dark-mode .cab-quiz-back-btn:hover {
+        color: #90cdf4 !important;
+        background-color: rgba(99, 179, 237, 0.12) !important;
+    }
+
+/* Карточка результатов теста в кабинете */
+.cab-quiz-result-title {
+    font-weight: bold;
+    color: #007bff;
+    font-size: 15px;
+    margin-bottom: 8px;
+    text-align: left;
+}
+
+.dark-mode .cab-quiz-result-title {
+    color: #8CBEFF;
+}
+
+.cab-quiz-result-card {
+    padding: 12px;
+    background-color: #F0F7FF;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border-left: 3px solid #007bff;
+    text-align: left;
+}
+
+.dark-mode .cab-quiz-result-card {
+    background-color: #1E2D3D;
+    border-left-color: #8CBEFF;
+}
+
+.cab-quiz-result-name {
+    display: block;
+    font-size: 15px;
+    margin-bottom: 4px;
+    color: #1A202C;
+}
+
+.dark-mode .cab-quiz-result-name {
+    color: #FFFFFF;
+}
+
+.cab-quiz-result-desc {
+    font-size: 12px;
+    color: #4A5568;
+    line-height: 1.4;
+    display: block;
+}
+
+.dark-mode .cab-quiz-result-desc {
+    color: #CBD5E1;
+}
+
+.cab-quiz-actions {
+    display: flex;
+    gap: 8px;
+}
+
+    .cab-quiz-actions .btn-arrow {
+        text-decoration: none;
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+
+
+/* ==========================================================================
+   БЛОК 9: ГЛАВНЫЙ ЭКРАН И ПОИСКОВЫЙ КАЛЬКУЛЯТОР (INDEX.HTML)
+   ========================================================================== */
+
+.academy-bg-title {
+    font-size: 50px;
+    font-weight: 800;
+    color: #000000;
+    text-align: center;
+    margin-bottom: 25px;
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8), 0 4px 12px rgba(255, 255, 255, 0.5);
+    max-width: 1800px;
+    width: 100%;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.dark-mode .academy-bg-title {
+    color: #E2E8F0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+.container-main {
+    max-width: 750px;
+    width: 100%;
+    border-radius: 24px;
+    padding: 70px 50px;
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+.dark-mode .container-main {
+    background-color: rgba(30, 30, 30, 0.8) !important;
+}
+
+.header-main {
+    margin-bottom: 45px;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.title-main {
+    font-size: 46px;
+    line-height: 1.3;
+    font-weight: 700;
+    color: #000000;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.dark-mode .title-main {
+    color: #E2E8F0;
+}
+
+.btn-grid-main {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    align-items: center;
+    width: 100%;
+}
+
+    .btn-grid-main .btn-item {
+        width: 100%;
+        max-width: 550px;
+        margin: 0 !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 65px;
+        padding: 15px 30px;
+        font-size: 22px;
+        font-weight: 600;
+        line-height: 1.4;
+        border-radius: 12px !important;
+        background-color: #8CBEFF;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+        white-space: nowrap;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+.dark-mode .btn-grid-main .btn-item {
+    background-color: #3B4B5E !important;
+    color: #FFFFFF !important;
+}
+
+    .dark-mode .btn-grid-main .btn-item:hover {
+        background-color: #4A5D75 !important;
+    }
+
+/* "Вы недавно смотрели..." */
+.recently-viewed {
+    display: inline-flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 40px;
+    font-size: 15px;
+    color: #000000;
+    text-align: left;
+    gap: 8px;
+}
+
+.dark-mode .recently-viewed {
+    color: #E2E8F0;
+}
+
+.recently-viewed-title {
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+.recently-viewed-links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+    .recently-viewed-links a {
+        color: #007bff;
+        text-decoration: none;
+        transition: color 0.2s;
+        font-weight: 500;
+    }
+
+.dark-mode .recently-viewed-links a {
+    color: #8CBEFF;
+}
+
+.recently-viewed-links a:hover {
+    text-decoration: underline;
+}
+
+/* Строка поиска-калькулятора балла */
+.search-container {
+    position: relative;
+    width: 100%;
+    max-width: 550px;
+    margin: 0 auto 20px auto;
+}
+
+.score-search-input {
+    width: 100%;
+    padding: 14px 45px 14px 20px;
+    font-size: 18px;
+    border: 2px solid #8CBEFF;
+    border-radius: 24px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-family: inherit;
+}
+
+.dark-mode .score-search-input {
+    background-color: #222222;
+    color: #FFFFFF;
+    border: 2px solid #3B4B5E;
+}
+
+.score-search-input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+}
+
+.search-clear {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #A0AEC0;
+    cursor: pointer;
+    user-select: none;
+    display: none;
+}
+
+    .search-clear:hover {
+        color: #4A5568;
+    }
+
+/* Результаты поиска по баллам */
+.search-results-box {
+    border: 2px solid #8CBEFF;
+    border-radius: 24px;
+    background-color: #FFFFFF;
+    margin-top: 10px;
+    margin-bottom: 25px;
+    width: 100%;
+    max-width: 550px;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+    text-align: left;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.dark-mode .search-results-box {
+    background-color: #222222;
+    border: 2px solid #3B4B5E;
+}
+
+.search-result-item {
+    padding: 14px 16px;
+    border-bottom: 1px solid #E2E8F0;
+    transition: background-color 0.2s;
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+    .search-result-item:hover {
+        background-color: #F8FAFC;
+    }
+
+.dark-mode .search-result-item:hover {
+    background-color: #2D2D2D;
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-result-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #1A202C;
+    margin-bottom: 4px;
+}
+
+.dark-mode .search-result-name {
+    color: #FFFFFF;
+}
+
+.search-result-info {
+    font-size: 15px;
+    color: #718096;
+    line-height: 1.5;
+}
+
+.dark-mode .search-result-info {
+    color: #A0AEC0;
+}
+
+/* Классы цветов вероятности поступления */
+.text-green {
+    color: #2ecc71;
+    font-weight: bold;
+}
+
+.text-yellow {
+    color: #f39c12;
+    font-weight: bold;
+}
+
+.text-red {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+
+/* ==========================================================================
+   БЛОК 10: СТИЛИ ВИДЖЕТА ОБРАТНОГО ОТСЧЕТА (COUNTDOWN TIMER)
+   ========================================================================== */
 
 .countdown-timer {
     float: right;
@@ -1594,446 +1806,18 @@ html.dark-mode,
     border-color: #7F1D1D;
 }
 
-@media (max-width: 768px) {
-    .countdown-timer {
-        float: none;
-        margin-top: 15px;
-        display: inline-flex;
-        margin-left: auto;
-        margin-right: auto;
-    }
-}
 
-.cabinet-toggle-btn {
-    position: fixed;
-    top: 25px;
-    left: 25px;
-    width: 42px;
-    height: 42px;
-    background-color: #007bff;
-    color: #ffffff;
-    border: none;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
-    transition: transform 0.2s, background-color 0.2s;
-    z-index: 9999;
-}
+/* ==================================================
+   БЛОК 11:СТИЛИ ПАНЕЛИ БЫСТРЫХ ВОПРОСОВ В ЧАТЕ
+   =================================================== */
 
-    .cabinet-toggle-btn:hover {
-        transform: scale(1.08);
-        background-color: #0056b3;
-    }
-
-    .cabinet-toggle-btn svg {
-        width: 20px;
-        height: 20px;
-        fill: currentColor;
-    }
-
-.cabinet-window {
-    position: fixed;
-    top: 85px;
-    left: 25px;
-    width: 380px;
-    height: 520px;
-    background-color: #ffffff;
-    border-radius: 20px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    border: 1px solid #E2E8F0;
-    z-index: 9999;
-    animation: pageFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.dark-mode .cabinet-window {
-    background-color: #222222;
-    border-color: #3A3B3D;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-}
-
-.cabinet-header {
-    background-color: #007bff;
-    color: #ffffff;
-    padding: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    user-select: none;
-}
-
-.dark-mode .cabinet-header {
-    background-color: #3B4B5E;
-}
-
-.cabinet-header-title {
-    font-weight: bold;
-    font-size: 15px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.cabinet-tabs {
-    display: flex;
-    border-bottom: 1px solid #E2E8F0;
-    background-color: #F8FAFC;
-}
-
-.dark-mode .cabinet-tabs {
-    background-color: #1A1A1A;
-    border-bottom: 1px solid #3A3B3D;
-}
-
-.cabinet-tab-btn {
-    flex: 1;
-    padding: 12px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: bold;
-    color: #718096;
-    transition: all 0.2s ease;
-    outline: none;
-}
-
-    .cabinet-tab-btn.active {
-        color: #007bff;
-        border-bottom: 2px solid #007bff;
-        background-color: #ffffff;
-    }
-
-.dark-mode .cabinet-tab-btn.active {
-    color: #8CBEFF;
-    border-bottom: 2px solid #3B4B5E;
-    background-color: #222222;
-}
-
-.cabinet-body {
-    flex: 1;
-    padding: 15px;
-    overflow-y: auto;
-    background-color: #ffffff;
-    font-size: 14px;
-}
-
-.dark-mode .cabinet-body {
-    background-color: #222222;
-    color: #E2E8F0;
-}
-
-.cab-checklist-filters {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 15px;
-    padding-bottom: 12px;
-    border-bottom: 1px dashed #E2E8F0;
-}
-
-.dark-mode .cab-checklist-filters {
-    border-bottom: 1px dashed #3A3B3D;
-}
-
-.cab-filter-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-    .cab-filter-row label {
-        font-size: 12px;
-        font-weight: bold;
-        color: #718096;
-    }
-
-.cab-select {
-    padding: 4px 8px;
-    border-radius: 6px;
-    border: 1px solid #CBD5E1;
-    font-size: 12px;
-    background-color: #fff;
-    outline: none;
-}
-
-.dark-mode .cab-select {
-    background-color: #2D2D2D;
-    color: #FFF;
-    border-color: #4A5D75;
-}
-
-.cab-checklist-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    margin-bottom: 10px;
-    cursor: pointer;
-    line-height: 1.4;
-}
-
-    .cab-checklist-item input {
-        margin-top: 3px;
-    }
-
-    .cab-checklist-item.completed {
-        text-decoration: line-through;
-        opacity: 0.5;
-    }
-
-.cab-quiz-question {
-    font-weight: bold;
-    margin-bottom: 12px;
-    line-height: 1.4;
-}
-
-.cab-quiz-options {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.cab-quiz-btn {
-    padding: 10px 14px;
-    background-color: #F1F5F9;
-    border: 1px solid #E2E8F0;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-align: left;
-    color: #1A202C;
-}
-
-.dark-mode .cab-quiz-btn {
-    background-color: #2D2D2D;
-    border-color: #3A3B3D;
-    color: #E2E8F0;
-}
-
-.cab-quiz-btn:hover {
-    background-color: #8CBEFF;
-    color: #000000;
-}
-
-.dark-mode .cab-quiz-btn:hover {
-    background-color: #3B4B5E;
-    color: #FFFFFF;
-}
-
-@media (max-width: 480px) {
-    .cabinet-window {
-        width: 100%;
-        height: 400px;
-        bottom: 55px;
-        left: 15px;
-        right: 15px;
-        top: auto;
-    }
-}
-
-.academy-bg-title {
-    font-size: 50px;
-    font-weight: 800;
-    color: #000000;
-    text-align: center;
-    margin-bottom: 25px;
-    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8), 0 4px 12px rgba(255, 255, 255, 0.5);
-    max-width: 1800px;
-    width: 100%;
-    transition: color 0.3s ease, text-shadow 0.3s ease;
-}
-
-.dark-mode .academy-bg-title {
-    color: #E2E8F0;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 4px 12px rgba(0, 0, 0, 0.6);
-}
-
-@media (max-width: 1290px) {
-    .academy-bg-title {
-        text-align: center;
-        font-size: 33px;
-        margin-top: 20px;
-        margin-bottom: 15px;
-        padding: 0 10px;
-    }
-}
-
-.cab-quiz-back-btn {
-    background: transparent !important;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    appearance: none !important;
-    -webkit-appearance: none !important;
-    padding: 6px 12px !important;
-    color: #007bff !important;
-    font-size: 14px !important;
-    font-weight: 600 !important;
-    cursor: pointer !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    text-align: left !important;
-    margin-right: auto !important;
-    margin-left: 0 !important;
-    gap: 6px !important;
-    margin-bottom: 14px !important;
-    border-radius: 6px !important;
-    font-family: inherit !important;
-    transition: all 0.2s ease-in-out !important;
-}
-
-    .cab-quiz-back-btn:hover {
-        color: #0056b3 !important;
-        background-color: rgba(0, 123, 255, 0.08) !important;
-    }
-
-.dark-mode .cab-quiz-back-btn {
-    color: #63b3ed !important;
-}
-
-    .dark-mode .cab-quiz-back-btn:hover {
-        color: #90cdf4 !important;
-        background-color: rgba(99, 179, 237, 0.12) !important;
-    }
-
-
-/* Стало (применится ко всем страницам без исключения): */
-@media (max-width: 1024px) {
-    body {
-        background-attachment: scroll !important;
-    }
-}
-
-@media (max-width: 768px) {
-    .cabinet-toggle-btn {
-        top: 15px !important;
-        left: 15px !important;
-    }
-
-    .cabinet-window {
-        position: fixed !important;
-        top: 15px !important;
-        left: 10px !important;
-        right: 10px !important;
-        width: calc(100% - 20px) !important;
-        max-width: calc(100% - 20px) !important;
-        max-height: calc(100vh - 30px) !important;
-        overflow-y: auto !important;
-        box-sizing: border-box !important;
-        z-index: 2000 !important;
-        transform: none !important;
-    }
-}
-/* ==========================================================================
-   УЛУЧШЕННОЕ НЕЗАВИСИМОЕ ПОЗИЦИОНИРОВАНИЕ КНОПКИ И ОКНА ЧАТА
-   ========================================================================== */
-
-/* Общий контейнер больше не ограничивает размеры дочерних элементов */
-.ai-widget {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    z-index: 99999;
-}
-
-/* Кнопка "Задать вопрос" жестко зафиксирована в нижнем углу */
-.ai-toggle-btn {
-    position: fixed !important;
-    bottom: 20px !important;
-    left: 20px !important;
-    z-index: 100000 !important;
-    margin: 0 !important;
-}
-
-/* Окно чата изначально фиксируется над кнопкой, но готово к перемещению */
-.ai-window {
-    position: fixed !important;
-    bottom: 90px; /* Изначальное положение над кнопкой */
-    left: 20px;
-    z-index: 99999 !important;
-    margin: 0 !important;
-    display: flex;
-    flex-direction: column;
-}
-/* ==========================================================================
-   КОМПАКТНЫЙ СТАБИЛЬНЫЙ РАЗМЕР КАБИНЕТА И СЕНСОРНОЕ СКРЫТИЕ ПЛАШЕК
-   ========================================================================== */
-
-/* Перекрытие кнопки вызова открытым кабинетом */
-.cabinet-window {
-    z-index: 100050 !important;
-}
-
-@media (max-width: 576px) {
-    /* Парящее компактное окно ЛК с фиксированной высотой (убирает любые скачки) */
-    .cabinet-window {
-        width: 90% !important;
-        max-width: 340px !important;
-        height: 480px !important; /* Фиксированная высота окна для обеих вкладок */
-        border-radius: 16px !important;
-        top: 40px !important;
-        left: 50% !important;
-        right: auto !important;
-        bottom: auto !important;
-        transform: translateX(-50%) !important;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
-        overflow: hidden !important;
-    }
-
-    /* Настройки заголовка */
-    .cabinet-header-title {
-        font-size: 14px !important;
-        white-space: nowrap !important;
-        overflow: visible !important;
-        text-overflow: clip !important;
-        max-width: none !important;
-    }
-
-    /* Стабильная высота тела контента для обеих вкладок со скроллом */
-    .cabinet-body {
-        height: 385px !important; /* Строго одинаковая высота контентной области */
-        max-height: 385px !important;
-        overflow-y: auto !important;
-        padding: 12px 14px !important;
-        box-sizing: border-box !important;
-    }
-
-    /* Вертикальное выравнивание фильтров: убирает сдвиг и выползание за рамки */
-    .cab-filter-row {
-        display: flex !important;
-        flex-direction: column !important; /* Выстраиваем метку и селект вертикально */
-        align-items: flex-start !important;
-        gap: 6px !important; /* Увеличиваем отступ между текстом и селектом */
-        margin-bottom: 12px !important;
-        width: 100% !important;
-    }
-
-    /* Выпадающий список занимает всю ширину карточки без вылетов */
-    .cab-select {
-        width: 100% !important;
-        max-width: 100% !important;
-        box-sizing: border-box !important;
-    }
-}
-
-/* ==========================================================================
-   УЛУЧШЕННЫЕ СТИЛИ ПАНЕЛИ БЫСТРЫХ ВОПРОСОВ
-   ========================================================================== */
 .ai-quick-questions {
     padding: 0;
     max-height: 0;
     opacity: 0;
     background-color: #ffffff;
     border-top: none;
-    display: flex !important; /* Используем flex для позиционирования кнопок внутри контейнера */
+    display: flex !important;
     flex-wrap: wrap;
     gap: 6px;
     transition: max-height 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease, padding 0.25s cubic-bezier(0.16, 1, 0.3, 1);
@@ -2047,21 +1831,19 @@ html.dark-mode,
     background-color: #222222;
 }
 
-/* Класс активации видимости быстрых вопросов (управляется через JS) */
 .ai-quick-questions.visible {
     max-height: 160px !important;
     opacity: 1 !important;
     padding: 10px 14px !important;
     border-top: 1px solid #E2E8F0 !important;
     visibility: visible !important;
-    overflow-y: auto; /* Допускается скролл при большом количестве кнопок на маленьких экранах */
+    overflow-y: auto;
 }
 
 .dark-mode .ai-quick-questions.visible {
     border-top: 1px solid #3A3B3D !important;
 }
 
-/* Кнопки быстрых вопросов */
 .ai-quick-questions button {
     background-color: #F1F5F9 !important;
     border: 1px solid #CBD5E1 !important;
@@ -2096,15 +1878,15 @@ html.dark-mode,
         border-color: rgba(255, 255, 255, 0.3) !important;
     }
 
-/* Исключение дублирования стилей и перекрытий */
 #ai-quick-questions.ai-quick-questions {
     border: none;
     margin: 0;
     height: auto;
 }
 
+
 /* ==========================================================================
-   ИНТЕРАКТИВНАЯ АКАДЕМИЧЕСКАЯ АНИМАЦИЯ ЗАГРУЗКИ (Мортаборд / Шапка выпускника)
+   БЛОК 12: ИНТЕРАКТИВНАЯ АКАДЕМИЧЕСКАЯ АНИМАЦИЯ ЗАГРУЗКИ (МОРТАБОРД)
    ========================================================================== */
 
 .academy-loader-container {
@@ -2126,17 +1908,14 @@ html.dark-mode,
 .mortarboard-svg {
     width: 100%;
     height: 100%;
-    /* Шапка левитирует вверх-вниз */
     animation: floatCap 2s infinite ease-in-out;
 }
 
-/* Эффект покачивания кисточки из центра шапки */
 .cap-tassel {
     transform-origin: 32px 22px;
     animation: swingTassel 2s infinite ease-in-out;
 }
 
-/* Пульсация текста загрузки */
 .loader-text {
     font-size: 14px;
     color: #718096;
@@ -2148,8 +1927,6 @@ html.dark-mode,
 .dark-mode .loader-text {
     color: #a0aec0;
 }
-
-/* --- КЛЮЧЕВЫЕ КАДРЫ АНИМАЦИЙ --- */
 
 @keyframes floatCap {
     0%, 100% {
@@ -2188,9 +1965,14 @@ html.dark-mode,
         opacity: 1;
     }
 }
-/* Фоновое изображение для всех страниц, кроме главной (Светлая тема) */
+
+
+/* ====================================
+   БЛОК 13: ФОНЫ СТРАНИЦ ДЛЯ ДВУХ ТЕМ 
+   ===================================*/
+
 body:not(.body-main) {
-    background-image: url('../Fon_2/1.png'); /* Если расширение файлов .jpg или .png, замените .jpeg на нужное */
+    background-image: url('../Fon_2/1.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -2198,164 +1980,336 @@ body:not(.body-main) {
     transition: background-image 0.3s ease;
 }
 
-/* Фоновое изображение для всех страниц, кроме главной (Темная тема) */
 .dark-mode body:not(.body-main) {
-    background-image: url('../Fon_2/2.png'); /* Если расширение файлов .jpg или .png, замените .jpeg на нужное */
-}
-/* Базовые стили для селекта */
-.cab-select {
-    padding: 4px 8px;
-    border-radius: 6px;
-    border: 1px solid #CBD5E1;
-    font-size: 12px;
-    background-color: #fff;
-    outline: none;
-    transition: background-color 0.2s, color 0.2s, border-color 0.2s, opacity 0.2s;
+    background-image: url('../Fon_2/2.png');
 }
 
-.dark-mode .cab-select {
-    background-color: #2D2D2D;
-    color: #FFF;
-    border-color: #4A5D75;
-}
 
-/* --- ДОБАВЬТЕ ЭТИ СТИЛИ НИЖЕ --- */
-
-/* Неактивный выпадающий список (disabled) — Светлая тема */
-.cab-select:disabled {
-    background-color: #F1F5F9 !important;
-    color: #94A3B8 !important;
-    border-color: #E2E8F0 !important;
-    cursor: not-allowed !important;
-    opacity: 0.6 !important;
-}
-
-/* Неактивный выпадающий список (disabled) — Темная тема */
-.dark-mode .cab-select:disabled {
-    background-color: #161616 !important; /* Более темный фон */
-    color: #5A6A85 !important; /* Приглушенный цвет текста */
-    border-color: #2D3748 !important; /* Менее контрастная рамка */
-    cursor: not-allowed !important;
-    opacity: 0.5 !important; /* Пониженная прозрачность */
-}
-/* --- СЕРАЯ КНОПКА (Пройти заново) --- */
-
-/* Светлая тема */
-.btn-gray {
-    background-color: #A0AEC0 !important;
-    color: #1A202C !important;
-}
-
-    .btn-gray:hover {
-        background-color: #818E9F !important; /* Плавное затемнение при наведении */
-    }
-
-/* Темная тема */
-.dark-mode .btn-gray {
-    background-color: #4A5568 !important;
-    color: #FFFFFF !important;
-}
-
-    .dark-mode .btn-gray:hover {
-        background-color: #2D3748 !important; /* Еще темнее в темной теме при наведении */
-    }
 /* ==========================================================================
-   СТИЛИ ЛИЧНОГО КАБИНЕТА (ВЫНЕСЕНЫ ИЗ CABINET.JS)
+   БЛОК 14:  АДАПТИВНЫЕ МЕДИА-ЗАПРОСЫ (RESPONSIVENESS)
    ========================================================================== */
 
-/* Чек-лист документов */
-.cab-checklist-list {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-}
-
-.cab-checklist-item {
-    text-align: left !important;
-    display: flex !important;
-    align-items: flex-start !important;
-}
-
-    .cab-checklist-item input[type="checkbox"] {
-        flex-shrink: 0;
-        margin-top: 4px;
+/* --- Адаптация под десктопы и средние экраны (1290px) --- */
+@media (max-width: 1290px) {
+    .academy-bg-title {
+        text-align: center;
+        font-size: 33px;
+        margin-top: 20px;
+        margin-bottom: 15px;
+        padding: 0 10px;
     }
 
-    .cab-checklist-item span {
-        margin-left: 8px;
+    .ai-widget {
+        bottom: 15px !important;
+        left: 2.5vw !important;
+        width: 95vw !important;
     }
 
-/* Индикатор прогресса в тесте */
-.cab-quiz-progress {
-    color: #007bff;
-    font-size: 13px;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-.dark-mode .cab-quiz-progress {
-    color: #8CBEFF;
-}
-
-/* Заголовок результатов теста */
-.cab-quiz-result-title {
-    font-weight: bold;
-    color: #007bff;
-    font-size: 15px;
-    margin-bottom: 8px;
-    text-align: left;
-}
-
-.dark-mode .cab-quiz-result-title {
-    color: #8CBEFF;
-}
-
-/* Карточка рекомендованной специальности */
-.cab-quiz-result-card {
-    padding: 12px;
-    background-color: #F0F7FF;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    border-left: 3px solid #007bff;
-    text-align: left;
-}
-
-.dark-mode .cab-quiz-result-card {
-    background-color: #1E2D3D;
-    border-left-color: #8CBEFF;
-}
-
-.cab-quiz-result-name {
-    display: block;
-    font-size: 15px;
-    margin-bottom: 4px;
-    color: #1A202C;
-}
-
-.dark-mode .cab-quiz-result-name {
-    color: #FFFFFF;
-}
-
-.cab-quiz-result-desc {
-    font-size: 12px;
-    color: #4A5568;
-    line-height: 1.4;
-    display: block;
-}
-
-.dark-mode .cab-quiz-result-desc {
-    color: #CBD5E1;
-}
-
-/* Блок кнопок действий */
-.cab-quiz-actions {
-    display: flex;
-    gap: 8px;
-}
-
-    /* Компактный размер кнопок в кабинете */
-    .cab-quiz-actions .btn-arrow {
-        text-decoration: none;
-        padding: 8px 12px;
-        font-size: 12px;
+    .ai-window {
+        position: fixed !important;
+        bottom: 75px !important;
+        left: 2.5vw !important;
+        width: 95vw !important;
+        height: 60vh !important;
+        min-width: auto !important;
+        max-width: none !important;
+        min-height: auto !important;
+        max-height: none !important;
+        border-radius: 20px !important;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2) !important;
     }
+
+    .ai-resizer {
+        display: none !important;
+    }
+
+    .ai-header {
+        cursor: default !important;
+    }
+}
+
+/* --- Адаптация под сенсорные экраны и планшеты (1024px) --- */
+@media (max-width: 1024px) {
+    /* Отключение fixed-эффекта на мобильных для предотвращения прыжков фона */
+    body {
+        background-attachment: scroll !important;
+    }
+}
+
+/* --- Адаптация под смартфоны (768px) --- */
+@media (max-width: 768px) {
+    body {
+        display: flex !important;
+        align-items: flex-start !important;
+        justify-content: center !important;
+        padding: 95px 15px 40px 15px !important;
+        position: relative !important;
+    }
+
+    .body-main {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 90px 15px 40px 15px !important;
+    }
+
+    .container {
+        padding: 24px 15px;
+        position: relative !important;
+    }
+
+    header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 10px;
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+        header h1, header h2 {
+            padding-left: 0;
+            padding-right: 0;
+            font-size: 32px;
+        }
+
+    .btn-back {
+        position: absolute !important;
+        left: 0 !important;
+        top: -93px !important;
+        padding: 8px 15px;
+        font-size: 14px;
+        border-radius: 30px;
+        z-index: 9999 !important;
+        background-color: transparent !important;
+        box-shadow: none !important;
+    }
+
+    .btn-home {
+        position: absolute;
+        top: 25px;
+        right: 60px;
+        width: 32px;
+        height: 32px;
+    }
+
+        .btn-home svg {
+            width: 32px;
+            height: 32px;
+        }
+
+    .btn-theme {
+        position: absolute;
+        top: 25px;
+        right: 15px;
+        width: 32px;
+        height: 32px;
+    }
+
+        .btn-theme svg {
+            width: 32px;
+            height: 32px;
+        }
+
+    .columns-container {
+        flex-direction: column;
+        gap: 30px;
+        margin-top: 15px;
+    }
+
+    .column {
+        width: 100%;
+    }
+
+        .column h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+    .spec-card {
+        padding: 15px;
+        border-radius: 16px;
+    }
+
+    .spec-title {
+        font-size: 20px;
+    }
+
+    .info-line {
+        font-size: 14px;
+    }
+
+    .stat-box {
+        max-width: 100%;
+        border-radius: 12px;
+    }
+
+    .section-title + .bar-table-wrapper {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .bar-table {
+        font-size: 13px;
+    }
+
+        .bar-table th, .bar-table td {
+            padding: 6px 4px;
+        }
+
+    .slider-container {
+        border-radius: 16px;
+    }
+
+    .slider-book {
+        padding: 20px 15px;
+        border-radius: 16px;
+        min-height: 200px;
+    }
+
+        .slider-book h3 {
+            font-size: 20px;
+        }
+
+    .slider-book-img {
+        max-height: 220px;
+    }
+
+    .container-main {
+        padding: 40px 20px !important;
+    }
+
+    .title-main {
+        font-size: 25px !important;
+    }
+
+    .btn-grid-main .btn-item {
+        font-size: 18px;
+        padding: 12px 20px;
+        white-space: normal;
+    }
+
+    .recently-viewed {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .recently-viewed-links {
+        align-items: center;
+    }
+
+    .search-container, .search-results-box {
+        max-width: 100%;
+    }
+
+    .score-search-input {
+        font-size: 16px;
+        padding: 12px 40px 12px 15px;
+        border-radius: 16px;
+    }
+
+    .btn-arrow {
+        padding: 8px 14px;
+        font-size: 14px;
+        margin: 0;
+    }
+
+    #page-num, #vo-page-num {
+        font-size: 14px;
+    }
+
+    .select-level {
+        width: 100%;
+        max-width: 280px;
+        font-size: 14px;
+        padding: 6px 10px;
+    }
+
+    .countdown-timer {
+        float: none;
+        margin-top: 15px;
+        display: inline-flex;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .cabinet-toggle-btn {
+        top: 15px !important;
+        left: 15px !important;
+    }
+
+    .cabinet-window {
+        position: fixed !important;
+        top: 15px !important;
+        left: 10px !important;
+        right: 10px !important;
+        width: calc(100% - 20px) !important;
+        max-width: calc(100% - 20px) !important;
+        max-height: calc(100vh - 30px) !important;
+        overflow-y: auto !important;
+        box-sizing: border-box !important;
+        z-index: 2000 !important;
+        transform: none !important;
+    }
+}
+
+/* --- Адаптация под сверхкомпактные мобильные экраны (576px) --- */
+@media (max-width: 576px) {
+    .cabinet-window {
+        width: 90% !important;
+        max-width: 340px !important;
+        height: 480px !important;
+        border-radius: 16px !important;
+        top: 40px !important;
+        left: 50% !important;
+        right: auto !important;
+        bottom: auto !important;
+        transform: translateX(-50%) !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+        overflow: hidden !important;
+    }
+
+    .cabinet-header-title {
+        font-size: 14px !important;
+        white-space: nowrap !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        max-width: none !important;
+    }
+
+    .cabinet-body {
+        height: 385px !important;
+        max-height: 385px !important;
+        overflow-y: auto !important;
+        padding: 12px 14px !important;
+        box-sizing: border-box !important;
+    }
+
+    .cab-filter-row {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 6px !important;
+        margin-bottom: 12px !important;
+        width: 100% !important;
+    }
+
+    .cab-select {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+}
+
+/* --- Адаптация под ультра-компактные мобильные экраны (480px) --- */
+@media (max-width: 480px) {
+    .cabinet-window {
+        width: 100%;
+        height: 400px;
+        bottom: 55px;
+        left: 15px;
+        right: 15px;
+        top: auto;
+    }
+}

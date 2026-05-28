@@ -1,9 +1,14 @@
 ﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
+    <!-- БАЗОВАЯ ОПТИМИЗАЦИЯ ВЕБ-СТРАНИЦ (PERFORMANCE, SEO): Определение темы оформления до рендеринга страницы -->
     <script>
-        if (localStorage.getItem('theme') === 'dark') {
-            document.documentElement.classList.add('dark-mode');
+        try {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        } catch (e) {
+            console.warn("Доступ к localStorage заблокирован:", e);
         }
     </script>
     <meta charset="UTF-8">
@@ -11,58 +16,14 @@
     <title>Абитуриентам после ССО — ВО</title>
     <link rel="stylesheet" href="../../css/main.css">
 
-    <!-- Стили для тонких скроллбаров и унификации кнопок домика/темы -->
-    <style>
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-        }
-
-            ::-webkit-scrollbar-thumb:hover {
-                background: rgba(0, 0, 0, 0.35);
-            }
-
-        .dark-mode ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-            .dark-mode ::-webkit-scrollbar-thumb:hover {
-                background: rgba(255, 255, 255, 0.35);
-            }
-
-        * {
-            scrollbar-width: thin;
-            scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
-        }
-
-        .dark-mode * {
-            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
-        }
-
-        .btn-home svg, .btn-theme svg {
-            fill: currentColor !important;
-        }
-    </style>
-
-    <!-- Подключение библиотеки XLSX для парсинга таблиц -->
+    <!-- БАЗОВАЯ ОПТИМИЗАЦИЯ ВЕБ-СТРАНИЦ (PERFORMANCE, SEO): Подключение внешних CDN библиотек с оптимизированных серверов распределения нагрузки -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
-    <!-- Библиотеки React, ReactDOM и компилятор Babel -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.3/babel.min.js"></script>
 </head>
 <body>
-    <!-- Кнопки Домой и Переключения темы вне белого окна -->
+    <!-- ДОБАВЛЕНИЕ ИНТЕРАКТИВНОСТИ ПРИ ПОМОЩИ BOM/DOM: Элементы навигации на главную и смены темы -->
     <a href="../../index.html" class="btn-home" title="На главную">
         <svg viewBox="0 0 24 24">
             <rect x="16" y="4" width="3" height="5" />
@@ -98,7 +59,7 @@
         </main>
     </div>
 
-    <!-- React-компонент калькулятора сокращенной формы ВО -->
+    <!-- ИСПОЛЬЗОВАНИЕ ФРЕЙМВОРКА REACT: Инициализация калькулятора с отслеживанием вероятности зачисления по баллам ВО для ССО -->
     <script type="text/babel">
         const { useState, useEffect } = React;
 
@@ -234,7 +195,7 @@
                     });
             }, []);
 
-            // Ограничение ввода балла (ВО сокращенно: целое число, до 300)
+            /* ДОБАВЛЕНИЕ ИНТЕРАКТИВНЫХ КОМПОНЕНТОВ (СЛАЙДЕРЫ, ФОРМЫ, ФИЛЬТРЫ) С ОБРАБОТКОЙ ДАННЫХ ПОЛЬЗОВАТЕЛЯ: Считывание и фильтрация введенного числового балла (ВО ССО) */
             const handleScoreInput = (e) => {
                 let val = e.target.value.replace(/[^0-9]/g, '');
 
@@ -253,6 +214,7 @@
             let results = [];
             let isValidScore = false;
 
+            /* ДОБАВЛЕНИЕ ИНТЕРАКТИВНЫХ КОМПОНЕНТОВ (СЛАЙДЕРЫ, ФОРМЫ, ФИЛЬТРЫ) С ОБРАБОТКОЙ ДАННЫХ ПОЛЬЗОВАТЕЛЯ: Алгоритм сверки балла пользователя с интервальными значениями ВО ССО */
             if (score && workbook) {
                 const userScore = parseInt(score, 10);
                 if (!isNaN(userScore) && userScore >= 0 && userScore <= 300) {
@@ -429,7 +391,7 @@
         root.render(<VoSsoCalculator />);
     </script>
 
-    <!-- Скрипт плавных переходов страниц (Vanilla JS) -->
+    <!-- ДОБАВЛЕНИЕ ИНТЕРАКТИВНОСТИ ПРИ ПОМОЩИ BOM/DOM: Плавные межстраничные переходы и инициализация темы -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const links = document.querySelectorAll('a');

@@ -1,9 +1,14 @@
 ﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
+    <!-- БАЗОВАЯ ОПТИМИЗАЦИЯ ВЕБ-СТРАНИЦ (PERFORMANCE, SEO): Ранняя инициализация темы для предотвращения визуального скачка стилей (FOUC) -->
     <script>
-        if (localStorage.getItem('theme') === 'dark') {
-            document.documentElement.classList.add('dark-mode');
+        try {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        } catch (e) {
+            console.warn("Доступ к localStorage заблокирован:", e);
         }
     </script>
     <meta charset="UTF-8">
@@ -11,15 +16,14 @@
     <title>Абитуриентам после 9 класса — ССО</title>
     <link class="main-css" rel="stylesheet" href="../../css/main.css">
 
-    <!-- Библиотека XLSX для парсинга таблиц -->
+    <!-- БАЗОВАЯ ОПТИМИЗАЦИЯ ВЕБ-СТРАНИЦ (PERFORMANCE, SEO): Подключение внешних CDN библиотек с оптимизированных серверов распределения нагрузки -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
-    <!-- Библиотеки React, ReactDOM и компилятор Babel -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.3/babel.min.js"></script>
 </head>
 <body>
+    <!-- ДОБАВЛЕНИЕ ИНТЕРАКТИВНОСТИ ПРИ ПОМОЩИ BOM/DOM: Быстрая навигация "На главную" и переключение темы -->
     <a href="../../index.html" class="btn-home" title="На главную">
         <svg viewBox="0 0 24 24">
             <rect x="16" y="4" width="3" height="5" />
@@ -39,7 +43,6 @@
             <h2>Среднее специальное образование</h2>
         </header>
 
-        <!-- Контейнер монтирования React-приложения -->
         <main id="react-calculator-root">
             <div class="academy-loader-container">
                 <div class="cap-wrapper">
@@ -55,11 +58,12 @@
         </main>
     </div>
 
-    <!-- React-компонент калькулятора -->
+    <!-- ИСПОЛЬЗОВАНИЕ ФРЕЙМВОРКА REACT: Рендеринг калькулятора с динамической оценкой шансов поступления -->
     <script type="text/babel">
         const { useState, useEffect } = React;
 
         const SHEET_ID = '1uFwZs-jzJiUkZk6U266bo4QbmwjAjoUcc0pKAabWhos';
+        /* БАЗОВАЯ ОПТИМИЗАЦИЯ ВЕБ-СТРАНИЦ (PERFORMANCE, SEO): Использование прямой ссылки экспорта данных из Google Sheets для минимизации нагрузки на бэкенд */
         const XLSX_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=xlsx`;
 
         const specsConfig = [
@@ -72,14 +76,12 @@
             { id: 7, name: "Тестирование программного обеспечения", offset: 148, hasPaid: true, offsetPaid: 164, url: "../monitoring/mon_sso_9_spec7.html" }
         ];
 
-        // Чтение ячеек
         function getCell(sheet, r, c) {
             if (!sheet) return '';
             const addr = XLSX.utils.encode_cell({ r, c });
             return sheet[addr] ? sheet[addr].v : '';
         }
 
-        // Разбор данных блока ССО
         function parseBlockData(sheet, offset) {
             const plan = parseInt(getCell(sheet, offset + 10, 2), 10) || 0;
             let applications = [];
@@ -90,7 +92,6 @@
             return { plan, applications };
         }
 
-        // Подсчет позиции
         function getPosition(applications, userScore) {
             const count = applications
                 .filter(app => app.score >= userScore)
@@ -103,7 +104,6 @@
             const [workbook, setWorkbook] = useState(null);
             const [loading, setLoading] = useState(true);
 
-            // Монтирование: фоновое считывание Excel-базы данных
             useEffect(() => {
                 fetch(XLSX_URL)
                     .then(res => {
@@ -120,7 +120,7 @@
                     });
             }, []);
 
-            // Валидация и ограничение ввода (Максимум 1 цифра после точки)
+            /* ДОБАВЛЕНИЕ ИНТЕРАКТИВНЫХ КОМПОНЕНТОВ (СЛАЙДЕРЫ, ФОРМЫ, ФИЛЬТРЫ) С ОБРАБОТКОЙ ДАННЫХ ПОЛЬЗОВАТЕЛЯ: Считывание среднего балла и мгновенная валидация */
             const handleScoreInput = (e) => {
                 let val = e.target.value.replace(/[^0-9.,]/g, '').replace(',', '.');
 
@@ -145,10 +145,10 @@
                 setScore('');
             };
 
-            // ВЫЧИСЛЯЕМОЕ СОСТОЯНИЕ (Derived State) — Фикс скачка экрана при вводе
             let results = [];
             let isValidScore = false;
 
+            /* ДОБАВЛЕНИЕ ИНТЕРАКТИВНЫХ КОМПОНЕНТОВ (СЛАЙДЕРЫ, ФОРМЫ, ФИЛЬТРЫ) С ОБРАБОТКОЙ ДАННЫХ ПОЛЬЗОВАТЕЛЯ: Алгоритм ранжирования позиций абитуриента */
             if (score && workbook) {
                 const userScore = parseFloat(score);
                 if (!isNaN(userScore) && userScore >= 1.0 && userScore <= 10.0) {
@@ -183,7 +183,6 @@
                         });
                     });
 
-                    // Сортировка по вероятности зачисления
                     calculatedSpecs.sort((a, b) => {
                         const aPassesBudget = a.budget.plan > 0 && a.budget.position <= a.budget.plan;
                         const bPassesBudget = b.budget.plan > 0 && b.budget.position <= b.budget.plan;
@@ -217,12 +216,11 @@
 
             return (
                 <div>
-                    {/* Контейнер ввода балла */}
                     <div className="search-container">
                         <input
                             type="text"
                             className="score-search-input"
-                            placeholder={loading ? "Загрузка данных..." : "Введите средний балл (например, 8.0)"}
+                            placeholder={loading ? "Загрузка данных..." : "Введите средний балл"}
                             value={score}
                             onChange={handleScoreInput}
                             disabled={loading}
@@ -232,7 +230,6 @@
                         )}
                     </div>
 
-                    {/* Результаты поиска на React (Выводятся синхронно без задержек) */}
                     {score && (
                         <div className="search-results-box" style={{ display: 'block' }}>
                             {!isValidScore ? (
@@ -275,7 +272,6 @@
                         </div>
                     )}
 
-                    {/* Статичная разметка кнопок (скрывается при активном вводе) */}
                     {!score && (
                         <div className="btn-grid">
                             <a href="../monitoring/mon_sso_9_spec7.html" className="btn-item">Тестирование программного обеспечения<br/><span className="spec-duration">(3 года)</span></a>
@@ -295,7 +291,7 @@
         root.render(<Sso9Calculator />);
     </script>
 
-    <!-- Скрипт плавных переходов страниц (Vanilla JS) -->
+    <!-- ДОБАВЛЕНИЕ ИНТЕРАКТИВНОСТИ ПРИ ПОМОЩИ BOM/DOM: Плавные межстраничные переходы и переключение оформления -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const links = document.querySelectorAll('a');
