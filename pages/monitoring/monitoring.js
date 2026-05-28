@@ -393,7 +393,7 @@ function renderMonitoringPage(s) {
 
     if (!isVoMode && s.lgota.length > 0) {
         html += `\n<h2 class="section-title">Льготные вне конкурса по баллам:</h2>
-        <div class="bar-table-wrapper" style="max-width: 250px;"><table class="bar-table"><thead><tr>`;
+        <div class="bar-table-wrapper"><table class="bar-table"><thead><tr>`;
         s.lgota.forEach(a => html += `<th>${a.label}</th>`);
         html += `</tr></thead><tbody><tr>`;
         s.lgota.forEach(a => html += `<td class="cell-green">${a.count}</td>`);
@@ -414,7 +414,7 @@ function renderMonitoringPage(s) {
         };
 
         html += `\n<h2 class="section-title">Целевые по баллам:</h2>
-        <div class="bar-table-wrapper" style="max-width: 150px;"><table class="bar-table"><thead><tr>`;
+        <div class="bar-table-wrapper"><table class="bar-table"><thead><tr>`;
         s.target.forEach(a => html += `<th>${a.label}</th>`);
         html += `</tr></thead><tbody><tr>`;
         s.target.forEach(a => {

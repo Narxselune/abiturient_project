@@ -614,6 +614,21 @@ nav ul {
     border: 1px solid #3A3B3D;
 }
 
+/* Автоматическое сужение таблиц льготников и целевых под их реальный контент */
+.section-title + .bar-table-wrapper {
+    width: fit-content;
+    max-width: 100%; /* Предотвращает выход за границы экрана на мобильных */
+    margin-left: 0; /* Выравнивание по левому краю (для симметрии) */
+}
+
+/* Дополнительная аккуратность: центрирование таблиц на мобильных устройствах */
+@media (max-width: 768px) {
+    .section-title + .bar-table-wrapper {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
 .bar-table {
     border-collapse: collapse;
     text-align: center;
