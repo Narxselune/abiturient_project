@@ -1,70 +1,66 @@
-﻿// monitoring.js
-
-// Глобальные переменные для переключения бюджета/платного
+﻿// переменные для переключения бюджета/платного
 let currentCategory = 'budget';
 let timerInterval = null;
 
-// ==========================================================================
-// НАСТРОЙКИ СРОКОВ ПРИЕМНОЙ КАМПАНИИ 2026 (С УЧЕТОМ ЗАКРЫТИЯ В 18:00)
-// ==========================================================================
+// настройки сроков приемки
 function getCampaignDates() {
     const isVo = typeof IS_VO !== 'undefined' && IS_VO;
-    const year = 2026; // Расчетный год
+    const year = 2026;
 
     let startDate, endDate, startLabel;
 
     if (isVo) {
-        // --- ВЫСШЕЕ ОБРАЗОВАНИЕ (ВО) ---
+        // ВО
         const isVoSso = typeof VO_MAX_SCORE !== 'undefined' && VO_MAX_SCORE === 300;
 
         if (isVoSso) {
-            // ВО после ССО (Сокращенный срок): с 12 по 17 июля включительно, до 18:00
+            // ВО после ССО (Сокращенный срок)
             startDate = new Date(year, 6, 12, 9, 0, 0);   // 12 июля 09:00
             endDate = new Date(year, 6, 17, 18, 0, 0);    // 17 июля 18:00
             startLabel = "12 июля";
         } else {
             // ВО на базе 11 классов (Полный срок)
             if (currentCategory === 'budget') {
-                // Бюджет ВО (11 кл.): с 12 июля по 17 июля включительно, до 18:00
+                // Бюджет ВО (11 кл.): с 12 июля по 17 июля 
                 startDate = new Date(year, 6, 12, 9, 0, 0);
                 endDate = new Date(year, 6, 17, 18, 0, 0);
                 startLabel = "12 июля";
             } else {
-                // Платно ВО (11 кл.): с 12 июля по 1 августа включительно, до 18:00
+                // Платно ВО (11 кл.): с 12 июля по 1 августа 
                 startDate = new Date(year, 6, 12, 9, 0, 0);
-                endDate = new Date(year, 7, 1, 18, 0, 0);     // 1 августа 18:00
+                endDate = new Date(year, 7, 1, 18, 0, 0);
                 startLabel = "12 июля";
             }
         }
     } else {
-        // --- СРЕДНЕЕ СПЕЦИАЛЬНОЕ ОБРАЗОВАНИЕ (ССО / ПТО) ---
+        // ССО
         const offset = typeof SPEC_OFFSET_BUDGET !== 'undefined' ? SPEC_OFFSET_BUDGET : (typeof SPEC_OFFSET !== 'undefined' ? SPEC_OFFSET : 0);
         const is9cl = offset < 320; // 9 класс (все смещения до 320 относятся к базе 9 классов)
 
         if (is9cl) {
             // База 9 классов
             if (currentCategory === 'budget') {
-                // Бюджет ССО (9 кл.): с 18 июля по 3 августа включительно, до 18:00
+                // Бюджет ССО (9 кл.): с 18 июля по 3 августа
                 startDate = new Date(year, 6, 18, 9, 0, 0);
-                endDate = new Date(year, 7, 3, 18, 0, 0);      // 3 августа 18:00
+                endDate = new Date(year, 7, 3, 18, 0, 0); // 3 августа 18:00
                 startLabel = "18 июля";
             } else {
-                // Платно ССО (9 кл.): с 18 июля по 10 августа включительно, до 18:00
+                // Платно ССО (9 кл.): с 18 июля по 10 августа
                 startDate = new Date(year, 6, 18, 9, 0, 0);
-                endDate = new Date(year, 7, 10, 18, 0, 0);     // 10 августа 18:00
+                endDate = new Date(year, 7, 10, 18, 0, 0); // 10 августа 18:00
                 startLabel = "18 июля";
             }
         } else {
             // База 11 классов и ПТО
             if (currentCategory === 'budget') {
-                // Бюджет ССО (11 кл. / ПТО): с 18 июля по 11 августа включительно, до 18:00
+                // Бюджет ССО (11 кл. / ПТО): с 18 июля по 11 августа
                 startDate = new Date(year, 6, 18, 9, 0, 0);
-                endDate = new Date(year, 7, 11, 18, 0, 0);     // 11 августа 18:00
+                endDate = new Date(year, 7, 11, 18, 0, 0); // 11 августа 18:00
                 startLabel = "18 июля";
             } else {
-                // Платно ССО (11 кл. / ПТО): с 18 июля по 15 августа включительно, до 18:00
+                // Платно ССО (11 кл. / ПТО): с 18 июля по 15 августа 
                 startDate = new Date(year, 6, 18, 9, 0, 0);
-                endDate = new Date(year, 7, 15, 18, 0, 0);     // 15 августа 18:00
+                endDate = new Date(year, 7, 15, 18, 0, 0); // 15 августа 18:00
                 startLabel = "18 июля";
             }
         }
@@ -72,7 +68,6 @@ function getCampaignDates() {
 
     return { startDate, endDate, startLabel };
 }
-// ==========================================================================
 
 // Запуск и обновление обратного отсчета
 function startCountdown() {
@@ -85,7 +80,7 @@ function startCountdown() {
         const { startDate, endDate, startLabel } = getCampaignDates();
         const now = new Date();
 
-        // 1. Состояние: Прием документов еще не начался
+        // Состояние: Прием документов еще не начался
         if (now < startDate) {
             timerEl.className = 'countdown-timer not-started';
             timerEl.innerHTML = `
@@ -97,7 +92,7 @@ function startCountdown() {
 
         const diff = endDate - now;
 
-        // 2. Состояние: Прием документов завершен
+        // Состояние: Прием документов завершен
         if (diff <= 0) {
             timerEl.className = 'countdown-timer expired';
             timerEl.innerHTML = `
@@ -107,7 +102,7 @@ function startCountdown() {
             return;
         }
 
-        // 3. Состояние: Активный прием документов
+        // Состояние: Активный прием документов
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -146,7 +141,7 @@ function getCell(sheet, r, c) {
     return sheet[addr] ? sheet[addr].v : '';
 }
 
-// Вспомогательная функция: проверяет, объединена ли ячейка по вертикали, и находит суммарный план
+// функция для проверки объединения ячеек по вертикали и нахождения суммы плана
 function getGroupedPlans(sheet, currentOffset) {
     let totalPlan = 0;
     let totalPlanTarget = 0;
@@ -193,12 +188,12 @@ function getGroupedPlans(sheet, currentOffset) {
     };
 }
 
-// Парсинг данных из Excel
+// парсинг данных из Excel
 function parseBlock(sheet, offset) {
     const isVoMode = typeof IS_VO !== 'undefined' && IS_VO;
 
     if (isVoMode) {
-        // --- ЛОГИКА ДЛЯ ВЫСШЕГО ОБРАЗОВАНИЯ (ВО) ---
+        // логика для ВО
         const maxScore = typeof VO_MAX_SCORE !== 'undefined' ? VO_MAX_SCORE : 400;
         const groupInfo = getGroupedPlans(sheet, offset);
 
@@ -259,7 +254,7 @@ function parseBlock(sheet, offset) {
         };
 
     } else {
-        // --- КЛАССИЧЕСКАЯ ЛОГИКА ДЛЯ СРЕДНЕГО СПЕЦИАЛЬНОГО ОБРАЗОВАНИЯ (ССО) ---
+        // логика для ССО
         const name = getCell(sheet, offset + 10, 0);
         const plan = parseInt(getCell(sheet, offset + 10, 2), 10) || 0;
         const type = getCell(sheet, offset + 0, 2);
@@ -293,7 +288,7 @@ function parseBlock(sheet, offset) {
     }
 }
 
-// Генерация HTML-структуры под дизайн
+// генерация HTML-структуры под дизайн
 function renderMonitoringPage(s) {
     const isVoMode = !!s.isVo;
     const noPaidExists = (typeof SPEC_OFFSET_PAID === 'undefined');
