@@ -2167,3 +2167,39 @@ body:not(.body-main) {
 .dark-mode body:not(.body-main) {
     background-image: url('../Fon_2/2.png'); /* Если расширение файлов .jpg или .png, замените .jpeg на нужное */
 }
+/* Базовые стили для селекта */
+.cab-select {
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid #CBD5E1;
+    font-size: 12px;
+    background-color: #fff;
+    outline: none;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, opacity 0.2s;
+}
+
+.dark-mode .cab-select {
+    background-color: #2D2D2D;
+    color: #FFF;
+    border-color: #4A5D75;
+}
+
+/* --- ДОБАВЬТЕ ЭТИ СТИЛИ НИЖЕ --- */
+
+/* Неактивный выпадающий список (disabled) — Светлая тема */
+.cab-select:disabled {
+    background-color: #F1F5F9 !important;
+    color: #94A3B8 !important;
+    border-color: #E2E8F0 !important;
+    cursor: not-allowed !important;
+    opacity: 0.6 !important;
+}
+
+/* Неактивный выпадающий список (disabled) — Темная тема */
+.dark-mode .cab-select:disabled {
+    background-color: #161616 !important; /* Более темный фон */
+    color: #5A6A85 !important; /* Приглушенный цвет текста */
+    border-color: #2D3748 !important; /* Менее контрастная рамка */
+    cursor: not-allowed !important;
+    opacity: 0.5 !important; /* Пониженная прозрачность */
+}
