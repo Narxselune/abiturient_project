@@ -3,9 +3,6 @@ const { useState, useEffect } = React;
 
 // База вопросов и ответов для трех профориентационных тестов
 const quizDatabases = {
-    // ----------------------------------------------------
-    // ТЕСТ 1: БАЗА 9 КЛАССОВ — ССО (7 специальностей)
-    // ----------------------------------------------------
     sso9: [
         {
             question: "1. Если бы тебе предложили поучаствовать в создании компьютерной игры, какую роль ты бы выбрал?",
@@ -53,10 +50,6 @@ const quizDatabases = {
             ]
         }
     ],
-
-    // ----------------------------------------------------
-    // ТЕСТ 2: БАЗА 11 КЛАССОВ — ССО (4 специальности)
-    // ----------------------------------------------------
     sso11: [
         {
             question: "1. Какая практическая ИТ-задача привлекает тебя больше всего?",
@@ -95,10 +88,6 @@ const quizDatabases = {
             ]
         }
     ],
-
-    // ----------------------------------------------------
-    // ТЕСТ 3: БАЗА 11 КЛАССОВ — ВО (5 специальностей)
-    // ----------------------------------------------------
     vo11: [
         {
             question: "1. Какая роль в крупной технологической компании кажется тебе наиболее привлекательной?",
@@ -170,12 +159,10 @@ function PersonalCabinet({ isOpen, onClose }) {
     const [currentTestKey, setCurrentTestKey] = useState(null); // 'sso9', 'sso11', 'vo11'
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [quizScores, setQuizScores] = useState({});
-    const [answersHistory, setAnswersHistory] = useState([]); // Очередь добавленных баллов для отката шагов
+    const [answersHistory, setAnswersHistory] = useState([]);
 
-    // Эффект для синхронизации фильтров в localStorage и корректировки формы обучения
     useEffect(() => {
         let currentForm = form;
-        // Если выбрана вышка (полный срок), заочной формы нет — принудительно ставим "дневная"
         if (level === 'vo_full') {
             currentForm = 'dnev';
             setForm('dnev');
@@ -219,23 +206,20 @@ function PersonalCabinet({ isOpen, onClose }) {
         if (currentQuestionIndex < activeTest.length - 1) {
             setCurrentQuestionIndex(prev => prev + 1);
         } else {
-            // Если вопросы закончились, для теста 11 классов ССО предлагаем выбрать форму обучения
             if (currentTestKey === 'sso11') {
                 setQuizStep(5);
             } else {
-                setQuizStep(6); // Для 9 классов ССО и 11 классов ВО выводим результат сразу
+                setQuizStep(6);
             }
         }
     };
 
-    // Логика перехода назад в тесте
     const handleQuizBack = () => {
         if (quizStep === 2) {
             setQuizStep(1);
             setTargetLevel('');
         } else if (quizStep === 4) {
             if (currentQuestionIndex > 0) {
-                // Откатываем баллы за последний ответ
                 const lastAddedScores = answersHistory[answersHistory.length - 1];
                 if (lastAddedScores) {
                     setQuizScores(prev => {
@@ -249,7 +233,6 @@ function PersonalCabinet({ isOpen, onClose }) {
                 }
                 setCurrentQuestionIndex(prev => prev - 1);
             } else {
-                // Возврат из первого вопроса к меню выбора базы
                 if (currentTestKey === 'vo11') {
                     setQuizStep(1);
                     setCurrentTestKey(null);
@@ -261,7 +244,6 @@ function PersonalCabinet({ isOpen, onClose }) {
                 setAnswersHistory([]);
             }
         } else if (quizStep === 5) {
-            // Шаг ССО 11 выбора формы обучения -> возвращаемся к последнему вопросу
             const activeTest = quizDatabases[currentTestKey];
             const lastIndex = activeTest.length - 1;
 
@@ -280,7 +262,6 @@ function PersonalCabinet({ isOpen, onClose }) {
             setCurrentQuestionIndex(lastIndex);
             setQuizStep(4);
         } else if (quizStep === 6) {
-            // Шаг результатов -> возвращаемся на форму обучения (для ССО 11) либо на последний вопрос
             if (currentTestKey === 'sso11') {
                 setQuizStep(5);
             } else {
@@ -353,7 +334,6 @@ function PersonalCabinet({ isOpen, onClose }) {
     const calculateRecommendation = () => {
         const winner = getWinnerKey();
 
-        // --- ТЕСТ 1: БАЗА 9 КЛАССОВ (ССО) ---
         if (currentTestKey === 'sso9') {
             if (winner === 'web') return {
                 name: "Разработка и сопровождение веб-ресурсов",
@@ -392,7 +372,6 @@ function PersonalCabinet({ isOpen, onClose }) {
             };
         }
 
-        // --- ТЕСТ 2: БАЗА 11 КЛАССОВ (ССО) ---
         if (currentTestKey === 'sso11') {
             if (winner === 'po') return {
                 name: "Тестирование программного обеспечения (11 кл., Дневное)",
@@ -432,7 +411,6 @@ function PersonalCabinet({ isOpen, onClose }) {
             };
         }
 
-        // --- ТЕСТ 3: БАЗА 11 КЛАССОВ (ВО) ---
         if (currentTestKey === 'vo11') {
             if (winner === 'info') return {
                 name: "Прикладная информатика (ВО)",
@@ -474,7 +452,7 @@ function PersonalCabinet({ isOpen, onClose }) {
         <div className="cabinet-window">
             <div className="cabinet-header">
                 <div className="cabinet-header-title">
-                     Личный кабинет абитуриента
+                    Личный кабинет абитуриента
                 </div>
                 <button className="ai-close-btn" onClick={onClose}>&times;</button>
             </div>
@@ -509,7 +487,7 @@ function PersonalCabinet({ isOpen, onClose }) {
                             <div className="cab-filter-row">
                                 <label>Форма обучения:</label>
                                 {level === 'vo_full' ? (
-                                    <select className="cab-select" value="dnev" disabled style={{ cursor: 'not-allowed', opacity: 0.8 }}>
+                                    <select className="cab-select" value="dnev" disabled>
                                         <option value="dnev">Дневная</option>
                                     </select>
                                 ) : (
@@ -528,22 +506,20 @@ function PersonalCabinet({ isOpen, onClose }) {
                             </div>
                         </div>
 
-                        <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
+                        <div className="cab-checklist-list">
                             {getRequiredDocuments().map((doc) => {
                                 const isChecked = !!checkedItems[doc.id];
                                 return (
                                     <label
                                         key={doc.id}
                                         className={`cab-checklist-item ${isChecked ? 'completed' : ''}`}
-                                        style={{ textAlign: 'left', display: 'flex', alignItems: 'flex-start' }}
                                     >
                                         <input
                                             type="checkbox"
                                             checked={isChecked}
                                             onChange={() => handleCheckboxChange(doc.id)}
-                                            style={{ flexShrink: 0, marginTop: '4px' }}
                                         />
-                                        <span style={{ marginLeft: '8px' }}>{doc.text}</span>
+                                        <span>{doc.text}</span>
                                     </label>
                                 );
                             })}
@@ -553,7 +529,6 @@ function PersonalCabinet({ isOpen, onClose }) {
 
                 {activeTab === 'quiz' && (
                     <div>
-                        {/* Кнопка "Назад" для всех шагов кроме первого */}
                         {quizStep > 1 && (
                             <button
                                 className="cab-quiz-back-btn"
@@ -563,7 +538,6 @@ function PersonalCabinet({ isOpen, onClose }) {
                             </button>
                         )}
 
-                        {/* ШАГ 1: Выбор траектории поступления */}
                         {quizStep === 1 && (
                             <div>
                                 <p className="cab-quiz-question">Какой уровень образования тебя интересует?</p>
@@ -574,7 +548,6 @@ function PersonalCabinet({ isOpen, onClose }) {
                             </div>
                         )}
 
-                        {/* ШАГ 2: База образования для Колледжа */}
                         {quizStep === 2 && (
                             <div>
                                 <p className="cab-quiz-question">Какая база образования у тебя на момент поступления?</p>
@@ -585,10 +558,9 @@ function PersonalCabinet({ isOpen, onClose }) {
                             </div>
                         )}
 
-                        {/* ШАГ 4: Прохождение вопросов активного теста */}
                         {quizStep === 4 && currentTestKey && (
                             <div>
-                                <p className="cab-quiz-question" style={{ color: '#007bff', fontSize: '13px', marginBottom: '5px' }}>
+                                <p className="cab-quiz-progress">
                                     Вопрос {currentQuestionIndex + 1} из {quizDatabases[currentTestKey].length}
                                 </p>
                                 <p className="cab-quiz-question">
@@ -608,7 +580,6 @@ function PersonalCabinet({ isOpen, onClose }) {
                             </div>
                         )}
 
-                        {/* ШАГ 5: Выбор формы обучения (для 11 кл. ССО) */}
                         {quizStep === 5 && (
                             <div>
                                 <p className="cab-quiz-question">Какой формат обучения тебе предпочтительнее?</p>
@@ -619,17 +590,16 @@ function PersonalCabinet({ isOpen, onClose }) {
                             </div>
                         )}
 
-                        {/* ШАГ 6: Вывод результатов тестирования */}
                         {quizStep === 6 && (
                             <div className="quiz-result-box">
-                                <p style={{ fontWeight: 'bold', color: '#007bff', fontSize: '15px', marginBottom: '8px' }}>Результат тестирования:</p>
-                                <div style={{ padding: '12px', backgroundColor: '#F0F7FF', borderRadius: '10px', marginBottom: '15px', borderLeft: '3px solid #007bff' }}>
-                                    <strong style={{ display: 'block', fontSize: '15px', marginBottom: '4px', color: '#1A202C' }}>{calculateRecommendation().name}</strong>
-                                    <span style={{ fontSize: '12px', color: '#4A5568', lineHeight: '1.4', display: 'block' }}>{calculateRecommendation().desc}</span>
+                                <p className="cab-quiz-result-title">Результат тестирования:</p>
+                                <div className="cab-quiz-result-card">
+                                    <strong className="cab-quiz-result-name">{calculateRecommendation().name}</strong>
+                                    <span className="cab-quiz-result-desc">{calculateRecommendation().desc}</span>
                                 </div>
-                                <div style={{ display: 'flex', gap: '8px' }}>
-                                    <a href={calculateRecommendation().url} className="btn-arrow" style={{ textDecoration: 'none', padding: '8px 12px', fontSize: '12px' }}>Смотреть конкурс</a>
-                                    <button className="btn-arrow" style={{ backgroundColor: '#A0AEC0', padding: '8px 12px', fontSize: '12px' }} onClick={resetQuiz}>Пройти заново</button>
+                                <div className="cab-quiz-actions">
+                                    <a href={calculateRecommendation().url} className="btn-arrow">Смотреть конкурс</a>
+                                    <button className="btn-arrow btn-gray" onClick={resetQuiz}>Пройти заново</button>
                                 </div>
                             </div>
                         )}

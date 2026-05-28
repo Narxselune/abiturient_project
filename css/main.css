@@ -15,7 +15,7 @@
 }
 
 html {
-    overflow-y: scroll;
+    overflow-y: auto;
     background-color: #F1EEFF;
     transition: background-color 0.3s ease;
 }
@@ -369,6 +369,7 @@ nav ul {
 .btn-arrow {
     padding: 10px 20px;
     background-color: #8CBEFF;
+    color: #000000;
     border: none;
     border-radius: 24px;
     font-weight: bold;
@@ -387,7 +388,7 @@ nav ul {
 }
 
 .dark-mode .btn-arrow:hover {
-    background-color: #4A5D75;
+    background-color: #2A3543 !important;
 }
 
 .lightbox {
@@ -1903,9 +1904,10 @@ html.dark-mode,
         background-color: rgba(99, 179, 237, 0.12) !important;
     }
 
-/* Медиа-запросы адаптации главной (перенесены из index.html) */
+
+/* Стало (применится ко всем страницам без исключения): */
 @media (max-width: 1024px) {
-    .body-main {
+    body {
         background-attachment: scroll !important;
     }
 }
@@ -2236,3 +2238,124 @@ body:not(.body-main) {
     cursor: not-allowed !important;
     opacity: 0.5 !important; /* Пониженная прозрачность */
 }
+/* --- СЕРАЯ КНОПКА (Пройти заново) --- */
+
+/* Светлая тема */
+.btn-gray {
+    background-color: #A0AEC0 !important;
+    color: #1A202C !important;
+}
+
+    .btn-gray:hover {
+        background-color: #818E9F !important; /* Плавное затемнение при наведении */
+    }
+
+/* Темная тема */
+.dark-mode .btn-gray {
+    background-color: #4A5568 !important;
+    color: #FFFFFF !important;
+}
+
+    .dark-mode .btn-gray:hover {
+        background-color: #2D3748 !important; /* Еще темнее в темной теме при наведении */
+    }
+/* ==========================================================================
+   СТИЛИ ЛИЧНОГО КАБИНЕТА (ВЫНЕСЕНЫ ИЗ CABINET.JS)
+   ========================================================================== */
+
+/* Чек-лист документов */
+.cab-checklist-list {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.cab-checklist-item {
+    text-align: left !important;
+    display: flex !important;
+    align-items: flex-start !important;
+}
+
+    .cab-checklist-item input[type="checkbox"] {
+        flex-shrink: 0;
+        margin-top: 4px;
+    }
+
+    .cab-checklist-item span {
+        margin-left: 8px;
+    }
+
+/* Индикатор прогресса в тесте */
+.cab-quiz-progress {
+    color: #007bff;
+    font-size: 13px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.dark-mode .cab-quiz-progress {
+    color: #8CBEFF;
+}
+
+/* Заголовок результатов теста */
+.cab-quiz-result-title {
+    font-weight: bold;
+    color: #007bff;
+    font-size: 15px;
+    margin-bottom: 8px;
+    text-align: left;
+}
+
+.dark-mode .cab-quiz-result-title {
+    color: #8CBEFF;
+}
+
+/* Карточка рекомендованной специальности */
+.cab-quiz-result-card {
+    padding: 12px;
+    background-color: #F0F7FF;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border-left: 3px solid #007bff;
+    text-align: left;
+}
+
+.dark-mode .cab-quiz-result-card {
+    background-color: #1E2D3D;
+    border-left-color: #8CBEFF;
+}
+
+.cab-quiz-result-name {
+    display: block;
+    font-size: 15px;
+    margin-bottom: 4px;
+    color: #1A202C;
+}
+
+.dark-mode .cab-quiz-result-name {
+    color: #FFFFFF;
+}
+
+.cab-quiz-result-desc {
+    font-size: 12px;
+    color: #4A5568;
+    line-height: 1.4;
+    display: block;
+}
+
+.dark-mode .cab-quiz-result-desc {
+    color: #CBD5E1;
+}
+
+/* Блок кнопок действий */
+.cab-quiz-actions {
+    display: flex;
+    gap: 8px;
+}
+
+    /* Компактный размер кнопок в кабинете */
+    .cab-quiz-actions .btn-arrow {
+        text-decoration: none;
+        padding: 8px 12px;
+        font-size: 12px;
+    }
