@@ -1583,14 +1583,13 @@ nav ul {
 
 /* "Вы недавно смотрели..." */
 .recently-viewed {
-    flex-direction: column;
-    align-items: flex-start; 
-    gap: 12px;
-    text-align: left;
-    width: 100%;
-    max-width: 550px;
-    margin-left: auto;
-    margin-right: auto;
+    display: inline-flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 40px;
+    font-size: 15px;
+    color: #000000;
+    gap: 8px;
 }
 
 .dark-mode .recently-viewed {
