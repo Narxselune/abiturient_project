@@ -1583,13 +1583,16 @@ nav ul {
 
 /* "Вы недавно смотрели..." */
 .recently-viewed {
-    display: inline-flex;
-    justify-content: center;
+    display: flex;
+    justify-content: flex-start;
     align-items: flex-start;
-    margin-top: 40px;
+    margin: 45px auto 0 auto; 
     font-size: 15px;
     color: #000000;
+    text-align: left;
     gap: 8px;
+    width: 100%;
+    max-width: 550px; 
 }
 
 .dark-mode .recently-viewed {
@@ -1604,7 +1607,7 @@ nav ul {
 .recently-viewed-links {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: flex-start; 
     gap: 10px;
 }
 
@@ -1622,7 +1625,6 @@ nav ul {
 .recently-viewed-links a:hover {
     text-decoration: underline;
 }
-
 /* Строка поиска-калькулятора балла */
 .search-container {
     position: relative;
