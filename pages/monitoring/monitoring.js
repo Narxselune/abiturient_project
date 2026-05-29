@@ -1,4 +1,6 @@
-﻿// переменные для переключения бюджета/платного
+﻿// pages/monitoring/monitoring.js
+
+// переменные для переключения бюджета/платного
 let currentCategory = 'budget';
 let timerInterval = null;
 
@@ -560,6 +562,44 @@ document.addEventListener('DOMContentLoaded', () => {
    БЛОК 15: ПЕРЕНЕСЕННЫЙ ГЛОБАЛЬНЫЙ СКРИПТ АНИМАЦИИ И ТЕМЫ 
    ======================================================== */
 
+function injectNavigationButtons() {
+    // Если кнопка темы уже есть на странице (во избежание дублирования), ничего не делаем
+    if (document.querySelector('.btn-theme')) return;
+
+    // Определяем, находимся ли мы на главной странице
+    const isRoot = window.location.pathname.endsWith('index.html') ||
+        window.location.pathname.endsWith('/') ||
+        window.location.pathname === '';
+
+    // Разметка кнопки темы
+    const themeButtonHtml = `
+        <a href="javascript:void(0)" class="btn-theme" onclick="toggleTheme()" title="Переключить тему">
+            <svg id="theme-icon" viewBox="0 0 24 24">
+                <path d="M12.3 22h-.1c-5.5 0-10-4.5-10-10 0-4.8 3.5-9 8.3-9.8.5-.1 1 .2 1.2.7.2.5 0 1.1-.4 1.4-3.5 2.5-4.2 7.4-1.7 10.9 2.5 3.5 7.4 4.2 10.9 1.7.4-.3 1-.3 1.4.1.4.4.5.9.2 1.4-1.8 2.3-4.5 3.6-7.8 3.6z" />
+            </svg>
+        </a>
+    `;
+
+    // Разметка кнопки "На главную" (генерируется только для внутренних страниц)
+    let homeButtonHtml = '';
+    if (!isRoot) {
+        homeButtonHtml = `
+            <a href="../../index.html" class="btn-home" title="На главную">
+                <svg viewBox="0 0 24 24">
+                    <rect x="16" y="4" width="3" height="5" />
+                    <path d="M12 2.5L2 10.5h2v10a1 1 0 0 0 1 1h6v-6h2v6h6a1 1 0 0 0 1-1v-10h2L12 2.5z" />
+                </svg>
+            </a>
+        `;
+    }
+
+    // Внедряем кнопки в тело документа
+    const wrapper = document.createElement('div');
+    wrapper.style.display = 'contents'; // Чтобы обертка не влияла на верстку CSS
+    wrapper.innerHTML = homeButtonHtml + themeButtonHtml;
+    document.body.appendChild(wrapper);
+}
+
 /* ДОБАВЛЕНИЕ ИНТЕРАКТИВНОСТИ ПРИ ПОМОЩИ BOM/DOM: Интегрированное управление SVG иконками светлой/темной темы оформления */
 const moonSvg = `<path d="M12.3 22h-.1c-5.5 0-10-4.5-10-10 0-4.8 3.5-9 8.3-9.8.5-.1 1 .2 1.2.7.2.5 0 1.1-.4 1.4-3.5 2.5-4.2 7.4-1.7 10.9 2.5 3.5 7.4 4.2 10.9 1.7.4-.3 1-.3 1.4.1.4.4.5.9.2 1.4-1.8 2.3-4.5 3.6-7.8 3.6z" />`;
 const sunSvg = `<circle cx="12" cy="12" r="5" /><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke-width="2" stroke-linecap="round" stroke="currentColor" />`;
@@ -578,14 +618,16 @@ function toggleTheme() {
     updateThemeIcon(isDark);
 }
 
-/* ДОБАВЛЕНИЕ ИНТЕРАКТИВНОСТИ ПРИ ПОМОЩИ BOM/DOM: Чтение сохраненного в сессии значения темы при старте страницы */
+/* ДОБАВЛЕНИЕ ИНТЕРАКТИВНОСТИ ПРИ ПОМОЩИ BOM/DOM: Объединенный обработчик событий при загрузке документа */
 document.addEventListener('DOMContentLoaded', () => {
+    // 1. Сначала динамически генерируем кнопки навигации
+    injectNavigationButtons();
+
+    // 2. Инициализируем правильную иконку темы (солнце/луна)
     const isDark = document.documentElement.classList.contains('dark-mode');
     updateThemeIcon(isDark);
-});
 
-/* ДОБАВЛЕНИЕ ИНТЕРАКТИВНОСТИ ПРИ ПОМОЩИ BOM/DOM: Алгоритм плавной покадровой анимации исчезновения контейнера при переходах */
-document.addEventListener('DOMContentLoaded', () => {
+    // 3. Навешиваем плавные переходы на ссылки
     const links = document.querySelectorAll('a');
     links.forEach(link => {
         const href = link.getAttribute('href');
