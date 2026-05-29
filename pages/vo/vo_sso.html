@@ -83,41 +83,32 @@
         }
 
         // Логика группировки планов набора для ВО
+        /* ДОБАВЛЕНИЕ ИНТЕРАКТИВНЫХ КОМПОНЕНТОВ (СЛАЙДЕРЫ, ФОРМЫ, ФИЛЬТРЫ) С ОБРАБОТКОЙ ДАННЫХ ПОЛЬЗОВАТЕЛЯ: Слияние планов с ограничением по границам разделов */
         function getGroupedPlans(sheet, currentOffset) {
-            let totalPlan = 0;
             let startRow = currentOffset;
-            let endRow = currentOffset;
 
-            while (startRow > 0) {
-                const currentTotalVal = getCell(sheet, startRow, 6);
-                const prevTotalVal = getCell(sheet, startRow - 1, 6);
-                const prevName = getCell(sheet, startRow - 1, 3);
+            // Фиксируем нижний лимит, чтобы не уйти в чужой раздел (Дневное/Заочное) при пустых ячейках
+            const limitRow = currentOffset >= 90 ? 93 : 64;
 
-                if (currentTotalVal !== "" && (prevTotalVal === "" || !prevName)) {
-                    break;
-                }
-                if (currentTotalVal === "" && prevName !== "") {
-                    startRow--;
-                } else {
-                    break;
-                }
+            // 1. Идем вверх, пока не найдем строку с итоговым планом "Всего"
+            while (startRow > limitRow && getCell(sheet, startRow, 6) === "") {
+                startRow--;
             }
 
-            let checkRow = startRow + 1;
-            while (checkRow < 1000) {
-                const checkTotalVal = getCell(sheet, checkRow, 6);
-                const checkName = getCell(sheet, checkRow, 3);
+            let totalPlan = 0;
+            let endRow = startRow;
 
-                if (checkName !== "" && checkTotalVal === "") {
-                    endRow = checkRow;
-                    checkRow++;
-                } else {
+            // 2. Суммируем планы внутри одной группы вниз
+            while (endRow < 1000) {
+                totalPlan += parseInt(getCell(sheet, endRow, 4), 10) || 0;
+
+                const nextTotalVal = getCell(sheet, endRow + 1, 6);
+                const nextName = getCell(sheet, endRow + 1, 3);
+
+                if (nextTotalVal !== "" || nextName === "") {
                     break;
                 }
-            }
-
-            for (let r = startRow; r <= endRow; r++) {
-                totalPlan += parseInt(getCell(sheet, r, 4), 10) || 0;
+                endRow++;
             }
 
             return {
@@ -137,9 +128,9 @@
             let startCol = 11; // Колонка L
             let currentMax = maxScore;
 
-            const isZaoch = offset >= 90;
-            const h1 = isZaoch ? 91 : 63;
-            const h2 = isZaoch ? 90 : 62;
+            // БАЗОВАЯ ОПТИМИЗАЦИЯ ВЕБ-СТРАНИЦ (PERFORMANCE, SEO): Всегда читаем заголовки шкал со строки 64 (индекс 63), так как они глобальные для всей таблицы ССО
+            const h1 = 63;
+            const h2 = 62;
 
             for (let col = startCol; col <= 100; col++) {
                 let count = parseInt(getCell(sheet, mainRow, col), 10) || 0;

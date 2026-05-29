@@ -107,12 +107,15 @@ const sso11Specs = [
     { name: "Радиосвязь и ТВ (Дневное)", offset: 388, offsetPaid: 404 },
     { name: "Почтовая деятельность (Дневное)", offset: 420, offsetPaid: 436 },
     { name: "Тестирование ПО (Дневное)", offset: 324, offsetPaid: 340 }
+    { name: "Телекоммуникации (Заочное)", offset: 454, offsetPaid: 470 },
+    { name: "Радиосвязь и ТВ (Заочное)", offset: 486, offsetPaid: 502 },
+    { name: "Почтовая деятельность (Заочное)", offset: 518, offsetPaid: 534 }
 ];
 
 const voSpecs = [
-    { name: "Автоматизация технологических процессов и производств", offset: 32, offsetPaid: 48, isVo: true },
-    { name: "Системы и сети инфокоммуникаций", offset: 33, offsetPaid: 49, isVo: true },
-    { name: "Прикладная информатика", offset: 34, offsetPaid: 50, isVo: true },
+    { name: "Автоматизация технологических процессов и производств", offset: 32, offsetPaid: null, isVo: true },
+    { name: "Системы и сети инфокоммуникаций", offset: 33, offsetPaid: 50, isVo: true },
+    { name: "Прикладная информатика", offset: 34, offsetPaid: 51, isVo: true },
     { name: "Цифровые клиентские сервисы и почтово-логистические системы", offset: 35, offsetPaid: null, isVo: true },
     { name: "Маркетинг", offset: 36, offsetPaid: 52, isVo: true }
 ];

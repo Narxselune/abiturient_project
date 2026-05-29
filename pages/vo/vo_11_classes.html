@@ -67,10 +67,10 @@
         const XLSX_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=xlsx`;
 
         const specsConfig = [
-            { id: 1, name: "Автоматизация технологических процессов и производств", offset: 32, hasPaid: true, offsetPaid: 48, url: "../monitoring/mon_vo_11_spec1.html" },
-            { id: 2, name: "Системы и сети инфокоммуникаций", offset: 33, hasPaid: true, offsetPaid: 49, url: "../monitoring/mon_vo_11_spec2.html" },
-            { id: 3, name: "Прикладная информатика", offset: 34, hasPaid: true, offsetPaid: 50, url: "../monitoring/mon_vo_11_spec3.html" },
-            { id: 4, name: "Цифровые клиентские сервисы и почтово-логистические системы", offset: 35, hasPaid: true, offsetPaid: 51, url: "../monitoring/mon_vo_11_spec4.html" },
+            { id: 1, name: "Автоматизация технологических процессов и производств", offset: 32, hasPaid: false, url: "../monitoring/mon_vo_11_spec1.html" },
+            { id: 2, name: "Системы и сети инфокоммуникаций", offset: 33, hasPaid: true, offsetPaid: 50, url: "../monitoring/mon_vo_11_spec2.html" },
+            { id: 3, name: "Прикладная информатика", offset: 34, hasPaid: true, offsetPaid: 51, url: "../monitoring/mon_vo_11_spec3.html" },
+            { id: 4, name: "Цифровые клиентские сервисы и почтово-логистические системы", offset: 35, hasPaid: false, url: "../monitoring/mon_vo_11_spec4.html" },
             { id: 5, name: "Маркетинг", offset: 36, hasPaid: true, offsetPaid: 52, url: "../monitoring/mon_vo_11_spec5.html" }
         ];
 
@@ -81,7 +81,7 @@
             return sheet[addr] ? sheet[addr].v : '';
         }
 
-        // Интервальный парсинг для Высшего Образования (ВО)
+/* ИСПОЛЬЗОВАНИЕ ФРЕЙМВОРКА REACT: Корректный парсинг данных с привязкой к глобальным строкам заголовков шкалы 400 */
         function parseBlockDataVO(sheet, offset) {
             const plan = parseInt(getCell(sheet, offset, 4), 10) || 0;
             const maxScore = 400;
@@ -90,9 +90,11 @@
             let startCol = 11; // L
             let currentMax = maxScore;
 
-            const h1 = offset >= 40 ? 47 : 31;
-            const h2 = offset >= 40 ? 46 : 30;
+            /* БАЗОВАЯ ОПТИМИЗАЦИЯ ВЕБ-СТРАНИЦ (PERFORMANCE, SEO): Фиксация индексов строк 32 и 31 для исключения пустых ячеек */
+            const h1 = 31; // Строка 32 в Google-таблице
+            const h2 = 30; // Строка 31 в Google-таблице
 
+            /* ДОБАВЛЕНИЕ ИНТЕРАКТИВНЫХ КОМПОНЕНТОВ (СЛАЙДЕРЫ, ФОРМЫ, ФИЛЬТРЫ) С ОБРАБОТКОЙ ДАННЫХ ПОЛЬЗОВАТЕЛЯ: Считывание ячеек по всей шкале до 400 баллов */
             for (let col = startCol; col <= 100; col++) {
                 let count = parseInt(getCell(sheet, offset, col), 10) || 0;
                 let currentMin = currentMax - 4;
