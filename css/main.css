@@ -1583,14 +1583,14 @@ nav ul {
 
 /* "Вы недавно смотрели..." */
 .recently-viewed {
-    display: inline-flex;
-    justify-content: center;
-    align-items: flex-start;
-    margin-top: 40px;
-    font-size: 15px;
-    color: #000000;
+    flex-direction: column;
+    align-items: flex-start; 
+    gap: 12px;
     text-align: left;
-    gap: 8px;
+    width: 100%;
+    max-width: 550px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .dark-mode .recently-viewed {
@@ -2145,8 +2145,10 @@ body:not(.body-main) {
     }
 
     .section-title + .bar-table-wrapper {
-        margin-left: auto;
-        margin-right: auto;
+        margin-left: 0; 
+        margin-right: 0; 
+        width: fit-content;
+        max-width: 100%;
     }
 
     .bar-table {
