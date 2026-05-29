@@ -512,6 +512,10 @@ async function switchCategory(category) {
 
 // Первоначальный запуск
 async function initMonitoring() {
+    // Если на странице нет контейнера мониторинга, прерываем выполнение,
+    // чтобы не вызывать сетевые ошибки парсинга таблиц на обычных страницах
+    if (!document.getElementById('monitor-content')) return;
+
     const startGid = typeof GID_BUDGET !== 'undefined' ? GID_BUDGET : (typeof GID !== 'undefined' ? GID : '0');
     const startOffset = typeof SPEC_OFFSET_BUDGET !== 'undefined' ? SPEC_OFFSET_BUDGET : (typeof SPEC_OFFSET !== 'undefined' ? SPEC_OFFSET : 0);
 
