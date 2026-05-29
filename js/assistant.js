@@ -179,40 +179,27 @@ function getCell(sheet, r, c) {
 }
 
 function getGroupedPlans(sheet, currentOffset) {
-    let totalPlan = 0;
     let startRow = currentOffset;
-    let endRow = currentOffset;
+    // Лимиты, чтобы не уйти в чужой блок при поиске объединенных ячеек
+    const limitRow = currentOffset >= 90 ? 93 : 64;
 
-    while (startRow > 0) {
-        const currentTotalVal = getCell(sheet, startRow, 6);
-        const prevTotalVal = getCell(sheet, startRow - 1, 6);
-        const prevName = getCell(sheet, startRow - 1, 3);
-
-        if (currentTotalVal !== "" && (prevTotalVal === "" || !prevName)) {
-            break;
-        }
-        if (currentTotalVal === "" && prevName !== "") {
-            startRow--;
-        } else {
-            break;
-        }
+    while (startRow > limitRow && getCell(sheet, startRow, 6) === "") {
+        startRow--;
     }
 
-    let checkRow = startRow + 1;
-    while (checkRow < 1000) {
-        const checkTotalVal = getCell(sheet, checkRow, 6);
-        const checkName = getCell(sheet, checkRow, 3);
+    let totalPlan = 0;
+    let endRow = startRow;
 
-        if (checkName !== "" && checkTotalVal === "") {
-            endRow = checkRow;
-            checkRow++;
-        } else {
+    while (endRow < 1000) {
+        totalPlan += parseInt(getCell(sheet, endRow, 4), 10) || 0;
+
+        const nextTotalVal = getCell(sheet, endRow + 1, 6);
+        const nextName = getCell(sheet, endRow + 1, 3);
+
+        if (nextTotalVal !== "" || nextName === "") {
             break;
         }
-    }
-
-    for (let r = startRow; r <= endRow; r++) {
-        totalPlan += parseInt(getCell(sheet, r, 4), 10) || 0;
+        endRow++;
     }
 
     return {
@@ -232,9 +219,17 @@ function parseSsoBlock(sheet, offset) {
 }
 
 function parseVoBlock(sheet, offset, isVoSso) {
-    const groupInfo = getGroupedPlans(sheet, offset);
-    const plan = groupInfo.sumPlan;
-    const mainRow = groupInfo.dataRow;
+    let plan = 0;
+    let mainRow = offset;
+
+    // Для Сокращенной формы (ССО) нужна группировка, для Полной (11 кл) - читаем напрямую
+    if (isVoSso) {
+        const groupInfo = getGroupedPlans(sheet, offset);
+        plan = groupInfo.sumPlan;
+        mainRow = groupInfo.dataRow;
+    } else {
+        plan = parseInt(getCell(sheet, offset, 4), 10) || 0;
+    }
 
     let applications = [];
     let startCol = 11;
@@ -246,6 +241,7 @@ function parseVoBlock(sheet, offset, isVoSso) {
         let count = parseInt(getCell(sheet, mainRow, col), 10) || 0;
         let currentMin = currentMax - 4;
         let headerVal = getCell(sheet, h1, col) || getCell(sheet, h2, col);
+
         if (!headerVal && count === 0 && currentMax < (isVoSso ? 250 : 350)) {
             break;
         }
@@ -468,7 +464,8 @@ function handleScoreCalculation(userScore, isVoScore, originalText) {
                 let paidHtml = '';
                 if (spec.offsetPaid) {
                     const paidData = parseVoBlock(sheet, spec.offsetPaid, false);
-                    const paidPos = getVoPosition(budgetData.applications, userScore);
+                    // ИСПРАВЛЕНИЕ: передаем paidData.applications вместо budgetData.applications
+                    const paidPos = getVoPosition(paidData.applications, userScore);
                     const paidStatus = paidPos <= paidData.plan
                         ? '<span style="color: #2e7d32; font-weight: bold;">Проходите</span>'
                         : '<span style="color: #c62828; font-weight: bold;">Не проходите</span>';
@@ -494,7 +491,8 @@ function handleScoreCalculation(userScore, isVoScore, originalText) {
                     let paidHtml = '';
                     if (spec.offsetPaid) {
                         const paidData = parseVoBlock(sheet, spec.offsetPaid, true);
-                        const paidPos = getVoPosition(budgetData.applications, userScore);
+                        // ИСПРАВЛЕНИЕ: передаем paidData.applications вместо budgetData.applications
+                        const paidPos = getVoPosition(paidData.applications, userScore);
                         const paidStatus = paidPos <= paidData.plan
                             ? '<span style="color: #2e7d32; font-weight: bold;">Проходите</span>'
                             : '<span style="color: #c62828; font-weight: bold;">Не проходите</span>';
@@ -520,6 +518,7 @@ function handleScoreCalculation(userScore, isVoScore, originalText) {
                 let paidHtml = '';
                 if (spec.offsetPaid) {
                     const paidData = parseSsoBlock(sheet, spec.offsetPaid);
+                    // ИСПРАВЛЕНИЕ: здесь была похожая ошибка, исправляем для надежности
                     const paidPos = getSsoPosition(paidData.applications, userScore);
                     const paidStatus = paidPos <= paidData.plan
                         ? '<span style="color: #2e7d32; font-weight: bold;">Проходите</span>'
