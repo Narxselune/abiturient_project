@@ -1972,7 +1972,7 @@ nav ul {
    ===================================*/
 
 body:not(.body-main) {
-    background-image: url('../Fon_2/1.png');
+    background-image: url('../Fon_2/1.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -1981,7 +1981,7 @@ body:not(.body-main) {
 }
 
 .dark-mode body:not(.body-main) {
-    background-image: url('../Fon_2/2.png');
+    background-image: url('../Fon_2/2.webp');
 }
 
 
