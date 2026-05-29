@@ -59,7 +59,7 @@ const assistantDatabase = [
         answer: 'Наш интерактивный калькулятор анализирует загруженные данные.<br>' +
             '1. Перейди во вкладку нужного уровня образования (например, ССО после 9 класса).<br>' +
             '2. Введи свой средний балл в строку поиска.<br>' +
-            '3. Программа определит твою позицию среди других абитуриентов, уже поданных документы, и подсветит шансы цветом (зеленый — проходишь, yellow — на грани, красный — не проходишь).'
+            '3. Программа определит твою позицию среди других абитуриентов, уже поданных документы, и подсветит шансы цветом (зеленый — проходишь, желтый — на грани, красный — не проходишь).'
     },
     {
         keywords: ['привет', 'здравствуй', 'добрый день', 'ку', 'хай', 'hello', 'бот'],
@@ -79,7 +79,7 @@ const assistantDatabase = [
             '<strong>Уровень ВО (заочная форма): </strong> в год 1636 руб. (в семестр 818 руб.)<br>'
     },
     {
-        keywords: ['работает', 'график', 'часы', 'режим', 'время работы', 'воскресен', 'информир', 'обновлен', 'время работы комиссии', 'часы работы', 'режим работы', 'когда работает', 'во сколько работает', 'работы приемной'],
+        keywords: ['работает', 'график', 'часы', 'режим', 'время работы', 'воскресен', 'информир', 'обновлен', 'время работы комиссии', 'часы работы', 'режим работы', 'когда работает', 'во сколько работает', 'работы приемной', 'приемка', 'приёмка'],
         answer: '<b>Время работы приемной комиссии:</b><br>' +
             '• Понедельник – Суббота: <b>с 9:00 до 18:00</b>.<br>' +
             '• Воскресенье: выходной день.<br>' +
@@ -495,9 +495,9 @@ function handleScoreCalculation(userScore, isVoScore, originalText) {
                         const paidStatus = paidPos <= paidData.plan
                             ? '<span style="color: #2e7d32; font-weight: bold;">Проходите</span>'
                             : '<span style="color: #c62828; font-weight: bold;">Не проходите</span>';
-                        paidHtml = `  - Platno: ${paidPos} из ${paidData.plan} мест (${paidStatus})<br>`;
+                        paidHtml = `  - Платно: ${paidPos} из ${paidData.plan} мест (${paidStatus})<br>`;
                     } else {
-                        paidHtml = `  - Platno: прием не осуществляется<br>`;
+                        paidHtml = `  - Платно: прием не осуществляется<br>`;
                     }
 
                     responseHtml += `${index + 1}. <strong>${spec.name}:</strong><br>` +
@@ -633,22 +633,33 @@ function generateBotResponse(userText) {
     let userScore = null;
     let isVoScore = false;
 
-    const voMatch = normalizedText.match(/\b([1-3]\d{2}|400)\b/);
-    if (voMatch) {
-        userScore = parseInt(voMatch[1], 10);
-        isVoScore = true;
+    /* ДОБАВЛЕНИЕ ИНТЕРАКТИВНЫХ КОМПОНЕНТОВ (СЛАЙДЕРЫ, ФОРМЫ, ФИЛЬТРЫ) С ОБРАБОТКОЙ ДАННЫХ ПОЛЬЗОВАТЕЛЯ: Динамический и контекстный парсинг баллов ССО (gpa) и ВО (0-400) */
+    // 1. Проверяем наличие среднего балла с точкой (например, 8.5) — это гарантированно GPA ССО
+    const gpaMatchWithDot = normalizedText.match(/\b(10\.0|[1-9]\.\d)\b/);
+
+    if (gpaMatchWithDot) {
+        userScore = parseFloat(gpaMatchWithDot[1]);
+        isVoScore = false;
         isScoreQuery = true;
     } else {
-        const gpaMatchWithDot = normalizedText.match(/\b(10\.0|[1-9]\.\d)\b/);
-        if (gpaMatchWithDot) {
-            userScore = parseFloat(gpaMatchWithDot[1]);
-            isScoreQuery = true;
-        } else {
-            const gpaMatchInt = normalizedText.match(/\b(10|[1-9])\b/);
-            const scoreKeywords = /балл|шанс|проход|оценк|средн|пройд/i;
-            if (gpaMatchInt && scoreKeywords.test(normalizedText) && !/класс|документ|справк/i.test(normalizedText)) {
-                userScore = parseFloat(gpaMatchInt[1]);
-                isScoreQuery = true;
+        // 2. Ищем любые целые числа во всем диапазоне от 0 до 400
+        const anyIntMatch = normalizedText.match(/\b(\d{1,3})\b/);
+        if (anyIntMatch) {
+            const parsedInt = parseInt(anyIntMatch[1], 10);
+            if (parsedInt >= 0 && parsedInt <= 400) {
+                // Если число от 0 до 10, по умолчанию считаем это GPA, 
+                // ЕСЛИ в тексте нет явного упоминания контекста высшего образования (во, вышка, цт, цэ, академия)
+                const hasVoContext = /во|выш|акад|цт|цэ|экзам|11\s*кл/i.test(normalizedText);
+                if (parsedInt <= 10 && !hasVoContext) {
+                    userScore = parseFloat(parsedInt);
+                    isVoScore = false;
+                    isScoreQuery = true;
+                } else {
+                    // Во всех остальных случаях (числа от 11 до 400, либо 0-10 с контекстом ВО) — это балл ВО
+                    userScore = parsedInt;
+                    isVoScore = true;
+                    isScoreQuery = true;
+                }
             }
         }
     }
@@ -687,7 +698,7 @@ function generateBotResponse(userText) {
         return;
     }
 
-    const defaultReply = 'Я не до конца понял твой вопрос. Попробуй спросить подробнее, используя ключевые слова, например: <strong>документы</strong>, <strong>сроки подачи</strong>, <strong>общежитие</strong> или напиши свой средний балл (например, <b>8.5</b>), чтобы я оценил шансы.';
+    const defaultReply = 'Я не до конца понял твой вопрос. Попробуй спросить подробнее, используя ключевые слова, например: <strong>документы</strong>, <strong>сроки подачи</strong>, <strong>общежитие</strong> или напиши свой средний балл (например, <b>8.5</b> или <b>260 во</b>), чтобы я оценил шансы.';
     setTimeout(() => {
         appendMessage(defaultReply, 'bot');
     }, 400);
