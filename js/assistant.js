@@ -106,7 +106,7 @@ const sso11Specs = [
     { name: "Телекоммуникации (Дневное)", offset: 356, offsetPaid: 372 },
     { name: "Радиосвязь и ТВ (Дневное)", offset: 388, offsetPaid: 404 },
     { name: "Почтовая деятельность (Дневное)", offset: 420, offsetPaid: 436 },
-    { name: "Тестирование ПО (Дневное)", offset: 324, offsetPaid: 340 }
+    { name: "Тестирование ПО (Дневное)", offset: 324, offsetPaid: 340 },
     { name: "Телекоммуникации (Заочное)", offset: 454, offsetPaid: 470 },
     { name: "Радиосвязь и ТВ (Заочное)", offset: 486, offsetPaid: 502 },
     { name: "Почтовая деятельность (Заочное)", offset: 518, offsetPaid: 534 }
